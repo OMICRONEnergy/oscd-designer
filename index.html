@@ -1,0 +1,38 @@
+<title>oscd-designer demo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons&display=block">
+<open-scd plugins='{"editor": [{"name": "Designer", "translations": {"de": "Designer"}, "icon": "add_box", "active": true, "src": "/dist/oscd-designer.js"}, {"name": "Designer Prototype", "translations": {"de": "Designer Prototyp"}, "icon": "add_box", "active": true, "src": "/dist/oscd-designer-prototype.js"}], "menu": [{"name": "Open File", "translations": {"de": "Datei öffnen"}, "icon": "folder_open", "active": true, "src": "https://openscd.github.io/oscd-open/oscd-open.js"}, {"name": "Save File", "translations": {"de": "Datei öffnen"}, "icon": "save", "active": true, "src": "https://openscd.github.io/oscd-save/oscd-save.js"}]}'></open-scd>
+
+<script type="module">
+import '@openscd/open-scd-core/open-scd.js';
+
+const editor = document.querySelector('open-scd');
+const params = (new URL(document.location)).searchParams;
+for (const [name, value] of params) {
+editor.setAttribute(name, value);
+}
+
+const sclText = await fetch('./sample.ssd').then(r => r.text())
+editor.docs['sample.ssd'] = new DOMParser().parseFromString(sclText, 'application/xml');
+editor.docName = 'sample.ssd';
+</script>
+
+<script>
+const _customElementsDefine = window.customElements.define;
+window.customElements.define = (name, cl, conf) => {
+  if (!customElements.get(name)) {
+    _customElementsDefine.call(window.customElements, name, cl, conf);
+  }
+};
+</script>
+
+<style>
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  background: white;
+}
+</style>

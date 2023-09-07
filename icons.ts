@@ -1,6 +1,6 @@
 import { svg } from 'lit';
 
-export const voltageLevelIcon = svg`<symbol
+export const voltageLevelIcon = svg`<svg
   id="VoltageLevel"
   viewBox="0 0 25 25"
   width="1" height="1"
@@ -13,9 +13,9 @@ export const voltageLevelIcon = svg`<symbol
     stroke-linejoin="round"
     stroke-linecap="round"
   />
-</symbol>`;
+</svg>`;
 
-export const bayIcon = svg`<symbol
+export const bayIcon = svg`<svg
   id="Bay"
   viewBox="0 0 25 25"
   width="1" height="1"
@@ -84,7 +84,7 @@ export const bayIcon = svg`<symbol
     stroke-linejoin="round"
     stroke-linecap="round"
   />
-</symbol>`;
+</svg>`;
 
 export const inFeedLineIcon = svg`<symbol
   id="IFL"
@@ -499,8 +499,8 @@ export const powerTransformerTwoWindingIcon = svg`<symbol
 
 export const symbols = svg`
   <defs>
-  <pattern id="dots" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse" width="1" height="1">
-    <circle class="droptarget" cx="0.5" cy="0.5" r="0.1" fill="#888" fill-opacity="0.3">
+  <pattern id="grid" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse" width="1" height="1" viewBox="0 0 1 1">
+  <rect x="0" y="0" width="1" height="1" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
   </pattern>
 ${disconnectorIcon}
 ${circuitBreakerIcon}

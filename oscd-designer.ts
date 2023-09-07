@@ -1,15 +1,18 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { property, state } from 'lit/decorators.js';
 
-import { newEditEvent } from '@openscd/open-scd-core';
+import { Edit, newEditEvent } from '@openscd/open-scd-core';
 import { getReference } from '@openscd/oscd-scl';
-
-import './sld-editor.js';
 
 import '@material/mwc-button';
 import '@material/mwc-icon-button';
 import '@material/mwc-icon';
+
+import './sld-editor.js';
+
+import type { PlaceEvent, ResizeEvent, StartEvent } from './sld-editor.js';
+import { voltageLevelIcon } from './icons.js';
 
 const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
 
@@ -21,7 +24,16 @@ export default class Designer extends LitElement {
   editCount = -1;
 
   @state()
+  templateElements: Record<string, Element> = {};
+
+  @state()
   gridSize = 32;
+
+  @state()
+  placing?: Element;
+
+  @state()
+  resizing?: Element;
 
   zoomIn(step = 4) {
     this.gridSize += step;
@@ -30,6 +42,28 @@ export default class Designer extends LitElement {
   zoomOut(step = 4) {
     this.gridSize -= step;
     if (this.gridSize < 4) this.gridSize = 4;
+  }
+
+  startPlacing(element: Element | undefined) {
+    this.reset();
+    this.placing = element;
+  }
+
+  startResizing(element: Element | undefined) {
+    this.reset();
+    this.resizing = element;
+  }
+
+  reset() {
+    this.placing = undefined;
+    this.resizing = undefined;
+  }
+
+  updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('doc'))
+      ['Substation', 'VoltageLevel', 'Bay'].forEach(tag => {
+        this.templateElements[tag] = this.doc.createElement(tag);
+      });
   }
 
   render() {
@@ -42,6 +76,52 @@ export default class Designer extends LitElement {
             .editCount=${this.editCount}
             .substation=${subs}
             .gridSize=${this.gridSize}
+            .placing=${this.placing}
+            .resizing=${this.resizing}
+            @oscd-sld-start-place=${({ detail }: StartEvent) => {
+              this.startPlacing(detail);
+            }}
+            @oscd-sld-start-resize=${({ detail }: StartEvent) => {
+              this.startResizing(detail);
+            }}
+            @oscd-sld-resize=${({ detail: { element, w, h } }: ResizeEvent) => {
+              this.dispatchEvent(
+                newEditEvent({
+                  element,
+                  attributes: {
+                    w: { namespaceURI: sldNs, value: w.toString() },
+                    h: { namespaceURI: sldNs, value: h.toString() },
+                  },
+                })
+              );
+              this.reset();
+            }}
+            @oscd-sld-place=${({
+              detail: { element, parent, x, y },
+            }: PlaceEvent) => {
+              const edits: Edit[] = [];
+              if (element.parentElement !== parent) {
+                edits.push({
+                  node: element,
+                  parent,
+                  reference: getReference(parent, element.tagName),
+                });
+              }
+              edits.push({
+                element,
+                attributes: {
+                  x: { namespaceURI: sldNs, value: x.toString() },
+                  y: { namespaceURI: sldNs, value: y.toString() },
+                },
+              });
+              this.dispatchEvent(newEditEvent(edits));
+              if (
+                !this.placing!.hasAttributeNS(sldNs, 'w') &&
+                !this.placing!.hasAttributeNS(sldNs, 'h')
+              )
+                this.startResizing(this.placing);
+              else this.reset();
+            }}
           ></sld-editor>`
       )}
       <nav>
@@ -57,14 +137,30 @@ export default class Designer extends LitElement {
           @click=${() => this.zoomOut()}
         >
         </mwc-icon-button>
-      </nav>
-      <div>
-        <mwc-button
+        ${Array.from(this.doc.documentElement.children).find(
+          c => c.tagName === 'Substation'
+        )
+          ? html` <mwc-icon-button
+              label="Add VoltageLevel"
+              @click=${() => {
+                const element =
+                  this.templateElements.VoltageLevel!.cloneNode() as Element;
+                let index = 1;
+                while (this.doc.querySelector(`VoltageLevel[name="V${index}"]`))
+                  index += 1;
+                element.setAttribute('name', `V${index}`);
+                this.startPlacing(element);
+              }}
+            >
+              ${voltageLevelIcon}
+            </mwc-icon-button>`
+          : nothing}
+        <mwc-icon-button
           @click=${() => this.insertSubstation()}
           label="Add Substation"
-          icon="add"
-        ></mwc-button>
-      </div>
+          icon="margin"
+        ></mwc-icon-button>
+      </nav>
     </main>`;
   }
 

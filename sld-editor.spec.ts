@@ -44,7 +44,7 @@ describe('Designer', () => {
 
   it('allows the user to resize the substation being edited', async () => {
     element.shadowRoot
-      ?.querySelector<IconButton>('mwc-icon-button[icon="settings_overscan"]')
+      ?.querySelector<IconButton>('h2 > mwc-icon-button')
       ?.click();
     await element.resizeSubstationUI.updateComplete;
     element.substationHeightUI.value = '42';

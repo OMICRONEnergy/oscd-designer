@@ -1,19 +1,26 @@
 <title>oscd-designer demo</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto:wght@300;400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons&display=block">
-<open-scd plugins='{"editor": [{"name": "Designer", "translations": {"de": "Designer"}, "icon": "add_box", "active": true, "src": "/dist/oscd-designer.js"}, {"name": "Designer Prototype", "translations": {"de": "Designer Prototyp"}, "icon": "add_box", "active": true, "src": "/dist/oscd-designer-prototype.js"}], "menu": [{"name": "Open File", "translations": {"de": "Datei öffnen"}, "icon": "folder_open", "active": true, "src": "https://openscd.github.io/oscd-open/oscd-open.js"}, {"name": "Save File", "translations": {"de": "Datei öffnen"}, "icon": "save", "active": true, "src": "https://openscd.github.io/oscd-save/oscd-save.js"}]}'></open-scd>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Symbols+Outlined&display=block">
+<open-scd plugins='{"editor": [{"name": "Designer", "translations": {"de": "Designer"}, "icon": "add_box", "active": true, "src": "/dist/oscd-designer.js"}], "menu": [{"name": "Open File", "translations": {"de": "Datei öffnen"}, "icon": "folder_open", "active": true, "src": "https://openscd.github.io/oscd-open/oscd-open.js"}, {"name": "Save File", "translations": {"de": "Datei öffnen"}, "icon": "save", "active": true, "src": "https://openscd.github.io/oscd-save/oscd-save.js"}]}'></open-scd>
 
 <script type="module">
-import '@openscd/open-scd-core/open-scd.js';
+import 'https://openenergytools.github.io/scl-editor/open-scd-core/open-scd.js';
 
 const editor = document.querySelector('open-scd');
+
+const plugins = await fetch('./plugins.json')
+  .then((res) => res.json())
+
 const params = (new URL(document.location)).searchParams;
 for (const [name, value] of params) {
-editor.setAttribute(name, value);
+  editor.setAttribute(name, value);
 }
 
+editor.plugins = plugins;
+
 const sclText = await fetch('./sample.ssd').then(r => r.text())
-editor.docs['sample.ssd'] = new DOMParser().parseFromString(sclText, 'application/xml');
+editor.docs['sample.ssd'] =
+  new DOMParser().parseFromString(sclText, 'application/xml');
 editor.docName = 'sample.ssd';
 </script>
 
@@ -28,11 +35,31 @@ window.customElements.define = (name, cl, conf) => {
 
 <style>
 * {
+  --oscd-theme-primary: #2aa198;
+  --oscd-theme-secondary: #6c71c4;
+  --oscd-theme-error: #dc322f;
+
+  --oscd-theme-base03: #002b36;
+  --oscd-theme-base02: #073642;
+  --oscd-theme-base01: #586e75;
+  --oscd-theme-base00: hsl(196, 13%, 45%);
+  --oscd-theme-base0: #839496;
+  --oscd-theme-base1: #93a1a1;
+  --oscd-theme-base2: #eee8d5;
+  --oscd-theme-base3: #fdf6e3;
+
+  --oscd-theme-text-font: 'Roboto';
+  --oscd-theme-icon-font: "Material Symbols Outlined";
+
+  --primary: var(--oscd-theme-primary);
+  --secondary: var(--oscd-theme-secondary);
+
   margin: 0px;
   padding: 0px;
 }
 
-body {
-  background: white;
+abbr {
+  text-decoration: none;
+  border-bottom: none;
 }
 </style>

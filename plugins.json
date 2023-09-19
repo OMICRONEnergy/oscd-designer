@@ -1,0 +1,118 @@
+{
+  "menu": [
+    {
+      "name": "Open project",
+      "translation": {
+        "de": "Project öffnen"
+      },
+      "icon": "folder_open",
+      "active": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/oscd-open/oscd-open.js"
+    },
+    {
+      "name": "Save project",
+      "translation": {
+        "de": "Projekt speichern"
+      },
+      "icon": "save",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/oscd-save/oscd-save.js"
+    },
+    {
+      "name": "Import IED",
+      "translation": {
+        "de": "Projekt speichern"
+      },
+      "icon": "snippet_folder",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-import-ied/scl-import-ied.js"
+    },
+    {
+      "name": "Validating",
+      "translation": {
+        "de": "Validieren"
+      },
+      "icon": "rule_folder",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-validating/scl-validating.js"
+    },
+    {
+      "name": "Wiazrding",
+      "translation": {
+        "de": "Wizarding"
+      },
+      "icon": "edit",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-wizarding/scl-wizarding.js"
+    }
+  ],
+  "editor": [
+    {
+      "name": "Designer",
+      "translations": {
+        "de": "Designer"
+      },
+      "icon": "add_box",
+      "active": true,
+      "src": "/dist/oscd-designer.js"
+    },
+    {
+      "name": "Start",
+      "translations": {
+        "de": "Start"
+      },
+      "icon": "start",
+      "active": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-editor-landing/scl-editor-landing.js"
+    },
+    {
+      "name": "Publisher",
+      "icon": "publish",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/oscd-publisher/oscd-publisher.js"
+    },
+    {
+      "name": "Subscriber (Later Binding)",
+      "translations": {
+        "de": "Subscriber (Later Binding)"
+      },
+      "icon": "link",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/subscriber-later-binding/oscd-subscriber-later-binding.js"
+    },
+    {
+      "name": "Communication",
+      "icon": "settings_ethernet",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/oscd-communication/oscd-communication.js"
+    },
+    {
+      "name": "Substation",
+      "icon": "margin",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-substation-editor/scl-substation-editor.js"
+    },
+    {
+      "name": "Template Editor",
+      "icon": "copy_all",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-template/scl-template.js"
+    },
+    {
+      "name": "Template Generator",
+      "icon": "copy_all",
+      "active": true,
+      "requireDoc": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/oscd-template-generator/oscd-template-generator.js"
+    }
+  ]
+}

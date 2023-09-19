@@ -104,7 +104,6 @@ export class SLDEditor extends LitElement {
         <mwc-icon-button
           icon="settings_overscan"
           label="Resize Substation"
-          style="position: relative; top: -10px;"
           @click=${() => this.resizeSubstationUI.show()}
         ></mwc-icon-button>
       </h2>
@@ -155,6 +154,12 @@ export class SLDEditor extends LitElement {
     h2 {
       font-family: Roboto;
       font-weight: 400;
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    mwc-icon-button {
+      --mdc-icon-button-size: 28px;
+      --mdc-icon-size: 24px;
     }
   `;
 }

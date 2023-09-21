@@ -30,19 +30,9 @@
       "src": "https://openenergytools.github.io/scl-editor/plugins/scl-import-ied/scl-import-ied.js"
     },
     {
-      "name": "Validating",
+      "name": "Wizards",
       "translation": {
-        "de": "Validieren"
-      },
-      "icon": "rule_folder",
-      "active": true,
-      "requireDoc": true,
-      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-validating/scl-validating.js"
-    },
-    {
-      "name": "Wiazrding",
-      "translation": {
-        "de": "Wizarding"
+        "de": "Wizards"
       },
       "icon": "edit",
       "active": true,

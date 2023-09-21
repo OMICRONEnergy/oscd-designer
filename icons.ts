@@ -1,5 +1,13 @@
 import { svg } from 'lit';
 
+export const resizePath = svg`<path
+  fill="black"
+  opacity="0.83"
+  d="M120 616v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 640v-80h80v80h-80Zm0-640v-80h80v80h-80Zm160 640v-80h80v80h-80Zm160 0v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160V296H600v-80h240v240h-80ZM120 936V696h80v160h160v80H120Z"
+/>`;
+
+export const movePath = svg`<path opacity="0.83" fill="black" d="M480 976 310 806l57-57 73 73V616l-205-1 73 73-58 58L80 576l169-169 57 57-72 72h206V330l-73 73-57-57 170-170 170 170-57 57-73-73v206l205 1-73-73 58-58 170 170-170 170-57-57 73-73H520l-1 205 73-73 58 58-170 170Z"/>`;
+
 export const voltageLevelIcon = svg`<svg
   id="VoltageLevel"
   viewBox="0 0 25 25"

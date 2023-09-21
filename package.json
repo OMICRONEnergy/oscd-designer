@@ -44,6 +44,7 @@
     "@web/rollup-plugin-copy": "^0.4.0",
     "@web/rollup-plugin-import-meta-assets": "^1.0.7",
     "@web/test-runner": "^0.14.0",
+    "@web/test-runner-commands": "^0.8.1",
     "babel-plugin-template-html-minifier": "^4.1.0",
     "concurrently": "^5.3.0",
     "deepmerge": "^4.2.2",
@@ -75,7 +76,8 @@
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
-          "argsIgnorePattern": "_.*"
+          "argsIgnorePattern": "_.*",
+          "varsIgnorePattern": "_.*"
         }
       ],
       "import/no-unresolved": "off",

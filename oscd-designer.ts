@@ -12,10 +12,76 @@ import '@material/mwc-icon';
 import './sld-editor.js';
 
 import type { PlaceEvent, ResizeEvent, StartEvent } from './sld-editor.js';
-import { voltageLevelIcon } from './icons.js';
+import { bayIcon, voltageLevelIcon } from './icons.js';
+import { attributes } from './util.js';
 
 const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
 const xmlnsNS = 'http://www.w3.org/2000/xmlns/';
+
+function uniqueName(element: Element, parent: Element): string {
+  const children = Array.from(parent.children);
+  const oldName = element.getAttribute('name');
+  if (
+    oldName &&
+    !children.find(child => child.getAttribute('name') === oldName)
+  )
+    return oldName;
+
+  const baseName =
+    element.getAttribute('name')?.replace(/[0-9]*$/, '') ??
+    element.tagName.charAt(0);
+  let index = 1;
+  function hasName(child: Element) {
+    return child.getAttribute('name') === baseName + index.toString();
+  }
+  while (children.find(hasName)) index += 1;
+
+  return baseName + index.toString();
+}
+
+function updateConnectivityNodes(
+  element: Element,
+  parent: Element,
+  name: string
+) {
+  const updates = [] as Edit[];
+
+  const cNodes = Array.from(element.getElementsByTagName('ConnectivityNode'));
+  const substationName = parent.closest('Substation')!.getAttribute('name');
+  let voltageLevelName = parent.closest('VoltageLevel')?.getAttribute('name');
+  if (element.tagName === 'VoltageLevel') voltageLevelName = name;
+
+  cNodes.forEach(cNode => {
+    const cNodeName = cNode.getAttribute('name');
+    let bayName = cNode.parentElement!.getAttribute('name');
+    if (element.tagName === 'Bay') bayName = name;
+
+    if (cNodeName && bayName) {
+      const pathName = `${substationName}/${voltageLevelName}/${bayName}/${cNodeName}`;
+      updates.push({
+        element: cNode,
+        attributes: {
+          pathName,
+        },
+      });
+    }
+  });
+  return updates;
+}
+
+function reparentElement(element: Element, parent: Element): Edit[] {
+  const edits: Edit[] = [];
+  edits.push({
+    node: element,
+    parent,
+    reference: getReference(parent, element.tagName),
+  });
+  const newName = uniqueName(element, parent);
+  if (newName !== element.getAttribute('name'))
+    edits.push({ element, attributes: { name: newName } });
+  edits.push(...updateConnectivityNodes(element, parent, newName));
+  return edits;
+}
 
 export default class Designer extends LitElement {
   @property()
@@ -75,13 +141,55 @@ export default class Designer extends LitElement {
   }
 
   updated(changedProperties: Map<string, any>) {
-    if (changedProperties.has('doc'))
-      ['Substation', 'VoltageLevel', 'Bay'].forEach(tag => {
-        this.templateElements[tag] = this.doc.createElementNS(
-          this.doc.documentElement.namespaceURI,
-          tag
-        );
+    if (!changedProperties.has('doc')) return;
+    ['Substation', 'VoltageLevel', 'Bay'].forEach(tag => {
+      this.templateElements[tag] = this.doc.createElementNS(
+        this.doc.documentElement.namespaceURI,
+        tag
+      );
+    });
+  }
+
+  placeElement(element: Element, parent: Element, x: number, y: number) {
+    const edits: Edit[] = [];
+    if (element.parentElement !== parent) {
+      edits.push(...reparentElement(element, parent));
+    }
+    edits.push({
+      element,
+      attributes: {
+        x: { namespaceURI: sldNs, value: x.toString() },
+        y: { namespaceURI: sldNs, value: y.toString() },
+      },
+    });
+
+    const {
+      pos: [oldX, oldY],
+    } = attributes(element);
+
+    const dx = x - oldX;
+    const dy = y - oldY;
+
+    Array.from(element.querySelectorAll('Bay')).forEach(descendant => {
+      const {
+        pos: [descX, descY],
+      } = attributes(descendant);
+      edits.push({
+        element: descendant,
+        attributes: {
+          x: { namespaceURI: sldNs, value: (descX + dx).toString() },
+          y: { namespaceURI: sldNs, value: (descY + dy).toString() },
+        },
       });
+    });
+
+    this.dispatchEvent(newEditEvent(edits));
+    if (
+      !this.placing!.hasAttributeNS(sldNs, 'w') &&
+      !this.placing!.hasAttributeNS(sldNs, 'h')
+    )
+      this.startResizing(this.placing);
+    else this.reset();
   }
 
   render() {
@@ -116,30 +224,7 @@ export default class Designer extends LitElement {
             }}
             @oscd-sld-place=${({
               detail: { element, parent, x, y },
-            }: PlaceEvent) => {
-              const edits: Edit[] = [];
-              if (element.parentElement !== parent) {
-                edits.push({
-                  node: element,
-                  parent,
-                  reference: getReference(parent, element.tagName),
-                });
-              }
-              edits.push({
-                element,
-                attributes: {
-                  x: { namespaceURI: sldNs, value: x.toString() },
-                  y: { namespaceURI: sldNs, value: y.toString() },
-                },
-              });
-              this.dispatchEvent(newEditEvent(edits));
-              if (
-                !this.placing!.hasAttributeNS(sldNs, 'w') &&
-                !this.placing!.hasAttributeNS(sldNs, 'h')
-              )
-                this.startResizing(this.placing);
-              else this.reset();
-            }}
+            }: PlaceEvent) => this.placeElement(element, parent, x, y)}
           ></sld-editor>`
       )}
       <nav>
@@ -155,6 +240,20 @@ export default class Designer extends LitElement {
           @click=${() => this.zoomOut()}
         >
         </mwc-icon-button>
+        ${Array.from(this.doc.documentElement.children).find(c =>
+          c.querySelector(':scope > VoltageLevel')
+        )
+          ? html` <mwc-icon-button
+              label="Add Bay"
+              @click=${() => {
+                const element =
+                  this.templateElements.Bay!.cloneNode() as Element;
+                this.startPlacing(element);
+              }}
+            >
+              ${bayIcon}
+            </mwc-icon-button>`
+          : nothing}
         ${Array.from(this.doc.documentElement.children).find(
           c => c.tagName === 'Substation'
         )
@@ -163,10 +262,6 @@ export default class Designer extends LitElement {
               @click=${() => {
                 const element =
                   this.templateElements.VoltageLevel!.cloneNode() as Element;
-                let index = 1;
-                while (this.doc.querySelector(`VoltageLevel[name="V${index}"]`))
-                  index += 1;
-                element.setAttribute('name', `V${index}`);
                 this.startPlacing(element);
               }}
             >

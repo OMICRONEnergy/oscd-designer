@@ -15,6 +15,7 @@ import type { PlaceEvent, ResizeEvent, StartEvent } from './sld-editor.js';
 import { voltageLevelIcon } from './icons.js';
 
 const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
+const xmlnsNS = 'http://www.w3.org/2000/xmlns/';
 
 export default class Designer extends LitElement {
   @property()
@@ -76,7 +77,10 @@ export default class Designer extends LitElement {
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('doc'))
       ['Substation', 'VoltageLevel', 'Bay'].forEach(tag => {
-        this.templateElements[tag] = this.doc.createElement(tag);
+        this.templateElements[tag] = this.doc.createElementNS(
+          this.doc.documentElement.namespaceURI,
+          tag
+        );
       });
   }
 
@@ -187,13 +191,16 @@ export default class Designer extends LitElement {
 
   insertSubstation() {
     const parent = this.doc.documentElement;
-    const node = this.doc.createElement('Substation');
+    const node = this.doc.createElementNS(
+      this.doc.documentElement.namespaceURI,
+      'Substation'
+    );
     const reference = getReference(parent, 'Substation');
     let index = 1;
     while (this.doc.querySelector(`:root > Substation[name="S${index}"]`))
       index += 1;
     node.setAttribute('name', `S${index}`);
-    node.setAttribute('xmlns:esld', sldNs);
+    node.setAttributeNS(xmlnsNS, 'xmlns:esld', sldNs);
     node.setAttributeNS(sldNs, 'esld:w', '50');
     node.setAttributeNS(sldNs, 'esld:h', '25');
     this.dispatchEvent(newEditEvent({ parent, node, reference }));

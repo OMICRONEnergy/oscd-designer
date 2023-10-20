@@ -183,6 +183,28 @@ describe('Designer', () => {
     );
   });
 
+  it('allows the user to abort placing an element', async () => {
+    expect(element.doc.querySelector('VoltageLevel')).to.not.exist;
+    element
+      .shadowRoot!.querySelector<Button>(
+        'mwc-icon-button[label="Add Substation"]'
+      )
+      ?.click();
+    await element.updateComplete;
+    element
+      .shadowRoot!.querySelector<Button>(
+        'mwc-icon-button[label="Add VoltageLevel"]'
+      )
+      ?.click();
+    await element.updateComplete;
+    expect(element)
+      .property('placing')
+      .to.have.property('tagName', 'VoltageLevel');
+    const event = new KeyboardEvent('keydown', { key: 'Escape' });
+    window.dispatchEvent(event);
+    expect(element).to.have.property('placing', undefined);
+  });
+
   it('gives new voltage levels unique names', async () => {
     element
       .shadowRoot!.querySelector<Button>(

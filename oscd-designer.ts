@@ -59,6 +59,20 @@ export default class Designer extends LitElement {
     this.resizing = undefined;
   }
 
+  handleKeydown = ({ key }: KeyboardEvent) => {
+    if (key === 'Escape') this.reset();
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('keydown', this.handleKeydown);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('keydown', this.handleKeydown);
+  }
+
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('doc'))
       ['Substation', 'VoltageLevel', 'Bay'].forEach(tag => {
@@ -160,6 +174,13 @@ export default class Designer extends LitElement {
           label="Add Substation"
           icon="margin"
         ></mwc-icon-button>
+        ${this.placing || this.resizing
+          ? html`<mwc-icon-button
+              icon="close"
+              label="Cancel action"
+              @click=${() => this.reset()}
+            ></mwc-icon-button>`
+          : nothing}
       </nav>
     </main>`;
   }

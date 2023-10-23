@@ -1,6 +1,6 @@
 // import { playwrightLauncher } from '@web/test-runner-playwright';
 
-const filteredLogs = ['in dev mode', 'mwc-textfield scheduled an update'];
+const filteredLogs = ['in dev mode', 'scheduled an update'];
 
 export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
   /** Test files to run */

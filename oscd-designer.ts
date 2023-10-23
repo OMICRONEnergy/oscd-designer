@@ -12,7 +12,7 @@ import '@material/mwc-icon';
 import './sld-editor.js';
 
 import type { PlaceEvent, ResizeEvent, StartEvent } from './sld-editor.js';
-import { bayIcon, voltageLevelIcon } from './icons.js';
+import { bayIcon, equipmentIcon, voltageLevelIcon } from './icons.js';
 import { attributes } from './util.js';
 
 const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
@@ -142,12 +142,14 @@ export default class Designer extends LitElement {
 
   updated(changedProperties: Map<string, any>) {
     if (!changedProperties.has('doc')) return;
-    ['Substation', 'VoltageLevel', 'Bay'].forEach(tag => {
-      this.templateElements[tag] = this.doc.createElementNS(
-        this.doc.documentElement.namespaceURI,
-        tag
-      );
-    });
+    ['Substation', 'VoltageLevel', 'Bay', 'ConductingEquipment'].forEach(
+      tag => {
+        this.templateElements[tag] = this.doc.createElementNS(
+          this.doc.documentElement.namespaceURI,
+          tag
+        );
+      }
+    );
   }
 
   placeElement(element: Element, parent: Element, x: number, y: number) {
@@ -170,21 +172,24 @@ export default class Designer extends LitElement {
     const dx = x - oldX;
     const dy = y - oldY;
 
-    Array.from(element.querySelectorAll('Bay')).forEach(descendant => {
-      const {
-        pos: [descX, descY],
-      } = attributes(descendant);
-      edits.push({
-        element: descendant,
-        attributes: {
-          x: { namespaceURI: sldNs, value: (descX + dx).toString() },
-          y: { namespaceURI: sldNs, value: (descY + dy).toString() },
-        },
-      });
-    });
+    Array.from(element.querySelectorAll('Bay, ConductingEquipment')).forEach(
+      descendant => {
+        const {
+          pos: [descX, descY],
+        } = attributes(descendant);
+        edits.push({
+          element: descendant,
+          attributes: {
+            x: { namespaceURI: sldNs, value: (descX + dx).toString() },
+            y: { namespaceURI: sldNs, value: (descY + dy).toString() },
+          },
+        });
+      }
+    );
 
     this.dispatchEvent(newEditEvent(edits));
     if (
+      ['Bay', 'VoltageLevel'].includes(this.placing!.tagName) &&
       !this.placing!.hasAttributeNS(sldNs, 'w') &&
       !this.placing!.hasAttributeNS(sldNs, 'h')
     )
@@ -228,6 +233,62 @@ export default class Designer extends LitElement {
           ></sld-editor>`
       )}
       <nav>
+        ${Array.from(this.doc.documentElement.children).find(c =>
+          c.querySelector(':scope > VoltageLevel > Bay')
+        )
+          ? ['CTR', 'VTR', 'DIS', 'CBR', 'IFL'].map(
+              eqType => html`<mwc-fab
+                mini
+                label="Add ${eqType}"
+                @click=${() => {
+                  const element =
+                    this.templateElements.ConductingEquipment!.cloneNode() as Element;
+                  element.setAttribute('type', eqType);
+                  element.setAttribute('name', `${eqType}1`);
+                  this.startPlacing(element);
+                }}
+              >
+                ${equipmentIcon(eqType)}
+              </mwc-fab>`
+            )
+          : nothing}
+        ${Array.from(this.doc.documentElement.children).find(c =>
+          c.querySelector(':scope > VoltageLevel')
+        )
+          ? html`<mwc-fab
+              mini
+              label="Add Bay"
+              @click=${() => {
+                const element =
+                  this.templateElements.Bay!.cloneNode() as Element;
+                this.startPlacing(element);
+              }}
+            >
+              ${bayIcon}
+            </mwc-fab>`
+          : nothing}
+        ${Array.from(this.doc.documentElement.children).find(
+          c => c.tagName === 'Substation'
+        )
+          ? html`<mwc-fab
+              mini
+              label="Add VoltageLevel"
+              @click=${() => {
+                const element =
+                  this.templateElements.VoltageLevel!.cloneNode() as Element;
+                this.startPlacing(element);
+              }}
+            >
+              ${voltageLevelIcon}
+            </mwc-fab>`
+          : nothing}
+        <mwc-fab
+          mini
+          icon="margin"
+          @click=${() => this.insertSubstation()}
+          label="Add Substation"
+        >
+        </mwc-fab>
         <mwc-icon-button
           icon="zoom_in"
           label="Zoom In"
@@ -240,45 +301,13 @@ export default class Designer extends LitElement {
           @click=${() => this.zoomOut()}
         >
         </mwc-icon-button>
-        ${Array.from(this.doc.documentElement.children).find(c =>
-          c.querySelector(':scope > VoltageLevel')
-        )
-          ? html` <mwc-icon-button
-              label="Add Bay"
-              @click=${() => {
-                const element =
-                  this.templateElements.Bay!.cloneNode() as Element;
-                this.startPlacing(element);
-              }}
-            >
-              ${bayIcon}
-            </mwc-icon-button>`
-          : nothing}
-        ${Array.from(this.doc.documentElement.children).find(
-          c => c.tagName === 'Substation'
-        )
-          ? html` <mwc-icon-button
-              label="Add VoltageLevel"
-              @click=${() => {
-                const element =
-                  this.templateElements.VoltageLevel!.cloneNode() as Element;
-                this.startPlacing(element);
-              }}
-            >
-              ${voltageLevelIcon}
-            </mwc-icon-button>`
-          : nothing}
-        <mwc-icon-button
-          @click=${() => this.insertSubstation()}
-          label="Add Substation"
-          icon="margin"
-        ></mwc-icon-button>
         ${this.placing || this.resizing
           ? html`<mwc-icon-button
               icon="close"
               label="Cancel action"
               @click=${() => this.reset()}
-            ></mwc-icon-button>`
+            >
+            </mwc-icon-button>`
           : nothing}
       </nav>
     </main>`;

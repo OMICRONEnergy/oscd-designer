@@ -1,4 +1,4 @@
-import { svg } from 'lit';
+import { svg, TemplateResult } from 'lit';
 
 export const resizePath = svg`<path
   fill="black"
@@ -11,7 +11,8 @@ export const movePath = svg`<path opacity="0.83" fill="black" d="M480 976 310 80
 export const voltageLevelIcon = svg`<svg
   id="VoltageLevel"
   viewBox="0 0 25 25"
-  width="1" height="1"
+  width="24" height="24"
+  slot="icon"
 >
   <path
     d="M 4 4 L 12.5 21 L 21 4"
@@ -26,7 +27,8 @@ export const voltageLevelIcon = svg`<svg
 export const bayIcon = svg`<svg
   id="Bay"
   viewBox="0 0 25 25"
-  width="1" height="1"
+  width="24" height="24"
+  slot="icon"
 >
   <path
     d="M 3 2 L 22 2"
@@ -94,11 +96,8 @@ export const bayIcon = svg`<svg
   />
 </svg>`;
 
-export const inFeedLineIcon = svg`<symbol
-  id="IFL"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
+const equipmentPaths: Partial<Record<string, TemplateResult<2>>> = {
+  IFL: svg`
   <path
     d="M 12.5 0 L 12.5 4"
     fill="transparent"
@@ -121,13 +120,8 @@ export const inFeedLineIcon = svg`<symbol
     stroke-linejoin="round"
     stroke-linecap="round"
   />
-</symbol>`;
-
-export const disconnectorIcon = svg`<symbol
-  id="DIS"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
+`,
+  DIS: svg`
   <path
     d="M 12.5 0 L 12.5 4"
     fill="transparent"
@@ -156,13 +150,8 @@ export const disconnectorIcon = svg`<symbol
     stroke-width="1.5"
     stroke-linecap="round"
   />
-</symbol>`;
-
-export const circuitBreakerIcon = svg`<symbol
-  id="CBR"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
+`,
+  CBR: svg`
   <line
     x1="12.5"
     y1="0"
@@ -208,13 +197,8 @@ export const circuitBreakerIcon = svg`<symbol
     stroke-width="1.5"
     stroke-linecap="round"
   />
-</symbol>`;
-
-export const currentTransformerIcon = svg`<symbol
-  id="CTR"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
+`,
+  CTR: svg`
   <line
     x1="12.5"
     y1="0"
@@ -233,13 +217,8 @@ export const currentTransformerIcon = svg`<symbol
     stroke-width="1.5"
     stroke-linecap="round"
   />
-</symbol>`;
-
-export const voltageTransformerIcon = svg`<symbol
-  id="VTR"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
+`,
+  VTR: svg`
   <line
     x1="12.5"
     y1="0"
@@ -285,83 +264,10 @@ export const voltageTransformerIcon = svg`<symbol
     stroke-width="1.5"
     stroke-linecap="round"
   />
-</symbol>`;
+`,
+};
 
-export const earthSwitchIcon = svg`<symbol
-  id="ERS"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
-  <line
-    x1="12.5"
-    x2="12.5"
-    y1="19.2"
-    y2="16.2"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-width="1.5"
-  />
-  <line
-    x1="12.5"
-    x2="12.5"
-    y1="1.25"
-    y2="6.25"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-width="1.5"
-  />
-  <line
-    x1="12.5"
-    x2="8"
-    y1="16.2"
-    y2="7.25"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-width="1.5"
-  />
-  <line
-    x1="13.5"
-    x2="11.5"
-    y1="6.25"
-    y2="6.25"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-width="1.5"
-  />
-  <line
-    x1="17"
-    x2="8"
-    y1="19.2"
-    y2="19.2"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-width="1.5"
-  />
-  <line
-    x1="15.5"
-    x2="9.5"
-    y1="21.4"
-    y2="21.4"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-width="1.5"
-  />
-  <line
-    x1="14.5"
-    x2="10.5"
-    y1="23.5"
-    y2="23.5"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-width="1.5"
-  />
-</symbol>`;
-
-export const generalConductingEquipmentIcon = svg`<symbol
-  id="ConductingEquipment"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
+const defaultEquipmentPath = svg`
   <circle
     cx="12.5"
     cy="12.5"
@@ -410,9 +316,46 @@ export const generalConductingEquipmentIcon = svg`<symbol
     stroke-linejoin="round"
     stroke-linecap="round"
   />
-</symbol>`;
+`;
 
-export const connectivityNodeIcon = svg`<marker
+export function equipmentPath(equipmentType: string): TemplateResult<2> {
+  if (equipmentType in equipmentPaths) return equipmentPaths[equipmentType]!;
+  return defaultEquipmentPath;
+}
+
+export function equipmentGraphic(equipmentType: string): TemplateResult<2> {
+  return svg`<svg
+  id="${equipmentType}"
+  viewBox="0 0 25 25"
+  width="24" height="24"
+  slot="graphic"
+>
+${equipmentPath(equipmentType)}
+</svg>`;
+}
+
+export function equipmentIcon(equipmentType: string): TemplateResult<2> {
+  return svg`<svg
+  id="${equipmentType}"
+  viewBox="0 0 25 25"
+  width="24" height="24"
+  slot="icon"
+>
+${equipmentPath(equipmentType)}
+</svg>`;
+}
+
+function equipmentSymbol(equipmentType: string): TemplateResult<2> {
+  return svg`<symbol
+  id="${equipmentType}"
+  viewBox="0 0 25 25"
+  width="1" height="1"
+>
+${equipmentPath(equipmentType)}
+</symbol>`;
+}
+
+export const connectivityNodeMarker = svg`<marker
   markerWidth="3" markerHeight="3"
   refX="12.5" refY="12.5"
   viewBox="0 0 25 25"
@@ -426,7 +369,7 @@ export const connectivityNodeIcon = svg`<marker
   />
 </marker>`;
 
-export const groundedIcon = svg`<marker
+export const groundedMarker = svg`<marker
   markerWidth="20" markerHeight="20"
   refX="12.5" refY="12.5"
   viewBox="0 0 25 25"
@@ -462,7 +405,7 @@ export const groundedIcon = svg`<marker
   />
 </marker>`;
 
-export const powerTransformerTwoWindingIcon = svg`<symbol
+export const powerTransformerTwoWindingSymbol = svg`<symbol
   id="PTR"
   viewBox="0 0 25 25"
   width="1" height="1"
@@ -510,13 +453,8 @@ export const symbols = svg`
   <pattern id="grid" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse" width="1" height="1" viewBox="0 0 1 1">
   <rect x="0" y="0" width="1" height="1" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
   </pattern>
-${disconnectorIcon}
-${circuitBreakerIcon}
-${voltageTransformerIcon}
-${currentTransformerIcon}
-${inFeedLineIcon}
-${generalConductingEquipmentIcon}
-${connectivityNodeIcon}
-${groundedIcon}
+  ${Object.keys(equipmentPaths).map(eqType => equipmentSymbol(eqType))}
+${connectivityNodeMarker}
+${groundedMarker}
   </defs>
 `;

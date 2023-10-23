@@ -8,8 +8,19 @@ import { EditEvent, handleEdit } from '@openscd/open-scd-core';
 
 import { IconButton } from '@material/mwc-icon-button';
 import { resetMouse, sendMouse } from '@web/test-runner-commands';
+import { identity } from '@openscd/oscd-scl';
+import { ListItem } from '@material/mwc-list/mwc-list-item.js';
 import Designer from './oscd-designer.js';
 import { SLDEditor } from './sld-editor.js';
+
+function middleOf(element: Element): [number, number] {
+  const { x, y, width, height } = element.getBoundingClientRect();
+
+  return [
+    Math.floor(x + window.pageXOffset + width / 2),
+    Math.floor(y + window.pageYOffset + height / 2),
+  ];
+}
 
 customElements.define('oscd-designer', Designer);
 
@@ -39,6 +50,22 @@ export const bayDocString = `<?xml version="1.0" encoding="UTF-8"?>
     </VoltageLevel>
     <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="13" esld:h="13">
       <Bay name="B1" esld:x="20" esld:y="11" esld:w="1" esld:h="1"/>
+    </VoltageLevel>
+  </Substation>
+</SCL>`;
+
+export const equipmentDocString = `<?xml version="1.0" encoding="UTF-8"?>
+<SCL version="2007" revision="B" xmlns="http://www.iec.ch/61850/2003/SCL">
+  <Substation xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0" name="S1" esld:w="50" esld:h="25">
+    <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="13" esld:h="13">
+      <Bay name="B1" esld:x="2" esld:y="2" esld:w="3" esld:h="3">
+      </Bay>
+    </VoltageLevel>
+    <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="23" esld:h="23">
+      <Bay name="B1" esld:x="20" esld:y="11" esld:w="6" esld:h="6">
+        <ConductingEquipment type="CBR" name="CBR1" esld:x="26" esld:y="14"/>
+        <ConductingEquipment type="BAT" name="BAT1" esld:x="26" esld:y="14"/>
+      </Bay>
     </VoltageLevel>
   </Substation>
 </SCL>`;
@@ -93,23 +120,17 @@ describe('Designer', () => {
   it('adds a substation on add button click', async () => {
     expect(element.doc.querySelector('Substation')).to.not.exist;
     element
-      .shadowRoot!.querySelector<Button>(
-        'mwc-icon-button[label="Add Substation"]'
-      )
+      .shadowRoot!.querySelector<Button>('[label="Add Substation"]')
       ?.click();
     expect(element.doc.querySelector('Substation')).to.exist;
   });
 
   it('gives new substations unique names', async () => {
     element
-      .shadowRoot!.querySelector<Button>(
-        'mwc-icon-button[label="Add Substation"]'
-      )
+      .shadowRoot!.querySelector<Button>('[label="Add Substation"]')
       ?.click();
     element
-      .shadowRoot!.querySelector<Button>(
-        'mwc-icon-button[label="Add Substation"]'
-      )
+      .shadowRoot!.querySelector<Button>('[label="Add Substation"]')
       ?.click();
     const [name1, name2] = Array.from(
       element.doc.querySelectorAll('Substation')
@@ -119,26 +140,20 @@ describe('Designer', () => {
 
   it('zooms in on zoom in button click', async () => {
     const initial = element.gridSize;
-    element
-      .shadowRoot!.querySelector<IconButton>('mwc-icon-button[icon="zoom_in"]')
-      ?.click();
+    element.shadowRoot!.querySelector<IconButton>('[icon="zoom_in"]')?.click();
     expect(element.gridSize).to.be.greaterThan(initial);
   });
 
   it('zooms out on zoom out button click', async () => {
     const initial = element.gridSize;
-    element
-      .shadowRoot!.querySelector<IconButton>('mwc-icon-button[icon="zoom_out"]')
-      ?.click();
+    element.shadowRoot!.querySelector<IconButton>('[icon="zoom_out"]')?.click();
     expect(element.gridSize).to.be.lessThan(initial);
   });
 
   it('does not zoom out past a positive minimum value', async () => {
     for (let i = 0; i < 20; i += 1)
       element
-        .shadowRoot!.querySelector<IconButton>(
-          'mwc-icon-button[icon="zoom_out"]'
-        )
+        .shadowRoot!.querySelector<IconButton>('[icon="zoom_out"]')
         ?.click();
     expect(element.gridSize).to.be.greaterThan(0);
   });
@@ -146,9 +161,7 @@ describe('Designer', () => {
   describe('given a substation', () => {
     beforeEach(async () => {
       element
-        .shadowRoot!.querySelector<Button>(
-          'mwc-icon-button[label="Add Substation"]'
-        )
+        .shadowRoot!.querySelector<Button>('[label="Add Substation"]')
         ?.click();
       await element.updateComplete;
     });
@@ -176,9 +189,7 @@ describe('Designer', () => {
 
     it('allows placing a new voltage level', async () => {
       element
-        .shadowRoot!.querySelector<Button>(
-          'mwc-icon-button[label="Add VoltageLevel"]'
-        )
+        .shadowRoot!.querySelector<Button>('[label="Add VoltageLevel"]')
         ?.click();
       expect(element)
         .property('placing')
@@ -211,16 +222,12 @@ describe('Designer', () => {
 
     it('gives new voltage levels unique names', async () => {
       element
-        .shadowRoot!.querySelector<Button>(
-          'mwc-icon-button[label="Add VoltageLevel"]'
-        )
+        .shadowRoot!.querySelector<Button>('[label="Add VoltageLevel"]')
         ?.click();
       await sendMouse({ type: 'click', position: [200, 200] });
       await sendMouse({ type: 'click', position: [300, 300] });
       element
-        .shadowRoot!.querySelector<Button>(
-          'mwc-icon-button[label="Add VoltageLevel"]'
-        )
+        .shadowRoot!.querySelector<Button>('[label="Add VoltageLevel"]')
         ?.click();
       await sendMouse({ type: 'click', position: [350, 350] });
       await sendMouse({ type: 'click', position: [450, 450] });
@@ -234,9 +241,7 @@ describe('Designer', () => {
 
     it('allows the user to abort placing an element', async () => {
       element
-        .shadowRoot!.querySelector<Button>(
-          'mwc-icon-button[label="Add VoltageLevel"]'
-        )
+        .shadowRoot!.querySelector<Button>('[label="Add VoltageLevel"]')
         ?.click();
       expect(element)
         .property('placing')
@@ -276,7 +281,7 @@ describe('Designer', () => {
           element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
         const moveHandle =
           sldEditor.shadowRoot!.querySelectorAll<SVGElement>('a.handle')[1];
-        moveHandle.dispatchEvent(new MouseEvent('click'));
+        moveHandle.dispatchEvent(new PointerEvent('click'));
         expect(element)
           .property('resizing')
           .to.exist.and.to.have.property('tagName', 'VoltageLevel');
@@ -293,7 +298,7 @@ describe('Designer', () => {
           element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
         const moveHandle =
           sldEditor.shadowRoot!.querySelector<SVGElement>('a.handle')!;
-        moveHandle.dispatchEvent(new MouseEvent('click'));
+        moveHandle.dispatchEvent(new PointerEvent('click'));
         expect(element)
           .property('placing')
           .to.exist.and.to.have.property('tagName', 'VoltageLevel');
@@ -310,7 +315,7 @@ describe('Designer', () => {
           element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
         const moveHandle =
           sldEditor.shadowRoot!.querySelector<SVGElement>('a.handle')!;
-        moveHandle.dispatchEvent(new MouseEvent('click'));
+        moveHandle.dispatchEvent(new PointerEvent('click'));
         expect(element)
           .property('placing')
           .to.exist.and.to.have.property('tagName', 'VoltageLevel');
@@ -323,9 +328,7 @@ describe('Designer', () => {
       });
 
       it('allows placing a new bay', async () => {
-        element
-          .shadowRoot!.querySelector<Button>('mwc-icon-button[label="Add Bay"]')
-          ?.click();
+        element.shadowRoot!.querySelector<Button>('[label="Add Bay"]')?.click();
         expect(element).property('placing').to.have.property('tagName', 'Bay');
         const sldEditor =
           element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -359,7 +362,7 @@ describe('Designer', () => {
             sldEditor.shadowRoot!.querySelectorAll<SVGElement>(
               'g.bay a.handle'
             )[1];
-          moveHandle.dispatchEvent(new MouseEvent('click'));
+          moveHandle.dispatchEvent(new PointerEvent('click'));
           expect(element)
             .property('resizing')
             .to.exist.and.to.have.property('tagName', 'Bay');
@@ -378,7 +381,7 @@ describe('Designer', () => {
             sldEditor.shadowRoot!.querySelectorAll<SVGElement>(
               'g.bay a.handle'
             )[1];
-          moveHandle.dispatchEvent(new MouseEvent('click'));
+          moveHandle.dispatchEvent(new PointerEvent('click'));
           expect(element)
             .property('resizing')
             .to.exist.and.to.have.property('tagName', 'Bay');
@@ -393,9 +396,10 @@ describe('Designer', () => {
         it('forbids undersizing voltage levels containing bays', async () => {
           const sldEditor =
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
-          const moveHandle =
-            sldEditor.shadowRoot!.querySelectorAll<SVGElement>('a.handle')[1];
-          moveHandle.dispatchEvent(new MouseEvent('click'));
+          const moveHandle = sldEditor.shadowRoot!.querySelectorAll<SVGElement>(
+            'g.voltagelevel > a.handle'
+          )[1];
+          moveHandle.dispatchEvent(new PointerEvent('click'));
           expect(element)
             .property('resizing')
             .to.exist.and.to.have.property('tagName', 'VoltageLevel');
@@ -412,7 +416,7 @@ describe('Designer', () => {
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           sldEditor
             .shadowRoot!.querySelector<SVGElement>('g.bay a.handle')!
-            .dispatchEvent(new MouseEvent('click'));
+            .dispatchEvent(new PointerEvent('click'));
           expect(element)
             .property('placing')
             .to.exist.and.to.have.property('tagName', 'Bay');
@@ -427,7 +431,7 @@ describe('Designer', () => {
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           sldEditor
             .shadowRoot!.querySelector<SVGElement>('g.bay a.handle')!
-            .dispatchEvent(new MouseEvent('click'));
+            .dispatchEvent(new PointerEvent('click'));
           const bay = element.placing!;
           expect(bay.parentElement).to.have.attribute('name', 'V1');
           expect(bay).to.have.attribute('name', 'B1');
@@ -439,7 +443,7 @@ describe('Designer', () => {
           expect(bay).to.have.attribute('name', 'B2');
           sldEditor
             .shadowRoot!.querySelector<SVGElement>('g.bay a.handle')!
-            .dispatchEvent(new MouseEvent('click'));
+            .dispatchEvent(new PointerEvent('click'));
           await sendMouse({ type: 'click', position: [200, 200] });
           expect(bay).to.have.attribute('esld:x', '5');
           expect(bay).to.have.attribute('esld:y', '3');
@@ -452,7 +456,7 @@ describe('Designer', () => {
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           sldEditor
             .shadowRoot!.querySelector<SVGElement>('g.bay a.handle')!
-            .dispatchEvent(new MouseEvent('click'));
+            .dispatchEvent(new PointerEvent('click'));
           const bay = element.placing!;
           const cNode = bay.querySelector('ConnectivityNode')!;
           expect(cNode).to.have.attribute('pathName', 'S1/V1/B1/L1');
@@ -466,13 +470,130 @@ describe('Designer', () => {
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           sldEditor
             .shadowRoot!.querySelector<SVGElement>('g.voltagelevel a.handle')!
-            .dispatchEvent(new MouseEvent('click'));
+            .dispatchEvent(new PointerEvent('click'));
           const bay = element.placing!.querySelector('Bay')!;
           expect(bay).to.have.attribute('esld:x', '2');
           expect(bay).to.have.attribute('esld:y', '2');
           await sendMouse({ type: 'click', position: [100, 100] });
           expect(bay).to.have.attribute('esld:x', '3');
           expect(bay).to.have.attribute('esld:y', '1');
+        });
+
+        it('allows placing new conducting equipment', async () => {
+          element
+            .shadowRoot!.querySelector<Button>('[label="Add CBR"]')
+            ?.click();
+          expect(element)
+            .property('placing')
+            .to.have.property('tagName', 'ConductingEquipment');
+          await sendMouse({ type: 'click', position: [150, 180] });
+          expect(element).to.have.property('placing', undefined);
+          expect(element).to.have.property('resizing', undefined);
+          const equipment = element.doc.querySelector('ConductingEquipment');
+          expect(equipment).to.exist;
+          expect(equipment).to.have.attribute('x', '3');
+          expect(equipment).to.have.attribute('y', '3');
+        });
+
+        describe('with conducting equipment', () => {
+          beforeEach(async () => {
+            const doc = new DOMParser().parseFromString(
+              equipmentDocString,
+              'application/xml'
+            );
+            element.doc = doc;
+            await element.updateComplete;
+          });
+
+          it('moves equipment on left mouse button click', async () => {
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+              .shadowRoot!.getElementById(<string>id)!
+              .querySelector('rect')!;
+            expect(equipment).to.not.have.attribute('esld:rot');
+            eqClickTarget.dispatchEvent(new PointerEvent('click'));
+            await sendMouse({ type: 'click', position: [150, 180] });
+            expect(equipment).to.have.attribute('esld:x', '3');
+            expect(equipment).to.have.attribute('esld:y', '3');
+          });
+
+          it('rotates equipment on middle mouse button click', () => {
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+              .shadowRoot!.getElementById(<string>id)!
+              .querySelector('rect')!;
+            expect(equipment).to.not.have.attribute('esld:rot');
+            eqClickTarget.dispatchEvent(
+              new PointerEvent('auxclick', { button: 1 })
+            );
+            expect(equipment).to.have.attribute('esld:rot', '1');
+          });
+
+          it('displays a menu on equipment right click', async () => {
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+              .shadowRoot!.getElementById(<string>id)!
+              .querySelector('rect')!;
+            eqClickTarget.dispatchEvent(
+              new PointerEvent('contextmenu', { clientX: 750, clientY: 550 })
+            );
+            await element.updateComplete;
+            expect(sldEditor)
+              .property('menu')
+              .to.exist.and.to.have.property('element', equipment);
+          });
+
+          it('flips the equipment on first menu item select', async () => {
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            let eqClickTarget = sldEditor
+              .shadowRoot!.getElementById(<string>id)!
+              .querySelector('rect')!;
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            let item = sldEditor.shadowRoot!.querySelector('mwc-list-item')!;
+            expect(equipment).to.not.have.attribute('esld:flip');
+            await sendMouse({ type: 'click', position: middleOf(item) });
+            expect(equipment).to.have.attribute('esld:flip', 'true');
+            eqClickTarget = sldEditor
+              .shadowRoot!.getElementById(<string>id)!
+              .querySelector('rect')!;
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            item = sldEditor.shadowRoot!.querySelector('mwc-list-item')!;
+            await sendMouse({ type: 'click', position: middleOf(item) });
+            expect(equipment).to.not.have.attribute('esld:flip');
+          });
+
+          it('rotates equipment on second menu item select', async () => {
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+              .shadowRoot!.getElementById(<string>id)!
+              .querySelector('rect')!;
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            const item = sldEditor.shadowRoot!.querySelector<ListItem>(
+              'mwc-list-item:nth-of-type(2)'
+            )!;
+            expect(equipment).to.not.have.attribute('esld:rot');
+            item.selected = true;
+            await element.updateComplete;
+            expect(equipment).to.have.attribute('esld:rot', '1');
+          });
         });
       });
     });

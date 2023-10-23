@@ -9,6 +9,7 @@
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "test": "npm run compile && wtr --coverage",
+    "test:update": "npm run compile && wtr --coverage --update-snapshots",
     "test:watch": "npm run compile && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch --coverage\"",
     "compile": "rimraf dist && tsc",
     "build": "npm run compile && rollup -c rollup.config.js && npm run analyze -- --exclude dist",
@@ -20,6 +21,7 @@
   "dependencies": {
     "@material/mwc-button": "^0.27.0",
     "@material/mwc-dialog": "^0.27.0",
+    "@material/mwc-fab": "^0.27.0",
     "@material/mwc-icon": "^0.27.0",
     "@material/mwc-icon-button": "^0.27.0",
     "@material/mwc-list": "^0.27.0",

@@ -51,15 +51,6 @@
       "src": "/dist/oscd-designer.js"
     },
     {
-      "name": "Start",
-      "translations": {
-        "de": "Start"
-      },
-      "icon": "start",
-      "active": true,
-      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-editor-landing/scl-editor-landing.js"
-    },
-    {
       "name": "Publisher",
       "icon": "publish",
       "active": true,
@@ -103,6 +94,15 @@
       "active": true,
       "requireDoc": true,
       "src": "https://openenergytools.github.io/scl-editor/plugins/oscd-template-generator/oscd-template-generator.js"
+    },
+    {
+      "name": "Start",
+      "translations": {
+        "de": "Start"
+      },
+      "icon": "start",
+      "active": true,
+      "src": "https://openenergytools.github.io/scl-editor/plugins/scl-editor-landing/scl-editor-landing.js"
     }
   ]
 }

@@ -16,10 +16,9 @@
 /.tmp/
 
 # build
-/_site/
-/dist/
-/out-tsc/
 /.rollup.cache/
+/dist/*
+!/dist/__snapshots__/
 
 storybook-static
 custom-elements.json

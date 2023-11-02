@@ -11,7 +11,7 @@
     "test": "npm run compile && wtr --coverage",
     "test:update": "npm run compile && wtr --coverage --update-snapshots",
     "test:watch": "npm run compile && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch --coverage\"",
-    "compile": "rimraf dist && tsc",
+    "compile": "rimraf --glob 'dist/!(__snapshots__)' && tsc",
     "build": "npm run compile && rollup -c rollup.config.js && npm run analyze -- --exclude dist",
     "start:build": "web-dev-server --root-dir dist --app-index index.html --open",
     "analyze": "cem analyze --litelement",

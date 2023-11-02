@@ -6,6 +6,41 @@ export const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
 export const xmlnsNs = 'http://www.w3.org/2000/xmlns/';
 export const svgNs = 'http://www.w3.org/2000/svg';
 
+export type Point = [number, number];
+export type Attrs = {
+  pos: Point;
+  dim: Point;
+  flip: boolean;
+  rot: 0 | 1 | 2 | 3;
+  bus: boolean;
+};
+
+export function xmlBoolean(value?: string | null) {
+  return ['true', '1'].includes(value?.trim() ?? 'false');
+}
+
+export function isBusBar(element: Element) {
+  return (
+    element.tagName === 'Bay' &&
+    xmlBoolean(element.querySelector('Section[bus]')?.getAttribute('bus'))
+  );
+}
+
+export function attributes(element: Element): Attrs {
+  const [x, y, w, h, rotVal] = ['x', 'y', 'w', 'h', 'rot'].map(name =>
+    parseFloat(element.getAttributeNS(sldNs, name) ?? '0')
+  );
+  const pos = [x, y].map(d => Math.max(0, d)) as Point;
+  const dim = [w, h].map(d => Math.max(1, d)) as Point;
+
+  const bus = xmlBoolean(element.getAttribute('bus'));
+  const flip = xmlBoolean(element.getAttributeNS(sldNs, 'flip'));
+
+  const rot = (((rotVal % 4) + 4) % 4) as 0 | 1 | 2 | 3;
+
+  return { pos, dim, flip, rot, bus };
+}
+
 function pathString(...args: string[]) {
   return args.join('/');
 }
@@ -31,7 +66,22 @@ function collinear(v0: Element, v1: Element, v2: Element) {
 }
 
 export function removeNode(node: Element): Edit[] {
-  const edits = [{ node }] as Edit[];
+  const edits = [] as Edit[];
+
+  if (xmlBoolean(node.querySelector(`Section[bus]`)?.getAttribute('bus'))) {
+    Array.from(node.querySelectorAll('Section:not([bus])')).forEach(section =>
+      edits.push({ node: section })
+    );
+    const sections = Array.from(node.querySelectorAll('Section[bus]'));
+    const busSection = sections[0];
+    Array.from(busSection.children)
+      .slice(1)
+      .forEach(vertex => edits.push({ node: vertex }));
+    const lastVertex = sections[sections.length - 1].lastElementChild;
+    if (lastVertex)
+      edits.push({ parent: busSection, node: lastVertex, reference: null });
+    sections.slice(1).forEach(section => edits.push({ node: section }));
+  } else edits.push({ node });
 
   Array.from(
     node.ownerDocument.querySelectorAll(
@@ -288,11 +338,12 @@ export function removeTerminal(terminal: Element): Edit[] {
   if (
     cNode &&
     otherTerminals.length &&
-    otherTerminals.every(t => t.closest('Bay') !== cNode.closest('Bay'))
+    otherTerminals.every(t => t.closest('Bay') !== cNode.closest('Bay')) &&
+    !isBusBar(cNode.closest('Bay')!)
   ) {
     const newParent = otherTerminals
-      .find(t => t.closest('Bay'))
-      ?.closest('Bay');
+      .find(t => t.closest('Bay'))!
+      .closest('Bay');
     if (newParent) edits.push(...reparentElement(cNode, newParent));
   }
 
@@ -311,30 +362,6 @@ export function removeTerminal(terminal: Element): Edit[] {
   if (cut) edits.push(...healSectionCut(cut));
 
   return edits;
-}
-
-export type Point = [number, number];
-export type Attrs = {
-  pos: Point;
-  dim: Point;
-  flip: boolean;
-  rot: 0 | 1 | 2 | 3;
-};
-
-export function attributes(element: Element): Attrs {
-  const [x, y, w, h, rotVal] = ['x', 'y', 'w', 'h', 'rot'].map(name =>
-    parseFloat(element.getAttributeNS(sldNs, name) ?? '0')
-  );
-  const pos = [x, y].map(d => Math.max(0, d)) as Point;
-  const dim = [w, h].map(d => Math.max(1, d)) as Point;
-
-  const flip = ['true', '1'].includes(
-    element.getAttributeNS(sldNs, 'flip')?.trim() ?? 'false'
-  );
-
-  const rot = (((rotVal % 4) + 4) % 4) as 0 | 1 | 2 | 3;
-
-  return { pos, dim, flip, rot };
 }
 
 export function connectionStartPoints(equipment: Element): {

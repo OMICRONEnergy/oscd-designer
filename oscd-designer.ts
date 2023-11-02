@@ -19,6 +19,7 @@ import {
   ConnectEvent,
   connectionStartPoints,
   elementPath,
+  isBusBar,
   PlaceEvent,
   Point,
   privType,
@@ -32,6 +33,33 @@ import {
   StartEvent,
   xmlnsNs,
 } from './util.js';
+
+function makeBusBar(doc: XMLDocument, nsp: string) {
+  const busBar = doc.createElementNS(doc.documentElement.namespaceURI, 'Bay');
+  busBar.setAttribute('name', 'BB1');
+  busBar.setAttributeNS(sldNs, `${nsp}:w`, '2');
+  const cNode = doc.createElementNS(
+    doc.documentElement.namespaceURI,
+    'ConnectivityNode'
+  );
+  cNode.setAttribute('name', 'L');
+  const priv = doc.createElementNS(doc.documentElement.namespaceURI, 'Private');
+  priv.setAttribute('type', privType);
+  const section = doc.createElementNS(sldNs, `${nsp}:Section`);
+  section.setAttribute('bus', 'true');
+  const v1 = doc.createElementNS(sldNs, `${nsp}:Vertex`);
+  v1.setAttributeNS(sldNs, `${nsp}:x`, '0.5');
+  v1.setAttributeNS(sldNs, `${nsp}:y`, '0.5');
+  section.appendChild(v1);
+  const v2 = doc.createElementNS(sldNs, `${nsp}:Vertex`);
+  v2.setAttributeNS(sldNs, `${nsp}:x`, '1.5');
+  v2.setAttributeNS(sldNs, `${nsp}:y`, '0.5');
+  section.appendChild(v2);
+  priv.appendChild(section);
+  cNode.appendChild(priv);
+  busBar.appendChild(cNode);
+  return busBar;
+}
 
 function cutSectionAt(
   section: Element,
@@ -176,6 +204,7 @@ export default class Designer extends LitElement {
         );
       }
     );
+    this.templateElements.BusBar = makeBusBar(this.doc, this.nsp);
   }
 
   rotateElement(element: Element) {
@@ -204,13 +233,14 @@ export default class Designer extends LitElement {
     if (element.parentElement !== parent) {
       edits.push(...reparentElement(element, parent));
     }
-    edits.push({
-      element,
-      attributes: {
-        x: { namespaceURI: sldNs, value: x.toString() },
-        y: { namespaceURI: sldNs, value: y.toString() },
-      },
-    });
+    if (element.localName !== 'Vertex')
+      edits.push({
+        element,
+        attributes: {
+          x: { namespaceURI: sldNs, value: x.toString() },
+          y: { namespaceURI: sldNs, value: y.toString() },
+        },
+      });
 
     const {
       pos: [oldX, oldY],
@@ -262,11 +292,42 @@ export default class Designer extends LitElement {
       });
     }
 
+    if (element.localName === 'Vertex') {
+      const bay = element.closest('Bay')!;
+      const sections = Array.from(bay.querySelectorAll('Section[bus]'));
+      const section = sections[0];
+      const vertex = section.querySelector('Vertex')!;
+      const lastSection = sections[sections.length - 1];
+      const lastVertex = lastSection.querySelector('Vertex:last-of-type')!;
+      const {
+        pos: [x1, y1],
+      } = attributes(vertex);
+      const w = x - x1 + 1;
+      const h = y - y1 + 1;
+      if (isBusBar(bay)) {
+        edits.push(...removeNode(section.closest('ConnectivityNode')!));
+        edits.push({
+          element: lastVertex,
+          attributes: {
+            x: { namespaceURI: sldNs, value: x.toString() },
+            y: { namespaceURI: sldNs, value: y.toString() },
+          },
+        });
+        edits.push({
+          element: bay,
+          attributes: {
+            w: { namespaceURI: sldNs, value: w.toString() },
+            h: { namespaceURI: sldNs, value: h.toString() },
+          },
+        });
+      }
+    }
+
     this.dispatchEvent(newEditEvent(edits));
     if (
       ['Bay', 'VoltageLevel'].includes(element.tagName) &&
-      !element.hasAttributeNS(sldNs, 'w') &&
-      !element.hasAttributeNS(sldNs, 'h')
+      (!element.hasAttributeNS(sldNs, 'w') ||
+        !element.hasAttributeNS(sldNs, 'h'))
     )
       this.startResizing(element);
     else this.reset();
@@ -444,41 +505,58 @@ export default class Designer extends LitElement {
           ></sld-editor>`
       )}
       <nav>
-        ${Array.from(this.doc.documentElement.children).find(c =>
-          c.querySelector(':scope > VoltageLevel > Bay')
+        ${Array.from(this.doc.documentElement.children).find(
+          c => c.tagName === 'Substation'
         )
-          ? ['CTR', 'VTR', 'DIS', 'CBR', 'IFL'].map(
-              eqType => html`<mwc-fab
-                mini
-                label="Add ${eqType}"
-                @click=${() => {
-                  const element =
-                    this.templateElements.ConductingEquipment!.cloneNode() as Element;
-                  element.setAttribute('type', eqType);
-                  element.setAttribute('name', `${eqType}1`);
-                  this.startPlacing(element);
-                }}
-                style="--mdc-theme-secondary: #fff; --mdc-theme-on-secondary: rgb(0, 0, 0 / 0.83)"
-              >
-                ${equipmentIcon(eqType)}
-              </mwc-fab>`
-            )
-          : nothing}
-        ${Array.from(this.doc.documentElement.children).find(c =>
-          c.querySelector(':scope > VoltageLevel')
+          ? html``
+          : nothing}${Array.from(
+          this.doc.querySelectorAll(':root > Substation > VoltageLevel > Bay')
+        ).find(bay => !isBusBar(bay))
+          ? ['CTR', 'VTR', 'DIS', 'CBR', 'IFL']
+              .map(
+                eqType => html`<mwc-fab
+                  mini
+                  label="Add ${eqType}"
+                  @click=${() => {
+                    const element =
+                      this.templateElements.ConductingEquipment!.cloneNode() as Element;
+                    element.setAttribute('type', eqType);
+                    element.setAttribute('name', `${eqType}1`);
+                    this.startPlacing(element);
+                  }}
+                  style="--mdc-theme-secondary: #fff; --mdc-theme-on-secondary: rgb(0, 0, 0 / 0.83)"
+                  >${equipmentIcon(eqType)}</mwc-fab
+                >`
+              )
+              .concat()
+          : nothing}${this.doc.querySelector(
+          ':root > Substation > VoltageLevel'
         )
           ? html`<mwc-fab
-              mini
-              label="Add Bay"
-              @click=${() => {
-                const element =
-                  this.templateElements.Bay!.cloneNode() as Element;
-                this.startPlacing(element);
-              }}
-              style="--mdc-theme-secondary: #12579B;"
-            >
-              ${bayIcon}
-            </mwc-fab>`
+                mini
+                icon="horizontal_rule"
+                @click=${() => {
+                  const element = this.templateElements.BusBar!.cloneNode(
+                    true
+                  ) as Element;
+                  this.startPlacing(element);
+                }}
+                label="Add Bus Bar"
+                style="--mdc-theme-secondary: #fff; --mdc-theme-on-secondary: rgb(0, 0, 0 / 0.83)"
+              >
+              </mwc-fab
+              ><mwc-fab
+                mini
+                label="Add Bay"
+                @click=${() => {
+                  const element =
+                    this.templateElements.Bay!.cloneNode() as Element;
+                  this.startPlacing(element);
+                }}
+                style="--mdc-theme-secondary: #12579B;"
+              >
+                ${bayIcon}
+              </mwc-fab>`
           : nothing}${Array.from(this.doc.documentElement.children).find(
           c => c.tagName === 'Substation'
         )

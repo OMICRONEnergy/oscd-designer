@@ -1,12 +1,10 @@
-import { svg, TemplateResult } from 'lit';
+import { html, svg, TemplateResult } from 'lit';
 
 export const resizePath = svg`<path
-  fill="black"
-  opacity="0.83"
   d="M120 616v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 640v-80h80v80h-80Zm0-640v-80h80v80h-80Zm160 640v-80h80v80h-80Zm160 0v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160V296H600v-80h240v240h-80ZM120 936V696h80v160h160v80H120Z"
 />`;
 
-export const movePath = svg`<path opacity="0.83" fill="black" d="M480 976 310 806l57-57 73 73V616l-205-1 73 73-58 58L80 576l169-169 57 57-72 72h206V330l-73 73-57-57 170-170 170 170-57 57-73-73v206l205 1-73-73 58-58 170 170-170 170-57-57 73-73H520l-1 205 73-73 58 58-170 170Z"/>`;
+export const movePath = svg`<path d="M480 976 310 806l57-57 73 73V616l-205-1 73 73-58 58L80 576l169-169 57 57-72 72h206V330l-73 73-57-57 170-170 170 170-57 57-73-73v206l205 1-73-73 58-58 170 170-170 170-57-57 73-73H520l-1 205 73-73 58 58-170 170Z"/>`;
 
 export const voltageLevelIcon = svg`<svg
   id="VoltageLevel"
@@ -318,41 +316,46 @@ const defaultEquipmentPath = svg`
   />
 `;
 
-export function equipmentPath(equipmentType: string): TemplateResult<2> {
-  if (equipmentType in equipmentPaths) return equipmentPaths[equipmentType]!;
+export function equipmentPath(equipmentType: string | null): TemplateResult<2> {
+  if (equipmentType && equipmentType in equipmentPaths)
+    return equipmentPaths[equipmentType]!;
   return defaultEquipmentPath;
 }
 
-export function equipmentGraphic(equipmentType: string): TemplateResult<2> {
-  return svg`<svg
-  id="${equipmentType}"
-  viewBox="0 0 25 25"
-  width="24" height="24"
-  slot="graphic"
->
-${equipmentPath(equipmentType)}
-</svg>`;
+export function equipmentGraphic(
+  equipmentType: string | null
+): TemplateResult<1> {
+  return html`<svg
+    id="${equipmentType}"
+    viewBox="0 0 25 25"
+    width="24"
+    height="24"
+    slot="graphic"
+  >
+    ${equipmentPath(equipmentType)}
+  </svg>`;
 }
 
-export function equipmentIcon(equipmentType: string): TemplateResult<2> {
-  return svg`<svg
-  id="${equipmentType}"
-  viewBox="0 0 25 25"
-  width="24" height="24"
-  slot="icon"
->
-${equipmentPath(equipmentType)}
-</svg>`;
+export function equipmentIcon(equipmentType: string): TemplateResult<1> {
+  return html`<svg
+    id="${equipmentType}"
+    viewBox="0 0 25 25"
+    width="24"
+    height="24"
+    slot="icon"
+  >
+    ${equipmentPath(equipmentType)}
+  </svg>`;
 }
 
 function equipmentSymbol(equipmentType: string): TemplateResult<2> {
   return svg`<symbol
-  id="${equipmentType}"
-  viewBox="0 0 25 25"
-  width="1" height="1"
->
-${equipmentPath(equipmentType)}
-</symbol>`;
+    id="${equipmentType}"
+    viewBox="0 0 25 25"
+    width="1" height="1"
+  >
+    ${equipmentPath(equipmentType)}
+  </symbol>`;
 }
 
 export const connectivityNodeMarker = svg`<marker

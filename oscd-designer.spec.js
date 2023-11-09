@@ -16,14 +16,10 @@ customElements.define('oscd-designer', Designer);
 export const emptyDocString = `<?xml version="1.0" encoding="UTF-8"?>
 <SCL version="2007" revision="B" xmlns="http://www.iec.ch/61850/2003/SCL">
 </SCL>`;
-export const substationDocString = `<?xml version="1.0" encoding="UTF-8"?>
-<SCL version="2007" revision="B" xmlns="http://www.iec.ch/61850/2003/SCL">
-  <Substation name ="S1" desc="No SLD xmlns attribute here"></Substation>
-</SCL>`;
 export const voltageLevelDocString = `<?xml version="1.0" encoding="UTF-8"?>
-<SCL version="2007" revision="B" xmlns="http://www.iec.ch/61850/2003/SCL">
-  <Substation name="S1" xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0" esld:w="50" esld:h="25">
-    <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="48" esld:h="23"/>
+<SCL version="2007" revision="B" xmlns:smth="https://transpower.co.nz/SCL/SSD/SLD/v0" xmlns="http://www.iec.ch/61850/2003/SCL">
+  <Substation name="S1" smth:w="50" smth:h="25">
+    <VoltageLevel name="V1" smth:x="1" smth:y="1" smth:w="48" smth:h="23" />
   </Substation>
 </SCL>`;
 export const bayDocString = `<?xml version="1.0" encoding="UTF-8"?>
@@ -31,11 +27,11 @@ export const bayDocString = `<?xml version="1.0" encoding="UTF-8"?>
   <Substation xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0" name="S1" esld:w="50" esld:h="25">
     <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="13" esld:h="13">
       <Bay name="B1" esld:x="2" esld:y="2" esld:w="3" esld:h="3">
-        <ConnectivityNode name="L1" pathName="S1/V1/B1/L1"/>
+        <ConnectivityNode name="L1" pathName="S1/V1/B1/L1" />
       </Bay>
     </VoltageLevel>
     <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="13" esld:h="13">
-      <Bay name="B1" esld:x="20" esld:y="11" esld:w="1" esld:h="1"/>
+      <Bay name="B1" esld:x="20" esld:y="11" esld:w="1" esld:h="1" />
     </VoltageLevel>
   </Substation>
 </SCL>`;
@@ -43,19 +39,38 @@ export const equipmentDocString = `<?xml version="1.0" encoding="UTF-8"?>
 <SCL version="2007" revision="B" xmlns="http://www.iec.ch/61850/2003/SCL">
   <Substation xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0" name="S1" esld:w="50" esld:h="25">
     <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="13" esld:h="13">
-      <Bay name="B1" esld:x="2" esld:y="2" esld:w="3" esld:h="3">
+      <Bay name="B1" esld:x="2" esld:y="2" esld:w="6" esld:h="6">
+        <ConductingEquipment type="CBR" name="CBR1" esld:x="4" esld:y="4" esld:rot="1" />
       </Bay>
     </VoltageLevel>
     <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="23" esld:h="23">
-      <Bay name="B1" esld:x="20" esld:y="11" esld:w="6" esld:h="6">
-        <ConductingEquipment type="CBR" name="CBR1" esld:x="26" esld:y="14"/>
-        <ConductingEquipment type="BAT" name="BAT1" esld:x="26" esld:y="14"/>
+      <Bay name="B1" esld:x="16" esld:y="2" esld:w="6" esld:h="6">
+        <ConductingEquipment type="CTR" name="CTR1" esld:x="17" esld:y="5" esld:rot="3" />
+        <ConductingEquipment type="DIS" name="DIS1" esld:x="18" esld:y="4" esld:rot="1" />
+        <ConductingEquipment type="NEW" name="NEW1" esld:x="19" esld:y="3" esld:rot="2" />
+        <ConductingEquipment type="VTR" name="VTR1" esld:x="17" esld:y="3" esld:rot="3" />
+        <ConductingEquipment type="DIS" name="DIS2" esld:x="20" esld:y="4" esld:rot="0" />
+        <ConductingEquipment type="BAT" name="BAT1" esld:x="19" esld:y="7" esld:rot="3">
+          <Terminal name="erroneous" />
+        </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
 </SCL>`;
 describe('Designer', () => {
     let element;
+    function querySvg({ scl, svg, }) {
+        var _a;
+        let target = element.shadowRoot.querySelector('sld-editor').shadowRoot;
+        if (scl) {
+            const sclTarget = element.doc.querySelector(scl);
+            target = (_a = target.getElementById) === null || _a === void 0 ? void 0 : _a.call(target, identity(sclTarget));
+        }
+        if (svg) {
+            target = target.querySelector(svg);
+        }
+        return target;
+    }
     beforeEach(async () => {
         const doc = new DOMParser().parseFromString(emptyDocString, 'application/xml');
         element = await fixture(html `<oscd-designer
@@ -75,17 +90,8 @@ describe('Designer', () => {
         element = await fixture(html `<oscd-designer></oscd-designer>`);
         expect((_a = element.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('p')).to.contain.text('SCL');
     });
-    it('adds the SLD XML namespace to any substations lacking it', async () => {
-        const doc = new DOMParser().parseFromString(substationDocString, 'application/xml');
-        element = await fixture(html `<oscd-designer
-        docName="testDoc"
-        .doc=${doc}
-        @oscd-edit=${({ detail }) => {
-            handleEdit(detail);
-            element.editCount += 1;
-        }}
-      ></oscd-designer>`);
-        expect(doc.querySelector('Substation')).to.have.attribute('xmlns:esld');
+    it('adds the SLD XML namespace if doc lacks it', async () => {
+        expect(element.doc.documentElement).to.have.attribute('xmlns:esld');
     });
     it('adds a substation on add button click', async () => {
         var _a;
@@ -189,284 +195,621 @@ describe('Designer', () => {
             window.dispatchEvent(event);
             expect(element).to.have.property('placing', undefined);
         });
-        describe('with a voltage level', () => {
+    });
+    describe('given a voltage level', () => {
+        beforeEach(async () => {
+            const doc = new DOMParser().parseFromString(voltageLevelDocString, 'application/xml');
+            element.doc = doc;
+            await element.updateComplete;
+        });
+        it('forbids undersizing the substation', async () => {
+            var _a, _b, _c, _d;
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            (_b = (_a = sldEditor.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('h2 > mwc-icon-button')) === null || _b === void 0 ? void 0 : _b.click();
+            sldEditor.substationWidthUI.value = '30';
+            sldEditor.substationHeightUI.value = '20';
+            (_d = (_c = sldEditor.shadowRoot) === null || _c === void 0 ? void 0 : _c.querySelector('mwc-button[slot="primaryAction"]')) === null || _d === void 0 ? void 0 : _d.click();
+            expect(sldEditor.substation).to.have.attribute('smth:h', '25');
+            expect(sldEditor.substation).to.have.attribute('smth:w', '50');
+        });
+        it('allows resizing voltage levels', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('a.handle')[1];
+            moveHandle.dispatchEvent(new PointerEvent('click'));
+            expect(element)
+                .property('resizing')
+                .to.exist.and.to.have.property('tagName', 'VoltageLevel');
+            const voltageLevel = element.resizing;
+            expect(voltageLevel).to.have.attribute('smth:w', '48');
+            expect(voltageLevel).to.have.attribute('smth:h', '23');
+            await sendMouse({ type: 'click', position: [300, 300] });
+            expect(voltageLevel).to.have.attribute('smth:w', '8');
+            expect(voltageLevel).to.have.attribute('smth:h', '7');
+        });
+        it('allows moving voltage levels', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const moveHandle = sldEditor.shadowRoot.querySelector('a.handle');
+            moveHandle.dispatchEvent(new PointerEvent('click'));
+            expect(element)
+                .property('placing')
+                .to.exist.and.to.have.property('tagName', 'VoltageLevel');
+            const voltageLevel = element.placing;
+            expect(voltageLevel).to.have.attribute('smth:x', '1');
+            expect(voltageLevel).to.have.attribute('smth:y', '1');
+            await sendMouse({ type: 'click', position: [100, 150] });
+            expect(voltageLevel).to.have.attribute('smth:x', '2');
+            expect(voltageLevel).to.have.attribute('smth:y', '2');
+        });
+        it('forbids moving voltage levels out of bounds', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const moveHandle = sldEditor.shadowRoot.querySelector('a.handle');
+            moveHandle.dispatchEvent(new PointerEvent('click'));
+            expect(element)
+                .property('placing')
+                .to.exist.and.to.have.property('tagName', 'VoltageLevel');
+            const voltageLevel = element.placing;
+            expect(voltageLevel).to.have.attribute('smth:x', '1');
+            expect(voltageLevel).to.have.attribute('smth:y', '1');
+            await sendMouse({ type: 'click', position: [200, 200] });
+            expect(voltageLevel).to.have.attribute('smth:x', '1');
+            expect(voltageLevel).to.have.attribute('smth:y', '1');
+        });
+        it('allows placing a new bay', async () => {
+            var _a;
+            (_a = element.shadowRoot.querySelector('[label="Add Bay"]')) === null || _a === void 0 ? void 0 : _a.click();
+            expect(element).property('placing').to.have.property('tagName', 'Bay');
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            await sendMouse({ type: 'click', position: [200, 200] });
+            expect(element).to.have.property('placing', undefined);
+            expect(element).property('resizing').to.have.property('tagName', 'Bay');
+            await sendMouse({ type: 'click', position: [400, 400] });
+            expect(sldEditor).to.have.property('resizing', undefined);
+            const bay = element.doc.querySelector('Bay');
+            expect(bay).to.exist;
+            expect(bay).to.have.attribute('x', '5');
+            expect(bay).to.have.attribute('y', '3');
+            expect(bay).to.have.attribute('w', '7');
+            expect(bay).to.have.attribute('h', '8');
+        });
+    });
+    describe('given a bay', () => {
+        beforeEach(async () => {
+            const doc = new DOMParser().parseFromString(bayDocString, 'application/xml');
+            element.doc = doc;
+            await element.updateComplete;
+        });
+        it('allows resizing bays', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay a.handle')[1];
+            moveHandle.dispatchEvent(new PointerEvent('click'));
+            expect(element)
+                .property('resizing')
+                .to.exist.and.to.have.property('tagName', 'Bay');
+            const bay = element.resizing;
+            expect(bay).to.have.attribute('esld:w', '3');
+            expect(bay).to.have.attribute('esld:h', '3');
+            await sendMouse({ type: 'click', position: [400, 400] });
+            expect(bay).to.have.attribute('esld:w', '10');
+            expect(bay).to.have.attribute('esld:h', '9');
+        });
+        it('forbids resizing bays out of bounds', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay a.handle')[1];
+            moveHandle.dispatchEvent(new PointerEvent('click'));
+            expect(element)
+                .property('resizing')
+                .to.exist.and.to.have.property('tagName', 'Bay');
+            const bay = element.resizing;
+            expect(bay).to.have.attribute('esld:w', '3');
+            expect(bay).to.have.attribute('esld:h', '3');
+            await sendMouse({ type: 'click', position: [600, 400] });
+            expect(bay).to.have.attribute('esld:w', '3');
+            expect(bay).to.have.attribute('esld:h', '3');
+        });
+        it('forbids undersizing voltage levels containing bays', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.voltagelevel > a.handle')[1];
+            moveHandle.dispatchEvent(new PointerEvent('click'));
+            expect(element)
+                .property('resizing')
+                .to.exist.and.to.have.property('tagName', 'VoltageLevel');
+            const voltageLevel = element.resizing;
+            expect(voltageLevel).to.have.attribute('esld:w', '13');
+            expect(voltageLevel).to.have.attribute('esld:h', '13');
+            await sendMouse({ type: 'click', position: [100, 100] });
+            expect(voltageLevel).to.have.attribute('esld:w', '13');
+            expect(voltageLevel).to.have.attribute('esld:h', '13');
+        });
+        it('allows moving bays', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            sldEditor
+                .shadowRoot.querySelector('g.bay a.handle')
+                .dispatchEvent(new PointerEvent('click'));
+            expect(element)
+                .property('placing')
+                .to.exist.and.to.have.property('tagName', 'Bay');
+            const bay = element.placing;
+            await sendMouse({ type: 'click', position: [200, 200] });
+            expect(bay).to.have.attribute('esld:x', '5');
+            expect(bay).to.have.attribute('esld:y', '3');
+        });
+        it('renames reparented bays if necessary', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            sldEditor
+                .shadowRoot.querySelector('g.bay a.handle')
+                .dispatchEvent(new PointerEvent('click'));
+            const bay = element.placing;
+            expect(bay.parentElement).to.have.attribute('name', 'V1');
+            expect(bay).to.have.attribute('name', 'B1');
+            await sendMouse({ type: 'click', position: [600, 200] });
+            expect(element).to.have.property('placing', undefined);
+            expect(bay).to.have.attribute('esld:x', '18');
+            expect(bay).to.have.attribute('esld:y', '3');
+            expect(bay.parentElement).to.have.attribute('name', 'V2');
+            expect(bay).to.have.attribute('name', 'B2');
+            sldEditor
+                .shadowRoot.querySelector('g.bay a.handle')
+                .dispatchEvent(new PointerEvent('click'));
+            await sendMouse({ type: 'click', position: [200, 200] });
+            expect(bay).to.have.attribute('esld:x', '5');
+            expect(bay).to.have.attribute('esld:y', '3');
+            expect(bay.parentElement).to.have.attribute('name', 'V1');
+            expect(bay).to.have.attribute('name', 'B2');
+        });
+        it("updates reparented bays' connectivity node paths", async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            sldEditor
+                .shadowRoot.querySelector('g.bay a.handle')
+                .dispatchEvent(new PointerEvent('click'));
+            const bay = element.placing;
+            const cNode = bay.querySelector('ConnectivityNode');
+            expect(cNode).to.have.attribute('pathName', 'S1/V1/B1/L1');
+            await sendMouse({ type: 'click', position: [600, 200] });
+            expect(element).to.have.property('placing', undefined);
+            expect(cNode).to.have.attribute('pathName', 'S1/V2/B2/L1');
+            expect(element.doc.documentElement).dom.to.equalSnapshot();
+        });
+        it('moves a bay when its parent voltage level is moved', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            sldEditor
+                .shadowRoot.querySelector('g.voltagelevel a.handle')
+                .dispatchEvent(new PointerEvent('click'));
+            const bay = element.placing.querySelector('Bay');
+            expect(bay).to.have.attribute('esld:x', '2');
+            expect(bay).to.have.attribute('esld:y', '2');
+            await sendMouse({ type: 'click', position: [100, 100] });
+            expect(bay).to.have.attribute('esld:x', '3');
+            expect(bay).to.have.attribute('esld:y', '1');
+        });
+        it('allows placing new conducting equipment', async () => {
+            var _a;
+            (_a = element.shadowRoot.querySelector('[label="Add CBR"]')) === null || _a === void 0 ? void 0 : _a.click();
+            expect(element)
+                .property('placing')
+                .to.have.property('tagName', 'ConductingEquipment');
+            await sendMouse({ type: 'click', position: [150, 180] });
+            expect(element).to.have.property('placing', undefined);
+            expect(element).to.have.property('resizing', undefined);
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            expect(equipment).to.exist;
+            expect(equipment).to.have.attribute('x', '3');
+            expect(equipment).to.have.attribute('y', '3');
+        });
+    });
+    describe('given conducting equipment', () => {
+        beforeEach(async () => {
+            const doc = new DOMParser().parseFromString(equipmentDocString, 'application/xml');
+            element.doc = doc;
+            await element.updateComplete;
+        });
+        it('moves equipment on left mouse button click', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(id)
+                .querySelector('rect');
+            eqClickTarget.dispatchEvent(new PointerEvent('click'));
+            await sendMouse({ type: 'click', position: [150, 180] });
+            expect(equipment).to.have.attribute('esld:x', '3');
+            expect(equipment).to.have.attribute('esld:y', '3');
+        });
+        it('rotates equipment on middle mouse button click', () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(id)
+                .querySelector('rect');
+            expect(equipment).to.have.attribute('esld:rot', '1');
+            eqClickTarget.dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+            expect(equipment).to.have.attribute('esld:rot', '2');
+        });
+        it('displays a menu on equipment right click', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(id)
+                .querySelector('rect');
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu', { clientX: 750, clientY: 550 }));
+            await element.updateComplete;
+            expect(sldEditor)
+                .property('menu')
+                .to.exist.and.to.have.property('element', equipment);
+        });
+        it('flips equipment on mirror menu item select', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            let eqClickTarget = sldEditor
+                .shadowRoot.getElementById(id)
+                .querySelector('rect');
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            let item = sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(5)');
+            expect(equipment).to.not.have.attribute('esld:flip');
+            item.selected = true;
+            await element.updateComplete;
+            item.selected = false;
+            expect(equipment).to.have.attribute('esld:flip', 'true');
+            eqClickTarget = sldEditor
+                .shadowRoot.getElementById(id)
+                .querySelector('rect');
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            item = sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(5)');
+            item.selected = true;
+            await element.updateComplete;
+            expect(equipment).to.not.have.attribute('esld:flip');
+        });
+        it('rotates equipment on rotate menu item select', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(id)
+                .querySelector('rect');
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            const item = sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(6)');
+            expect(equipment).to.have.attribute('esld:rot', '1');
+            item.selected = true;
+            await element.updateComplete;
+            expect(equipment).to.have.attribute('esld:rot', '2');
+        });
+        it('moves equipment on move menu item select', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const id = identity(equipment);
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(id)
+                .querySelector('rect');
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            const item = sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(7)');
+            item.selected = true;
+            await element.updateComplete;
+            expect(equipment).to.have.attribute('esld:x', '4');
+            expect(equipment).to.have.attribute('esld:y', '4');
+            await sendMouse({ type: 'click', position: [150, 180] });
+            expect(equipment).to.have.attribute('esld:x', '3');
+            expect(equipment).to.have.attribute('esld:y', '3');
+        });
+        it('grounds equipment on connection point right click', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(identity(equipment))
+                .querySelector('circle');
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            expect(element.doc.querySelector('ConnectivityNode[name="grounded"]')).to
+                .exist;
+            expect(equipment.querySelector('Terminal[name="T1"]')).to.have.attribute('cNodeName', 'grounded');
+            await element.updateComplete;
+            const eqClickTarget2 = sldEditor
+                .shadowRoot.getElementById(identity(equipment))
+                .querySelector('circle');
+            eqClickTarget2.dispatchEvent(new PointerEvent('contextmenu'));
+            expect(element.doc.querySelector('ConnectivityNode[name="grounded"]')).to
+                .exist;
+            expect(equipment.querySelector('Terminal[name="T2"]')).to.have.attribute('cNodeName', 'grounded');
+            await expect(element.doc.documentElement).dom.to.equalSnapshot();
+        });
+        it('grounds equipment on ground menu item select', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            expect(equipment.querySelector('Terminal[name="T1"][cNodeName="grounded"]')).to.not.exist;
+            sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(2)').selected = true;
+            await element.updateComplete;
+            expect(equipment.querySelector('Terminal[name="T1"][cNodeName="grounded"]')).to.exist;
+            querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            expect(equipment.querySelector('Terminal[name="T2"][cNodeName="grounded"]')).to.not.exist;
+            sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(3)').selected = true;
+            await element.updateComplete;
+            expect(equipment.querySelector('Terminal[name="T2"][cNodeName="grounded"]')).to.exist;
+        });
+        it('connects equipment on connection point and equipment click', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(identity(equipment))
+                .querySelector('circle:nth-of-type(2)');
+            eqClickTarget.dispatchEvent(new PointerEvent('click'));
+            await element.updateComplete;
+            const equipment2 = element.doc.querySelector('ConductingEquipment:nth-child(2)');
+            const eq2ClickTarget = sldEditor.shadowRoot.getElementById(identity(equipment2));
+            const position = middleOf(eq2ClickTarget);
+            position[0] -= 1;
+            expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
+            await sendMouse({ type: 'click', position });
+            expect(element.doc.querySelector('ConnectivityNode')).to.exist;
+            await expect(element.doc.documentElement).dom.to.equalSnapshot();
+        });
+        it('connects equipment on connect menu item select', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            let equipment = element.doc.querySelector('ConductingEquipment');
+            querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(1)').selected = true;
+            expect(equipment.querySelector('Terminal[name="T1"]')).to.not.exist;
+            let position = middleOf(querySvg({ scl: '[type="VTR"]', svg: 'rect' }));
+            position[1] -= 1;
+            await sendMouse({ type: 'click', position });
+            expect(equipment.querySelector('Terminal[name="T1"]')).to.exist;
+            querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(2)').selected = true;
+            expect(equipment.querySelector('Terminal[name="T2"]')).to.not.exist;
+            position = middleOf(querySvg({ scl: '[type="NEW"]', svg: 'rect' }));
+            position[1] -= 1;
+            await sendMouse({ type: 'click', position });
+            expect(equipment.querySelector('Terminal[name="T2"]')).to.exist;
+            equipment = element.doc.querySelector('[type="DIS"]');
+            querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(1)').selected = true;
+            expect(equipment.querySelector('Terminal[name="T1"]')).to.not.exist;
+            position = middleOf(querySvg({ scl: '[type="CTR"]', svg: 'rect' }));
+            await sendMouse({ type: 'click', position });
+            expect(equipment.querySelector('Terminal[name="T1"]')).to.exist;
+            querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(2)').selected = true;
+            expect(equipment.querySelector('Terminal[name="T2"]')).to.not.exist;
+            position = middleOf(querySvg({ scl: '[name="DIS2"]', svg: 'rect' }));
+            position[1] += 1;
+            await sendMouse({ type: 'click', position });
+            expect(equipment.querySelector('Terminal[name="T2"]')).to.exist;
+            await expect(element.doc.documentElement).dom.to.equalSnapshot();
+        });
+        it('will not connect equipment directly to itself', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(identity(equipment))
+                .querySelector('circle:nth-of-type(2)');
+            eqClickTarget.dispatchEvent(new PointerEvent('click'));
+            await element.updateComplete;
+            const eq2ClickTarget = sldEditor.shadowRoot.getElementById(identity(equipment));
+            const position = middleOf(eq2ClickTarget);
+            expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
+            await sendMouse({ type: 'click', position });
+            expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
+        });
+        describe('with established connectivity', () => {
             beforeEach(async () => {
-                const doc = new DOMParser().parseFromString(voltageLevelDocString, 'application/xml');
-                element.doc = doc;
+                const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                const equipment = element.doc.querySelector('ConductingEquipment');
+                const eqClickTarget = sldEditor
+                    .shadowRoot.getElementById(identity(equipment))
+                    .querySelector('circle');
+                eqClickTarget.dispatchEvent(new PointerEvent('click'));
                 await element.updateComplete;
+                const equipment2 = element.doc.querySelector('ConductingEquipment[type="DIS"]');
+                const eq2ClickTarget = sldEditor.shadowRoot.getElementById(identity(equipment2));
+                const position = middleOf(eq2ClickTarget);
+                position[0] -= 1;
+                await sendMouse({ type: 'click', position });
             });
-            it('forbids undersizing the substation', async () => {
-                var _a, _b, _c, _d;
+            it('uniquely names new connectivity nodes', async () => {
                 const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                (_b = (_a = sldEditor.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector('h2 > mwc-icon-button')) === null || _b === void 0 ? void 0 : _b.click();
-                sldEditor.substationWidthUI.value = '30';
-                sldEditor.substationHeightUI.value = '20';
-                (_d = (_c = sldEditor.shadowRoot) === null || _c === void 0 ? void 0 : _c.querySelector('mwc-button[slot="primaryAction"]')) === null || _d === void 0 ? void 0 : _d.click();
-                expect(sldEditor.substation).to.have.attribute('esld:h', '25');
-                expect(sldEditor.substation).to.have.attribute('esld:w', '50');
+                const equipment = element.doc.querySelector('ConductingEquipment');
+                const eqClickTarget = sldEditor
+                    .shadowRoot.getElementById(identity(equipment))
+                    .querySelector('circle');
+                eqClickTarget.dispatchEvent(new PointerEvent('click'));
+                await element.updateComplete;
+                const equipment2 = element.doc.querySelector('ConductingEquipment[type="CTR"]');
+                const eq2ClickTarget = sldEditor.shadowRoot.getElementById(identity(equipment2));
+                const position = middleOf(eq2ClickTarget);
+                position[0] -= 1;
+                expect(element.doc.querySelector('ConnectivityNode[name="L1"]')).to
+                    .exist;
+                expect(element.doc.querySelector('ConnectivityNode[name="L2"]')).to.not
+                    .exist;
+                await sendMouse({ type: 'click', position });
+                expect(element.doc.querySelector('ConnectivityNode[name="L2"]')).to
+                    .exist;
+                await expect(element.doc.documentElement).dom.to.equalSnapshot();
             });
-            it('allows resizing voltage levels', async () => {
+            it('connects equipment on connection point and connectivity node click', async () => {
                 const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                const moveHandle = sldEditor.shadowRoot.querySelectorAll('a.handle')[1];
-                moveHandle.dispatchEvent(new PointerEvent('click'));
-                expect(element)
-                    .property('resizing')
-                    .to.exist.and.to.have.property('tagName', 'VoltageLevel');
-                const voltageLevel = element.resizing;
-                expect(voltageLevel).to.have.attribute('esld:w', '48');
-                expect(voltageLevel).to.have.attribute('esld:h', '23');
-                await sendMouse({ type: 'click', position: [300, 300] });
-                expect(voltageLevel).to.have.attribute('esld:w', '8');
-                expect(voltageLevel).to.have.attribute('esld:h', '7');
+                const equipment = element.doc.querySelector('ConductingEquipment[type="CTR"]');
+                const eqClickTarget = sldEditor
+                    .shadowRoot.getElementById(identity(equipment))
+                    .querySelector('circle');
+                eqClickTarget.dispatchEvent(new PointerEvent('click'));
+                const cNode = element.doc.querySelector('ConnectivityNode');
+                const cNodeClickTarget = sldEditor.shadowRoot.getElementById(identity(cNode));
+                await sendMouse({
+                    type: 'click',
+                    position: middleOf(cNodeClickTarget),
+                });
+                expect(equipment.querySelector('Terminal')).to.exist.and.to.have.attribute('connectivityNode', cNode.getAttribute('pathName'));
+                await expect(element.doc.documentElement).dom.to.equalSnapshot();
             });
-            it('allows moving voltage levels', async () => {
+            it('avoids short circuit connections', async () => {
                 const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                const moveHandle = sldEditor.shadowRoot.querySelector('a.handle');
-                moveHandle.dispatchEvent(new PointerEvent('click'));
-                expect(element)
-                    .property('placing')
-                    .to.exist.and.to.have.property('tagName', 'VoltageLevel');
-                const voltageLevel = element.placing;
-                expect(voltageLevel).to.have.attribute('esld:x', '1');
-                expect(voltageLevel).to.have.attribute('esld:y', '1');
-                await sendMouse({ type: 'click', position: [100, 150] });
-                expect(voltageLevel).to.have.attribute('esld:x', '2');
-                expect(voltageLevel).to.have.attribute('esld:y', '2');
+                const equipment = element.doc.querySelector('ConductingEquipment[type="DIS"]');
+                const eqClickTarget = sldEditor
+                    .shadowRoot.getElementById(identity(equipment))
+                    .querySelector('circle');
+                eqClickTarget.dispatchEvent(new PointerEvent('click'));
+                const cNode = element.doc.querySelector('ConnectivityNode');
+                const cNodeClickTarget = sldEditor.shadowRoot.getElementById(identity(cNode));
+                expect(equipment.querySelectorAll('Terminal')).to.have.lengthOf(1);
+                await sendMouse({
+                    type: 'click',
+                    position: middleOf(cNodeClickTarget),
+                });
+                expect(equipment.querySelectorAll('Terminal')).to.have.lengthOf(1);
+                await expect(element.doc.documentElement).dom.to.equalSnapshot();
             });
-            it('forbids moving voltage levels out of bounds', async () => {
+            it('keeps connection paths simple', async () => {
                 const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                const moveHandle = sldEditor.shadowRoot.querySelector('a.handle');
-                moveHandle.dispatchEvent(new PointerEvent('click'));
-                expect(element)
-                    .property('placing')
-                    .to.exist.and.to.have.property('tagName', 'VoltageLevel');
-                const voltageLevel = element.placing;
-                expect(voltageLevel).to.have.attribute('esld:x', '1');
-                expect(voltageLevel).to.have.attribute('esld:y', '1');
-                await sendMouse({ type: 'click', position: [200, 200] });
-                expect(voltageLevel).to.have.attribute('esld:x', '1');
-                expect(voltageLevel).to.have.attribute('esld:y', '1');
+                const equipment = element.doc.querySelector('ConductingEquipment[type="CTR"]');
+                const eqClickTarget = sldEditor
+                    .shadowRoot.getElementById(identity(equipment))
+                    .querySelector('circle');
+                eqClickTarget.dispatchEvent(new PointerEvent('click'));
+                await sendMouse({ type: 'click', position: [400, 300] });
+                await sendMouse({ type: 'click', position: [350, 300] });
+                await sendMouse({ type: 'click', position: [300, 250] });
+                await sendMouse({ type: 'click', position: [300, 220] });
+                const equipment2 = element.doc.querySelector('ConductingEquipment[type="NEW"]');
+                const eq2ClickTarget = sldEditor
+                    .shadowRoot.getElementById(identity(equipment2))
+                    .querySelector('circle');
+                eq2ClickTarget.dispatchEvent(new PointerEvent('click'));
+                await sendMouse({ type: 'click', position: [400, 300] });
+                const equipment3 = element.doc.querySelector('ConductingEquipment[type="VTR"]');
+                const eq3ClickTarget = sldEditor
+                    .shadowRoot.getElementById(identity(equipment3))
+                    .querySelector('circle');
+                eq3ClickTarget.dispatchEvent(new PointerEvent('click'));
+                await sendMouse({ type: 'click', position: [300, 220] });
+                expect(element.doc.querySelectorAll('Vertex')).to.have.property('length', 16);
+                await expect(element.doc.documentElement).dom.to.equalSnapshot();
             });
-            it('allows placing a new bay', async () => {
-                var _a;
-                (_a = element.shadowRoot.querySelector('[label="Add Bay"]')) === null || _a === void 0 ? void 0 : _a.click();
-                expect(element).property('placing').to.have.property('tagName', 'Bay');
-                const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                await sendMouse({ type: 'click', position: [200, 200] });
-                expect(element).to.have.property('placing', undefined);
-                expect(element).property('resizing').to.have.property('tagName', 'Bay');
-                await sendMouse({ type: 'click', position: [400, 400] });
-                expect(sldEditor).to.have.property('resizing', undefined);
-                const bay = element.doc.querySelector('Bay');
-                expect(bay).to.exist;
-                expect(bay).to.have.attribute('x', '5');
-                expect(bay).to.have.attribute('y', '3');
-                expect(bay).to.have.attribute('w', '7');
-                expect(bay).to.have.attribute('h', '8');
-            });
-            describe('with a bay', () => {
+            describe('between more than two pieces of equipment', async () => {
                 beforeEach(async () => {
-                    const doc = new DOMParser().parseFromString(bayDocString, 'application/xml');
-                    element.doc = doc;
+                    querySvg({ scl: '[type="CTR"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                    await sendMouse({
+                        type: 'click',
+                        position: middleOf(querySvg({ scl: 'ConnectivityNode' })),
+                    });
+                    querySvg({ scl: '[type="BAT"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                    await sendMouse({
+                        type: 'click',
+                        position: middleOf(querySvg({ scl: '[type="CTR"]', svg: 'rect' })),
+                    });
+                });
+                it('disconnects equipment on rotation', async () => {
+                    expect(element.doc.querySelector('[type="CTR"] > Terminal')).to.exist;
+                    querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                    expect(element.doc.querySelector('[type="CTR"] > Terminal')).to.not
+                        .exist;
+                    expect(element.doc.querySelectorAll('Vertex')).to.have.property('length', 2);
+                    expect(element.doc.querySelector('[type="BAT"] > Terminal')).to.exist;
+                    querySvg({ scl: '[type="BAT"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                    expect(element.doc.querySelector('[type="BAT"] > Terminal')).to.not
+                        .exist;
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                });
+                it('disconnects terminals on detach menu item select', async () => {
+                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                    const equipment = element.doc.querySelector('[type="CTR"]');
+                    querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
                     await element.updateComplete;
+                    expect(equipment.querySelector('Terminal[name="T1"]')).to.exist;
+                    sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(1)').selected = true;
+                    await element.updateComplete;
+                    expect(equipment.querySelector('Terminal[name="T1"]')).to.not.exist;
+                    querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+                    await sldEditor.updateComplete;
+                    expect(equipment.querySelector('Terminal[name="T2"]')).to.exist;
+                    sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(3)').selected = true;
+                    await element.updateComplete;
+                    expect(equipment.querySelector('Terminal[name="T2"]')).to.not.exist;
                 });
-                it('allows resizing bays', async () => {
-                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                    const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay a.handle')[1];
-                    moveHandle.dispatchEvent(new PointerEvent('click'));
-                    expect(element)
-                        .property('resizing')
-                        .to.exist.and.to.have.property('tagName', 'Bay');
-                    const bay = element.resizing;
-                    expect(bay).to.have.attribute('esld:w', '3');
-                    expect(bay).to.have.attribute('esld:h', '3');
-                    await sendMouse({ type: 'click', position: [400, 400] });
-                    expect(bay).to.have.attribute('esld:w', '10');
-                    expect(bay).to.have.attribute('esld:h', '9');
+                it('simplifies horizontal connection paths when disconnecting', async () => {
+                    querySvg({ scl: '[type="VTR"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                    await sendMouse({ type: 'click', position: [300, 220] });
+                    expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
+                    expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(16);
+                    querySvg({ scl: '[type="CBR"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                    element.updateComplete;
+                    expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(4);
+                    expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(13);
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
                 });
-                it('forbids resizing bays out of bounds', async () => {
-                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                    const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay a.handle')[1];
-                    moveHandle.dispatchEvent(new PointerEvent('click'));
-                    expect(element)
-                        .property('resizing')
-                        .to.exist.and.to.have.property('tagName', 'Bay');
-                    const bay = element.resizing;
-                    expect(bay).to.have.attribute('esld:w', '3');
-                    expect(bay).to.have.attribute('esld:h', '3');
-                    await sendMouse({ type: 'click', position: [600, 400] });
-                    expect(bay).to.have.attribute('esld:w', '3');
-                    expect(bay).to.have.attribute('esld:h', '3');
+                it('simplifies vertical connection paths when disconnecting', async () => {
+                    querySvg({ scl: '[type="NEW"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                    await sendMouse({ type: 'click', position: [600, 270] });
+                    expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
+                    expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(16);
+                    querySvg({ scl: '[type="NEW"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                    element.updateComplete;
+                    expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(4);
+                    expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(11);
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
                 });
-                it('forbids undersizing voltage levels containing bays', async () => {
-                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                    const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.voltagelevel > a.handle')[1];
-                    moveHandle.dispatchEvent(new PointerEvent('click'));
-                    expect(element)
-                        .property('resizing')
-                        .to.exist.and.to.have.property('tagName', 'VoltageLevel');
-                    const voltageLevel = element.resizing;
-                    expect(voltageLevel).to.have.attribute('esld:w', '13');
-                    expect(voltageLevel).to.have.attribute('esld:h', '13');
-                    await sendMouse({ type: 'click', position: [100, 100] });
-                    expect(voltageLevel).to.have.attribute('esld:w', '13');
-                    expect(voltageLevel).to.have.attribute('esld:h', '13');
+                it('simplifies when disconnecting only where possible', async () => {
+                    querySvg({ scl: '[type="VTR"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                    await sendMouse({ type: 'click', position: [300, 220] });
+                    querySvg({ scl: '[type="NEW"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                    await sendMouse({ type: 'click', position: [300, 220] });
+                    expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(7);
+                    expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(19);
+                    querySvg({ scl: '[type="NEW"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                    expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
+                    expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(16);
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
                 });
-                it('allows moving bays', async () => {
-                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                    sldEditor
-                        .shadowRoot.querySelector('g.bay a.handle')
-                        .dispatchEvent(new PointerEvent('click'));
-                    expect(element)
-                        .property('placing')
-                        .to.exist.and.to.have.property('tagName', 'Bay');
-                    const bay = element.placing;
-                    await sendMouse({ type: 'click', position: [200, 200] });
-                    expect(bay).to.have.attribute('esld:x', '5');
-                    expect(bay).to.have.attribute('esld:y', '3');
-                });
-                it('renames reparented bays if necessary', async () => {
-                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                    sldEditor
-                        .shadowRoot.querySelector('g.bay a.handle')
-                        .dispatchEvent(new PointerEvent('click'));
-                    const bay = element.placing;
-                    expect(bay.parentElement).to.have.attribute('name', 'V1');
-                    expect(bay).to.have.attribute('name', 'B1');
-                    await sendMouse({ type: 'click', position: [600, 200] });
-                    expect(element).to.have.property('placing', undefined);
-                    expect(bay).to.have.attribute('esld:x', '18');
-                    expect(bay).to.have.attribute('esld:y', '3');
-                    expect(bay.parentElement).to.have.attribute('name', 'V2');
-                    expect(bay).to.have.attribute('name', 'B2');
-                    sldEditor
-                        .shadowRoot.querySelector('g.bay a.handle')
-                        .dispatchEvent(new PointerEvent('click'));
-                    await sendMouse({ type: 'click', position: [200, 200] });
-                    expect(bay).to.have.attribute('esld:x', '5');
-                    expect(bay).to.have.attribute('esld:y', '3');
-                    expect(bay.parentElement).to.have.attribute('name', 'V1');
-                    expect(bay).to.have.attribute('name', 'B2');
-                });
-                it("updates reparented bays' connectivity node paths", async () => {
-                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                    sldEditor
-                        .shadowRoot.querySelector('g.bay a.handle')
-                        .dispatchEvent(new PointerEvent('click'));
-                    const bay = element.placing;
-                    const cNode = bay.querySelector('ConnectivityNode');
-                    expect(cNode).to.have.attribute('pathName', 'S1/V1/B1/L1');
-                    await sendMouse({ type: 'click', position: [600, 200] });
-                    expect(element).to.have.property('placing', undefined);
-                    expect(cNode).to.have.attribute('pathName', 'S1/V2/B2/L1');
-                });
-                it('moves a bay when its parent voltage level is moved', async () => {
-                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                    sldEditor
-                        .shadowRoot.querySelector('g.voltagelevel a.handle')
-                        .dispatchEvent(new PointerEvent('click'));
-                    const bay = element.placing.querySelector('Bay');
-                    expect(bay).to.have.attribute('esld:x', '2');
-                    expect(bay).to.have.attribute('esld:y', '2');
-                    await sendMouse({ type: 'click', position: [100, 100] });
-                    expect(bay).to.have.attribute('esld:x', '3');
-                    expect(bay).to.have.attribute('esld:y', '1');
-                });
-                it('allows placing new conducting equipment', async () => {
-                    var _a;
-                    (_a = element
-                        .shadowRoot.querySelector('[label="Add CBR"]')) === null || _a === void 0 ? void 0 : _a.click();
-                    expect(element)
-                        .property('placing')
-                        .to.have.property('tagName', 'ConductingEquipment');
+                it('disconnects equipment upon being moved', async () => {
+                    querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(new PointerEvent('click'));
+                    expect(element.doc.querySelector('[type="DIS"] > Terminal')).to.exist;
                     await sendMouse({ type: 'click', position: [150, 180] });
-                    expect(element).to.have.property('placing', undefined);
-                    expect(element).to.have.property('resizing', undefined);
-                    const equipment = element.doc.querySelector('ConductingEquipment');
-                    expect(equipment).to.exist;
-                    expect(equipment).to.have.attribute('x', '3');
-                    expect(equipment).to.have.attribute('y', '3');
+                    expect(element.doc.querySelector('[type="DIS"] > Terminal')).to.not
+                        .exist;
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
                 });
-                describe('with conducting equipment', () => {
-                    beforeEach(async () => {
-                        const doc = new DOMParser().parseFromString(equipmentDocString, 'application/xml');
-                        element.doc = doc;
-                        await element.updateComplete;
-                    });
-                    it('moves equipment on left mouse button click', async () => {
-                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                        const equipment = element.doc.querySelector('ConductingEquipment');
-                        const id = identity(equipment);
-                        const eqClickTarget = sldEditor
-                            .shadowRoot.getElementById(id)
-                            .querySelector('rect');
-                        expect(equipment).to.not.have.attribute('esld:rot');
-                        eqClickTarget.dispatchEvent(new PointerEvent('click'));
-                        await sendMouse({ type: 'click', position: [150, 180] });
-                        expect(equipment).to.have.attribute('esld:x', '3');
-                        expect(equipment).to.have.attribute('esld:y', '3');
-                    });
-                    it('rotates equipment on middle mouse button click', () => {
-                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                        const equipment = element.doc.querySelector('ConductingEquipment');
-                        const id = identity(equipment);
-                        const eqClickTarget = sldEditor
-                            .shadowRoot.getElementById(id)
-                            .querySelector('rect');
-                        expect(equipment).to.not.have.attribute('esld:rot');
-                        eqClickTarget.dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
-                        expect(equipment).to.have.attribute('esld:rot', '1');
-                    });
-                    it('displays a menu on equipment right click', async () => {
-                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                        const equipment = element.doc.querySelector('ConductingEquipment');
-                        const id = identity(equipment);
-                        const eqClickTarget = sldEditor
-                            .shadowRoot.getElementById(id)
-                            .querySelector('rect');
-                        eqClickTarget.dispatchEvent(new PointerEvent('contextmenu', { clientX: 750, clientY: 550 }));
-                        await element.updateComplete;
-                        expect(sldEditor)
-                            .property('menu')
-                            .to.exist.and.to.have.property('element', equipment);
-                    });
-                    it('flips the equipment on first menu item select', async () => {
-                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                        const equipment = element.doc.querySelector('ConductingEquipment');
-                        const id = identity(equipment);
-                        let eqClickTarget = sldEditor
-                            .shadowRoot.getElementById(id)
-                            .querySelector('rect');
-                        eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
-                        await element.updateComplete;
-                        let item = sldEditor.shadowRoot.querySelector('mwc-list-item');
-                        expect(equipment).to.not.have.attribute('esld:flip');
-                        await sendMouse({ type: 'click', position: middleOf(item) });
-                        expect(equipment).to.have.attribute('esld:flip', 'true');
-                        eqClickTarget = sldEditor
-                            .shadowRoot.getElementById(id)
-                            .querySelector('rect');
-                        eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
-                        await element.updateComplete;
-                        item = sldEditor.shadowRoot.querySelector('mwc-list-item');
-                        await sendMouse({ type: 'click', position: middleOf(item) });
-                        expect(equipment).to.not.have.attribute('esld:flip');
-                    });
-                    it('rotates equipment on second menu item select', async () => {
-                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
-                        const equipment = element.doc.querySelector('ConductingEquipment');
-                        const id = identity(equipment);
-                        const eqClickTarget = sldEditor
-                            .shadowRoot.getElementById(id)
-                            .querySelector('rect');
-                        eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
-                        await element.updateComplete;
-                        const item = sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(2)');
-                        expect(equipment).to.not.have.attribute('esld:rot');
-                        item.selected = true;
-                        await element.updateComplete;
-                        expect(equipment).to.have.attribute('esld:rot', '1');
-                    });
+                it('removes superfluous connectivity nodes when disconnecting', async () => {
+                    querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                    querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                    expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                });
+                it('removes contained connectivity nodes when moving containers', async () => {
+                    querySvg({ svg: 'a.handle' }).dispatchEvent(new PointerEvent('click'));
+                    await sendMouse({ type: 'click', position: [100, 150] });
+                    expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(1);
+                });
+                it('removes connected connectivity nodes when moving containers', async () => {
+                    querySvg({
+                        scl: '[name="V2"]',
+                        svg: 'a.handle',
+                    }).dispatchEvent(new PointerEvent('click'));
+                    expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(2);
+                    await sendMouse({ type: 'click', position: [500, 150] });
+                    expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(1);
+                });
+                it('keeps internal connectivity nodes when moving containers', async () => {
+                    var _a;
+                    const position = middleOf(querySvg({
+                        scl: '[name="V2"]',
+                        svg: 'a.handle',
+                    }));
+                    await sendMouse({ position, type: 'click' });
+                    (_a = element
+                        .shadowRoot.querySelector('[label="Add Substation"]')) === null || _a === void 0 ? void 0 : _a.click();
+                    expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(2);
+                    await sendMouse({ position, type: 'click' });
+                    expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(1);
                 });
             });
         });

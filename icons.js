@@ -437,12 +437,16 @@ export const powerTransformerTwoWindingSymbol = svg `<symbol
 </symbol>`;
 export const symbols = svg `
   <defs>
-  <pattern id="grid" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse" width="1" height="1" viewBox="0 0 1 1">
-  <rect x="0" y="0" width="1" height="1" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
+  <pattern id="grid" patternUnits="userSpaceOnUse" width="1" height="1" viewBox="0 0 1 1">
+  <line x1="0" y1="0" x2="0" y2="1" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
+  <line x1="0" y1="0" x2="1" y2="0" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
+  <line x1="1" y1="0" x2="1" y2="1" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
+  <line x1="0" y1="1" x2="1" y2="1" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
   </pattern>
   ${Object.keys(equipmentPaths).map(eqType => equipmentSymbol(eqType))}
-${connectivityNodeMarker}
-${groundedMarker}
+  ${equipmentSymbol('ConductingEquipment')}
+  ${connectivityNodeMarker}
+  ${groundedMarker}
   </defs>
 `;
 //# sourceMappingURL=icons.js.map

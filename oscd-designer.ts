@@ -18,6 +18,7 @@ import {
   ConnectDetail,
   ConnectEvent,
   connectionStartPoints,
+  eqTypes,
   isBusBar,
   PlaceEvent,
   PlaceLabelEvent,
@@ -587,7 +588,7 @@ export default class Designer extends LitElement {
           : nothing}${Array.from(
           this.doc.querySelectorAll(':root > Substation > VoltageLevel > Bay')
         ).find(bay => !isBusBar(bay))
-          ? ['CTR', 'VTR', 'DIS', 'CBR', 'IFL']
+          ? eqTypes
               .map(
                 eqType => html`<mwc-fab
                   mini
@@ -667,7 +668,7 @@ export default class Designer extends LitElement {
           @click=${() => this.zoomOut()}
         >
         </mwc-icon-button
-        >${this.placing || this.resizing
+        >${this.placing || this.resizing || this.connecting || this.placingLabel
           ? html`<mwc-icon-button
               icon="close"
               label="Cancel action"

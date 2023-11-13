@@ -6,6 +6,28 @@ export const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
 export const xmlnsNs = 'http://www.w3.org/2000/xmlns/';
 export const svgNs = 'http://www.w3.org/2000/svg';
 
+export const eqTypes = [
+  'CAB',
+  'CAP',
+  'CBR',
+  'CTR',
+  'DIS',
+  'GEN',
+  'IFL',
+  'LIN',
+  'MOT',
+  'REA',
+  'RES',
+  'SAR',
+  'SMC',
+  'VTR',
+] as const;
+export type EqType = (typeof eqTypes)[number];
+export function isEqType(str: string): str is EqType {
+  return eqTypes.includes(str as EqType);
+}
+export const ringedEqTypes = new Set(['GEN', 'MOT', 'SMC']);
+
 export type Point = [number, number];
 export type Attrs = {
   pos: Point;

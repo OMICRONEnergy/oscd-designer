@@ -242,6 +242,16 @@ snapshots["Designer given conducting equipment grounds equipment on connection p
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -408,6 +418,16 @@ snapshots["Designer given conducting equipment connects equipment on connection 
         >
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
       </Bay>
     </VoltageLevel>
@@ -663,6 +683,16 @@ snapshots["Designer given conducting equipment connects equipment on connect men
         >
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L2"
@@ -931,6 +961,16 @@ snapshots["Designer given conducting equipment with established connectivity uni
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -1136,6 +1176,16 @@ snapshots["Designer given conducting equipment with established connectivity con
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -1302,6 +1352,16 @@ snapshots["Designer given conducting equipment with established connectivity avo
         >
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
       </Bay>
     </VoltageLevel>
@@ -1577,6 +1637,16 @@ snapshots["Designer given conducting equipment with established connectivity kee
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -1740,6 +1810,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:y="7"
           name="BAT1"
           type="BAT"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
         >
         </ConductingEquipment>
       </Bay>
@@ -1916,6 +1996,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           </Terminal>
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L2"
@@ -2227,6 +2317,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
         <ConnectivityNode
           name="L1"
           pathName="S1/V2/B1/L1"
@@ -2517,6 +2617,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
         <ConnectivityNode
           name="L1"
           pathName="S1/V2/B1/L1"
@@ -2741,6 +2851,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
         <ConnectivityNode
           name="L1"
           pathName="S1/V2/B1/L1"
@@ -2900,6 +3020,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -3016,6 +3146,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           </Terminal>
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L1"
@@ -3240,6 +3380,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -3366,6 +3516,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           </Terminal>
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L1"
@@ -3620,6 +3780,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           </Terminal>
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="7"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="7"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L1"
@@ -3903,6 +4073,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           </Terminal>
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L2"
@@ -4786,7 +4966,7 @@ snapshots["Designer given conducting equipment with established connectivity bet
 snapshots["Designer given a voltage level opens a menu on voltage level right click"] = 
 `<menu
   id="sld-context-menu"
-  style="position: fixed; top: 0px; left: 0px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px;"
+  style="position: fixed; top: 0px; left: 0px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px; overflow-y: auto;"
 >
   <mwc-list>
     <mwc-list-item
@@ -4866,7 +5046,7 @@ snapshots["Designer given a voltage level opens a menu on voltage level right cl
 snapshots["Designer given conducting equipment opens a menu on equipment right click"] = 
 `<menu
   id="sld-context-menu"
-  style="position: fixed; top: 550px; left: 750px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px;"
+  style="position: fixed; top: 550px; left: 750px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px; overflow-y: auto;"
 >
   <mwc-list>
     <mwc-list-item
@@ -5246,6 +5426,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           <Terminal name="erroneous">
           </Terminal>
         </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
         <ConnectivityNode
           name="L1"
           pathName="S1/V2/B1/L1"
@@ -5526,6 +5716,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           </Terminal>
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L1"
@@ -6030,6 +6230,16 @@ snapshots["Designer given conducting equipment with established connectivity bet
           </Terminal>
           <Terminal name="erroneous">
           </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
         </ConductingEquipment>
         <ConnectivityNode
           name="L1"

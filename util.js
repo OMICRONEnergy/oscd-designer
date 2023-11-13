@@ -3,6 +3,24 @@ export const privType = 'Transpower-SLD-Vertices';
 export const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
 export const xmlnsNs = 'http://www.w3.org/2000/xmlns/';
 export const svgNs = 'http://www.w3.org/2000/svg';
+export function xmlBoolean(value) {
+    var _a;
+    return ['true', '1'].includes((_a = value === null || value === void 0 ? void 0 : value.trim()) !== null && _a !== void 0 ? _a : 'false');
+}
+export function isBusBar(element) {
+    var _a;
+    return (element.tagName === 'Bay' &&
+        xmlBoolean((_a = element.querySelector('Section[bus]')) === null || _a === void 0 ? void 0 : _a.getAttribute('bus')));
+}
+export function attributes(element) {
+    const [x, y, w, h, rotVal] = ['x', 'y', 'w', 'h', 'rot'].map(name => { var _a; return parseFloat((_a = element.getAttributeNS(sldNs, name)) !== null && _a !== void 0 ? _a : '0'); });
+    const pos = [x, y].map(d => Math.max(0, d));
+    const dim = [w, h].map(d => Math.max(1, d));
+    const bus = xmlBoolean(element.getAttribute('bus'));
+    const flip = xmlBoolean(element.getAttributeNS(sldNs, 'flip'));
+    const rot = (((rotVal % 4) + 4) % 4);
+    return { pos, dim, flip, rot, bus };
+}
 function pathString(...args) {
     return args.join('/');
 }
@@ -20,7 +38,22 @@ function collinear(v0, v1, v2) {
     return (x0 === x1 && x1 === x2) || (y0 === y1 && y1 === y2);
 }
 export function removeNode(node) {
-    const edits = [{ node }];
+    var _a;
+    const edits = [];
+    if (xmlBoolean((_a = node.querySelector(`Section[bus]`)) === null || _a === void 0 ? void 0 : _a.getAttribute('bus'))) {
+        Array.from(node.querySelectorAll('Section:not([bus])')).forEach(section => edits.push({ node: section }));
+        const sections = Array.from(node.querySelectorAll('Section[bus]'));
+        const busSection = sections[0];
+        Array.from(busSection.children)
+            .slice(1)
+            .forEach(vertex => edits.push({ node: vertex }));
+        const lastVertex = sections[sections.length - 1].lastElementChild;
+        if (lastVertex)
+            edits.push({ parent: busSection, node: lastVertex, reference: null });
+        sections.slice(1).forEach(section => edits.push({ node: section }));
+    }
+    else
+        edits.push({ node });
     Array.from(node.ownerDocument.querySelectorAll(`Terminal[connectivityNode="${node.getAttribute('pathName')}"]`)).forEach(terminal => edits.push({ node: terminal }));
     return edits;
 }
@@ -192,7 +225,6 @@ export function reparentElement(element, parent) {
     return edits;
 }
 export function removeTerminal(terminal) {
-    var _a;
     const edits = [];
     edits.push({ node: terminal });
     const pathName = terminal.getAttribute('connectivityNode');
@@ -200,9 +232,11 @@ export function removeTerminal(terminal) {
     const otherTerminals = Array.from(terminal.ownerDocument.querySelectorAll(`Terminal[connectivityNode="${pathName}"]`)).filter(t => t !== terminal);
     if (cNode &&
         otherTerminals.length &&
-        otherTerminals.every(t => t.closest('Bay') !== cNode.closest('Bay'))) {
-        const newParent = (_a = otherTerminals
-            .find(t => t.closest('Bay'))) === null || _a === void 0 ? void 0 : _a.closest('Bay');
+        otherTerminals.every(t => t.closest('Bay') !== cNode.closest('Bay')) &&
+        !isBusBar(cNode.closest('Bay'))) {
+        const newParent = otherTerminals
+            .find(t => t.closest('Bay'))
+            .closest('Bay');
         if (newParent)
             edits.push(...reparentElement(cNode, newParent));
     }
@@ -219,15 +253,6 @@ export function removeTerminal(terminal) {
     if (cut)
         edits.push(...healSectionCut(cut));
     return edits;
-}
-export function attributes(element) {
-    var _a, _b;
-    const [x, y, w, h, rotVal] = ['x', 'y', 'w', 'h', 'rot'].map(name => { var _a; return parseFloat((_a = element.getAttributeNS(sldNs, name)) !== null && _a !== void 0 ? _a : '0'); });
-    const pos = [x, y].map(d => Math.max(0, d));
-    const dim = [w, h].map(d => Math.max(1, d));
-    const flip = ['true', '1'].includes((_b = (_a = element.getAttributeNS(sldNs, 'flip')) === null || _a === void 0 ? void 0 : _a.trim()) !== null && _b !== void 0 ? _b : 'false');
-    const rot = (((rotVal % 4) + 4) % 4);
-    return { pos, dim, flip, rot };
 }
 export function connectionStartPoints(equipment) {
     const { pos: [x, y], rot, } = attributes(equipment);

@@ -214,7 +214,7 @@ describe('Designer', () => {
         });
         it('allows resizing voltage levels', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
-            const moveHandle = sldEditor.shadowRoot.querySelectorAll('a.handle')[1];
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('.handle')[1];
             moveHandle.dispatchEvent(new PointerEvent('click'));
             expect(element)
                 .property('resizing')
@@ -228,7 +228,7 @@ describe('Designer', () => {
         });
         it('allows moving voltage levels', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
-            const moveHandle = sldEditor.shadowRoot.querySelector('a.handle');
+            const moveHandle = sldEditor.shadowRoot.querySelector('.handle');
             moveHandle.dispatchEvent(new PointerEvent('click'));
             expect(element)
                 .property('placing')
@@ -242,7 +242,7 @@ describe('Designer', () => {
         });
         it('forbids moving voltage levels out of bounds', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
-            const moveHandle = sldEditor.shadowRoot.querySelector('a.handle');
+            const moveHandle = sldEditor.shadowRoot.querySelector('.handle');
             moveHandle.dispatchEvent(new PointerEvent('click'));
             expect(element)
                 .property('placing')
@@ -271,6 +271,25 @@ describe('Designer', () => {
             expect(bay).to.have.attribute('w', '7');
             expect(bay).to.have.attribute('h', '8');
         });
+        it('allows placing a new bus bar', async () => {
+            var _a;
+            (_a = element
+                .shadowRoot.querySelector('[label="Add Bus Bar"]')) === null || _a === void 0 ? void 0 : _a.click();
+            expect(element).property('placing').to.have.property('tagName', 'Bay');
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            await sendMouse({ type: 'click', position: [200, 200] });
+            expect(element).to.have.property('placing', undefined);
+            expect(element).property('resizing').to.have.property('tagName', 'Bay');
+            await sendMouse({ type: 'click', position: [400, 400] });
+            expect(sldEditor).to.have.property('resizing', undefined);
+            const bus = element.doc.querySelector('Bay');
+            expect(bus).to.exist;
+            expect(bus).to.have.attribute('x', '5');
+            expect(bus).to.have.attribute('y', '3');
+            expect(bus).to.have.attribute('smth:w', '1');
+            expect(bus).to.have.attribute('h', '8');
+            expect(bus).dom.to.equalSnapshot();
+        });
     });
     describe('given a bay', () => {
         beforeEach(async () => {
@@ -280,7 +299,7 @@ describe('Designer', () => {
         });
         it('allows resizing bays', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
-            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay a.handle')[1];
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay .handle')[1];
             moveHandle.dispatchEvent(new PointerEvent('click'));
             expect(element)
                 .property('resizing')
@@ -294,7 +313,7 @@ describe('Designer', () => {
         });
         it('forbids resizing bays out of bounds', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
-            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay a.handle')[1];
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay .handle')[1];
             moveHandle.dispatchEvent(new PointerEvent('click'));
             expect(element)
                 .property('resizing')
@@ -308,7 +327,7 @@ describe('Designer', () => {
         });
         it('forbids undersizing voltage levels containing bays', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
-            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.voltagelevel > a.handle')[1];
+            const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.voltagelevel > .handle')[1];
             moveHandle.dispatchEvent(new PointerEvent('click'));
             expect(element)
                 .property('resizing')
@@ -323,7 +342,7 @@ describe('Designer', () => {
         it('allows moving bays', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
             sldEditor
-                .shadowRoot.querySelector('g.bay a.handle')
+                .shadowRoot.querySelector('g.bay .handle')
                 .dispatchEvent(new PointerEvent('click'));
             expect(element)
                 .property('placing')
@@ -336,7 +355,7 @@ describe('Designer', () => {
         it('renames reparented bays if necessary', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
             sldEditor
-                .shadowRoot.querySelector('g.bay a.handle')
+                .shadowRoot.querySelector('g.bay .handle')
                 .dispatchEvent(new PointerEvent('click'));
             const bay = element.placing;
             expect(bay.parentElement).to.have.attribute('name', 'V1');
@@ -348,7 +367,7 @@ describe('Designer', () => {
             expect(bay.parentElement).to.have.attribute('name', 'V2');
             expect(bay).to.have.attribute('name', 'B2');
             sldEditor
-                .shadowRoot.querySelector('g.bay a.handle')
+                .shadowRoot.querySelector('g.bay .handle')
                 .dispatchEvent(new PointerEvent('click'));
             await sendMouse({ type: 'click', position: [200, 200] });
             expect(bay).to.have.attribute('esld:x', '5');
@@ -359,7 +378,7 @@ describe('Designer', () => {
         it("updates reparented bays' connectivity node paths", async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
             sldEditor
-                .shadowRoot.querySelector('g.bay a.handle')
+                .shadowRoot.querySelector('g.bay .handle')
                 .dispatchEvent(new PointerEvent('click'));
             const bay = element.placing;
             const cNode = bay.querySelector('ConnectivityNode');
@@ -372,7 +391,7 @@ describe('Designer', () => {
         it('moves a bay when its parent voltage level is moved', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
             sldEditor
-                .shadowRoot.querySelector('g.voltagelevel a.handle')
+                .shadowRoot.querySelector('g.voltagelevel .handle')
                 .dispatchEvent(new PointerEvent('click'));
             const bay = element.placing.querySelector('Bay');
             expect(bay).to.have.attribute('esld:x', '2');
@@ -394,6 +413,52 @@ describe('Designer', () => {
             expect(equipment).to.exist;
             expect(equipment).to.have.attribute('x', '3');
             expect(equipment).to.have.attribute('y', '3');
+        });
+        describe('with a sibling bus bar', () => {
+            beforeEach(async () => {
+                var _a;
+                (_a = element
+                    .shadowRoot.querySelector('[label="Add Bus Bar"]')) === null || _a === void 0 ? void 0 : _a.click();
+                await sendMouse({ type: 'click', position: [200, 200] });
+                await sendMouse({ type: 'click', position: [400, 400] });
+            });
+            it('allows the bay to overlap its sibling bus bar', async () => {
+                const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                const moveHandle = sldEditor.shadowRoot.querySelectorAll('g.bay .handle')[1];
+                moveHandle.dispatchEvent(new PointerEvent('click'));
+                expect(element)
+                    .property('resizing')
+                    .to.exist.and.to.have.property('tagName', 'Bay');
+                const bay = element.resizing;
+                expect(bay).to.have.attribute('esld:w', '3');
+                expect(bay).to.have.attribute('esld:h', '3');
+                await sendMouse({ type: 'click', position: [400, 400] });
+                expect(bay).to.have.attribute('esld:w', '10');
+                expect(bay).to.have.attribute('esld:h', '9');
+            });
+            it('moves the bus bar on left click', async () => {
+                await sendMouse({
+                    type: 'click',
+                    position: middleOf(querySvg({ scl: '[name="L"]' })),
+                });
+                const bus = element.doc.querySelector('[name="BB1"]');
+                expect(bus).to.have.attribute('x', '5');
+                await sendMouse({ type: 'click', position: [150, 150] });
+                expect(bus).to.have.attribute('x', '3');
+            });
+            it('resizes the bus bar on middle mouse button click', async () => {
+                await sendMouse({
+                    type: 'click',
+                    button: 'middle',
+                    position: middleOf(querySvg({ scl: '[name="L"]' })),
+                });
+                const bus = element.doc.querySelector('[name="BB1"]');
+                expect(bus).to.have.attribute('esld:w', '1');
+                expect(bus).to.have.attribute('h', '8');
+                await sendMouse({ type: 'click', position: [250, 150] });
+                expect(bus).to.have.attribute('esld:w', '3');
+                expect(bus).to.have.attribute('h', '1');
+            });
         });
     });
     describe('given conducting equipment', () => {
@@ -785,14 +850,14 @@ describe('Designer', () => {
                     await expect(element.doc.documentElement).dom.to.equalSnapshot();
                 });
                 it('removes contained connectivity nodes when moving containers', async () => {
-                    querySvg({ svg: 'a.handle' }).dispatchEvent(new PointerEvent('click'));
+                    querySvg({ svg: '.handle' }).dispatchEvent(new PointerEvent('click'));
                     await sendMouse({ type: 'click', position: [100, 150] });
                     expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(1);
                 });
                 it('removes connected connectivity nodes when moving containers', async () => {
                     querySvg({
                         scl: '[name="V2"]',
-                        svg: 'a.handle',
+                        svg: '.handle',
                     }).dispatchEvent(new PointerEvent('click'));
                     expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(2);
                     await sendMouse({ type: 'click', position: [500, 150] });
@@ -802,7 +867,7 @@ describe('Designer', () => {
                     var _a;
                     const position = middleOf(querySvg({
                         scl: '[name="V2"]',
-                        svg: 'a.handle',
+                        svg: '.handle',
                     }));
                     await sendMouse({ position, type: 'click' });
                     (_a = element
@@ -810,6 +875,90 @@ describe('Designer', () => {
                     expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(2);
                     await sendMouse({ position, type: 'click' });
                     expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(1);
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                });
+                describe('and a bus bar', () => {
+                    beforeEach(async () => {
+                        var _a;
+                        (_a = element
+                            .shadowRoot.querySelector('[label="Add Bus Bar"]')) === null || _a === void 0 ? void 0 : _a.click();
+                        await sendMouse({ type: 'click', position: [430, 150] });
+                        await sendMouse({ type: 'click', position: [430, 230] });
+                        await sendMouse({
+                            type: 'click',
+                            position: middleOf(querySvg({ scl: '[name="L"]' })),
+                        });
+                        await sendMouse({ type: 'click', position: [450, 150] });
+                        querySvg({ scl: '[type="VTR"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                        await sendMouse({
+                            type: 'click',
+                            position: middleOf(querySvg({ scl: '[name="L"]' })),
+                        });
+                    });
+                    it('keeps the bus bar when moving containers', async () => {
+                        var _a, _b;
+                        const position = middleOf(querySvg({
+                            scl: '[name="V2"] > [name="B1"]',
+                            svg: '.handle',
+                        }));
+                        expect((_a = element.doc
+                            .querySelector('[name="L"]')) === null || _a === void 0 ? void 0 : _a.querySelectorAll('Section')).to.have.lengthOf(3);
+                        await sendMouse({ position, type: 'click' });
+                        position[1] -= 40;
+                        await sendMouse({ position, type: 'click' });
+                        expect((_b = element.doc
+                            .querySelector('[name="L"]')) === null || _b === void 0 ? void 0 : _b.querySelectorAll('Section')).to.have.lengthOf(1);
+                        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                    });
+                    it('opens a menu on right click', async () => {
+                        querySvg({
+                            scl: '[name="L"]',
+                            svg: 'line[stroke="none"]',
+                        }).dispatchEvent(new PointerEvent('contextmenu'));
+                        await element.updateComplete;
+                        expect(querySvg({ svg: 'menu' })).to.exist;
+                    });
+                    it('resizes the bus bar on first menu item select', async () => {
+                        querySvg({
+                            scl: '[name="L"]',
+                            svg: 'line[stroke="none"]',
+                        }).dispatchEvent(new PointerEvent('contextmenu'));
+                        await element.updateComplete;
+                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                        sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(1)').selected = true;
+                        const bus = element.doc.querySelector('[name="BB1"]');
+                        expect(bus).to.have.attribute('h', '3');
+                        await sendMouse({ type: 'click', position: [450, 150] });
+                        expect(bus).to.have.attribute('h', '2');
+                        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                    });
+                    it('moves the bus bar on first menu item select', async () => {
+                        querySvg({
+                            scl: '[name="L"]',
+                            svg: 'line[stroke="none"]',
+                        }).dispatchEvent(new PointerEvent('contextmenu'));
+                        await element.updateComplete;
+                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                        sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(2)').selected = true;
+                        const bus = element.doc.querySelector('[name="BB1"]');
+                        expect(bus).to.have.attribute('y', '2');
+                        await sendMouse({ type: 'click', position: [430, 400] });
+                        expect(bus).to.have.attribute('y', '10');
+                        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                    });
+                    it('removes the bus bar on third menu item select', async () => {
+                        querySvg({
+                            scl: '[name="L"]',
+                            svg: 'line[stroke="none"]',
+                        }).dispatchEvent(new PointerEvent('contextmenu'));
+                        await element.updateComplete;
+                        expect(element.doc.querySelector('[name="BB1"]')).to.exist;
+                        const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                        sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(3)').selected = true;
+                        await sldEditor.updateComplete;
+                        expect(element.doc.querySelector('[name="BB1"]')).to.not.exist;
+                        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                    });
                 });
             });
         });

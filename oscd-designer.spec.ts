@@ -69,6 +69,7 @@ export const equipmentDocString = `<?xml version="1.0" encoding="UTF-8"?>
         <ConductingEquipment type="BAT" name="BAT1" esld:x="19" esld:y="7" esld:rot="3" esld:lx="19" esld:ly="7">
           <Terminal name="erroneous"/>
         </ConductingEquipment>
+        <ConductingEquipment type="SMC" name="SMC1" esld:x="22" esld:y="8" esld:rot="3" esld:lx="22" esld:ly="8" />
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -339,7 +340,7 @@ describe('Designer', () => {
       }).dispatchEvent(new PointerEvent('contextmenu'));
       await element.updateComplete;
       expect(queryUI({ ui: 'menu' })).to.exist;
-      expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
+      await expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
     });
 
     it('resizes voltage levels on resize menu item select', async () => {
@@ -673,7 +674,7 @@ describe('Designer', () => {
     });
 
     it('allows placing new conducting equipment', async () => {
-      element.shadowRoot!.querySelector<Button>('[label="Add CBR"]')?.click();
+      element.shadowRoot!.querySelector<Button>('[label="Add GEN"]')?.click();
       expect(element)
         .property('placing')
         .to.have.property('tagName', 'ConductingEquipment');
@@ -753,7 +754,7 @@ describe('Designer', () => {
 
     it('requests equipment edit wizard on edit menu item select', async () => {
       queryUI({
-        scl: '[type="CTR"]',
+        scl: '[type="SMC"]',
         ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       const sldEditor =
@@ -764,7 +765,7 @@ describe('Designer', () => {
       )!.selected = true;
       await sldEditor.updateComplete;
       expect(lastCalledWizard).to.equal(
-        element.doc.querySelector('[type="CTR"]')
+        element.doc.querySelector('[type="SMC"]')
       );
     });
 
@@ -825,7 +826,7 @@ describe('Designer', () => {
       );
       await element.updateComplete;
       expect(queryUI({ ui: 'menu' })).to.exist;
-      expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
+      await expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
     });
 
     it('flips equipment on mirror menu item select', async () => {

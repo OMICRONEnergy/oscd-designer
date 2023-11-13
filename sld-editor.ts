@@ -18,6 +18,7 @@ import '@material/mwc-textfield';
 import { getReference, identity } from '@openscd/oscd-scl';
 import {
   bayGraphic,
+  eqRingPath,
   equipmentGraphic,
   movePath,
   resizePath,
@@ -29,6 +30,7 @@ import {
   connectionStartPoints,
   elementPath,
   isBusBar,
+  isEqType,
   newConnectEvent,
   newPlaceEvent,
   newPlaceLabelEvent,
@@ -42,6 +44,7 @@ import {
   privType,
   removeNode,
   removeTerminal,
+  ringedEqTypes,
   sldNs,
   svgNs,
   xmlBoolean,
@@ -127,17 +130,17 @@ const parentTags: Partial<Record<string, string>> = {
 };
 
 const singleTerminal = new Set([
-  'VTR',
-  'GEN',
-  'MOT',
-  'FAN',
-  'PMP',
-  'EFN',
   'BAT',
+  'EFN',
+  'FAN',
+  'GEN',
+  'IFL',
+  'MOT',
+  'PMP',
   'RRC',
   'SAR',
   'SMC',
-  'IFL',
+  'VTR',
 ]);
 
 function preventDefault(e: Event) {
@@ -238,7 +241,7 @@ export class SLDEditor extends LitElement {
   coordinatesRef: Ref<HTMLElement> = createRef();
 
   positionCoordinates(e: MouseEvent) {
-    const coordinatesDiv = this.coordinatesRef.value;
+    const coordinatesDiv = this.coordinatesRef?.value;
     if (coordinatesDiv) {
       coordinatesDiv.style.top = `${e.clientY}px`;
       coordinatesDiv.style.left = `${e.clientX + 16}px`;
@@ -365,19 +368,20 @@ export class SLDEditor extends LitElement {
       e.stopImmediatePropagation();
       this.menu = undefined;
     }
-    this.positionCoordinates(e);
   };
 
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('keydown', this.handleKeydown);
     window.addEventListener('click', this.handleClick, true);
+    window.addEventListener('click', this.positionCoordinates);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.handleKeydown);
     window.removeEventListener('click', this.handleClick);
+    window.removeEventListener('click', this.positionCoordinates);
   }
 
   nearestOpenTerminal(equipment?: Element): 'top' | 'bottom' | undefined {
@@ -773,20 +777,26 @@ export class SLDEditor extends LitElement {
       <menu
         id="sld-context-menu"
         style="position: fixed; top: ${this.menu.top}px; left: ${this.menu
-          .left}px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px;"
-        ${ref(async (m?: Element) => {
-          if (!(m instanceof HTMLElement)) return;
+          .left}px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px; overflow-y: auto;"
+        ${ref(async (menu?: Element) => {
+          if (!(menu instanceof HTMLElement)) return;
+          const nav = (
+            this.parentElement!.getRootNode() as ShadowRoot
+          ).querySelector('nav')!;
+          const navHeight = nav.offsetHeight + 12;
           await this.updateComplete;
-          const { bottom, right } = m.getBoundingClientRect();
-          if (bottom > window.innerHeight) {
-            m.style.removeProperty('top');
+          const { bottom, right } = menu.getBoundingClientRect();
+          if (bottom > window.innerHeight - navHeight) {
+            menu.style.removeProperty('top');
             // eslint-disable-next-line no-param-reassign
-            m.style.bottom = '0px';
+            menu.style.bottom = `${navHeight}px`;
+            // eslint-disable-next-line no-param-reassign
+            menu.style.maxHeight = `calc(100vh - ${navHeight + 68}px)`;
           }
           if (right > window.innerWidth) {
-            m.style.removeProperty('left');
+            menu.style.removeProperty('left');
             // eslint-disable-next-line no-param-reassign
-            m.style.right = '0px';
+            menu.style.right = '0px';
           }
         })}
       >
@@ -835,23 +845,21 @@ export class SLDEditor extends LitElement {
     }
 
     let coordinates = html``;
+    let invalid = false;
+    let hidden = true;
     if (this.placing) {
       const {
         dim: [w0, h0],
       } = attributes(this.placing);
-      const invalid = !this.canPlaceAt(
+      hidden = false;
+      invalid = !this.canPlaceAt(
         this.placing,
         this.mouseX,
         this.mouseY,
         w0,
         h0
       );
-      coordinates = html`<div
-        ${ref(this.coordinatesRef)}
-        class="${classMap({ coordinates: true, invalid })}"
-      >
-        (${this.mouseX},${this.mouseY})
-      </div>`;
+      coordinates = html`${this.mouseX},${this.mouseY}`;
     }
 
     if (this.resizing && !isBusBar(this.resizing)) {
@@ -860,14 +868,16 @@ export class SLDEditor extends LitElement {
       } = attributes(this.resizing);
       const newW = Math.max(1, this.mouseX - x + 1);
       const newH = Math.max(1, this.mouseY - y + 1);
-      const invalid = !this.canResizeTo(this.resizing, newW, newH);
-      coordinates = html`<div
-        ${ref(this.coordinatesRef)}
-        class="${classMap({ coordinates: true, invalid })}"
-      >
-        (${newW}&times;${newH})
-      </div>`;
+      hidden = false;
+      invalid = !this.canResizeTo(this.resizing, newW, newH);
+      coordinates = html`${newW}&times;${newH}`;
     }
+    const coordinateTooltip = html`<div
+      ${ref(this.coordinatesRef)}
+      class="${classMap({ coordinates: true, invalid, hidden })}"
+    >
+      (${coordinates})
+    </div>`;
 
     const connectionPreview = [];
     if (this.connecting) {
@@ -995,7 +1005,8 @@ export class SLDEditor extends LitElement {
             visibility: visible;
             opacity: 1;
           }
-          rect {
+          g.voltagelevel > rect,
+          g.bay > rect {
             shape-rendering: crispEdges;
           }
           section:not(:hover) .preview {
@@ -1047,7 +1058,7 @@ export class SLDEditor extends LitElement {
         ).map(element => this.renderLabel(element))}
         ${placingLabelTarget}
       </svg>
-      ${menu} ${coordinates}
+      ${menu} ${coordinateTooltip}
       <mwc-dialog
         id="resizeSubstationUI"
         heading="Resize ${this.substation.getAttribute('name')}"
@@ -1309,9 +1320,17 @@ export class SLDEditor extends LitElement {
     const deg = 90 * rot;
 
     const eqType = equipment.getAttribute('type')!;
-    const symbol = ['CBR', 'CTR', 'VTR', 'DIS', 'IFL'].includes(eqType)
-      ? eqType
-      : 'ConductingEquipment';
+    const ringed = ringedEqTypes.has(eqType);
+    const symbol = isEqType(eqType) ? eqType : 'ConductingEquipment';
+    const icon = ringed
+      ? svg`<svg
+    viewBox="0 0 25 25"
+    width="1"
+    height="1"
+  >
+    ${eqRingPath}
+  </svg>`
+      : svg`<use href="#${symbol}" pointer-events="none" />`;
 
     let handleClick = () => {
       this.dispatchEvent(newStartPlaceEvent(equipment));
@@ -1418,7 +1437,13 @@ export class SLDEditor extends LitElement {
       flip ? ' scale(-1,1)' : ''
     }" transform-origin="0.5 0.5">
       <title>${equipment.getAttribute('name')}</title>
-      <use href="#${symbol}" pointer-events="none" />
+      ${icon}
+      ${
+        ringed
+          ? svg`<use transform="rotate(${-deg} 0.5 0.5)" href="#${symbol}"
+        pointer-events="none" />`
+          : nothing
+      }
       <rect width="1" height="1" fill="none" pointer-events="${
         connect ? 'none' : 'all'
       }"
@@ -1636,6 +1661,9 @@ export class SLDEditor extends LitElement {
       --mdc-icon-size: 24px;
     }
 
+    .hidden {
+      display: none;
+    }
     .coordinates {
       position: fixed;
       pointer-events: none;

@@ -431,7 +431,7 @@ describe('Designer', () => {
       expect(bus).to.have.attribute('y', '3');
       expect(bus).to.have.attribute('smth:w', '1');
       expect(bus).to.have.attribute('h', '8');
-      expect(bus).dom.to.equalSnapshot();
+      expect(bus).dom.to.equalSnapshot({ ignoreAttributes: ['esld:uuid'] });
     });
   });
 
@@ -558,7 +558,9 @@ describe('Designer', () => {
       await sendMouse({ type: 'click', position: [600, 200] });
       expect(element).to.have.property('placing', undefined);
       expect(cNode).to.have.attribute('pathName', 'S1/V2/B2/L1');
-      expect(element.doc.documentElement).dom.to.equalSnapshot();
+      expect(element.doc.documentElement).dom.to.equalSnapshot({
+        ignoreAttributes: ['esld:uuid'],
+      });
     });
 
     it('moves a bay when its parent voltage level is moved', async () => {
@@ -795,7 +797,9 @@ describe('Designer', () => {
         'cNodeName',
         'grounded'
       );
-      await expect(element.doc.documentElement).dom.to.equalSnapshot();
+      await expect(element.doc.documentElement).dom.to.equalSnapshot({
+        ignoreAttributes: ['esld:uuid'],
+      });
     });
 
     it('grounds equipment on ground menu item select', async () => {
@@ -852,7 +856,9 @@ describe('Designer', () => {
       expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
       await sendMouse({ type: 'click', position });
       expect(element.doc.querySelector('ConnectivityNode')).to.exist;
-      await expect(element.doc.documentElement).dom.to.equalSnapshot();
+      await expect(element.doc.documentElement).dom.to.equalSnapshot({
+        ignoreAttributes: ['esld:uuid'],
+      });
     });
 
     it('connects equipment on connect menu item select', async () => {
@@ -910,7 +916,9 @@ describe('Designer', () => {
       position[1] += 1;
       await sendMouse({ type: 'click', position });
       expect(equipment.querySelector('Terminal[name="T2"]')).to.exist;
-      await expect(element.doc.documentElement).dom.to.equalSnapshot();
+      await expect(element.doc.documentElement).dom.to.equalSnapshot({
+        ignoreAttributes: ['esld:uuid'],
+      });
     });
 
     it('will not connect equipment directly to itself', async () => {
@@ -976,7 +984,9 @@ describe('Designer', () => {
         await sendMouse({ type: 'click', position });
         expect(element.doc.querySelector('ConnectivityNode[name="L2"]')).to
           .exist;
-        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+        await expect(element.doc.documentElement).dom.to.equalSnapshot({
+          ignoreAttributes: ['esld:uuid'],
+        });
       });
 
       it('connects equipment on connection point and connectivity node click', async () => {
@@ -1003,7 +1013,9 @@ describe('Designer', () => {
           'connectivityNode',
           cNode!.getAttribute('pathName')!
         );
-        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+        await expect(element.doc.documentElement).dom.to.equalSnapshot({
+          ignoreAttributes: ['esld:uuid'],
+        });
       });
 
       it('avoids short circuit connections', async () => {
@@ -1026,7 +1038,9 @@ describe('Designer', () => {
           position: middleOf(cNodeClickTarget),
         });
         expect(equipment!.querySelectorAll('Terminal')).to.have.lengthOf(1);
-        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+        await expect(element.doc.documentElement).dom.to.equalSnapshot({
+          ignoreAttributes: ['esld:uuid'],
+        });
       });
 
       it('keeps connection paths simple', async () => {
@@ -1063,7 +1077,9 @@ describe('Designer', () => {
           'length',
           16
         );
-        await expect(element.doc.documentElement).dom.to.equalSnapshot();
+        await expect(element.doc.documentElement).dom.to.equalSnapshot({
+          ignoreAttributes: ['esld:uuid'],
+        });
       });
 
       describe('between more than two pieces of equipment', async () => {
@@ -1101,7 +1117,9 @@ describe('Designer', () => {
           );
           expect(element.doc.querySelector('[type="BAT"] > Terminal')).to.not
             .exist;
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('disconnects terminals on detach menu item select', async () => {
@@ -1143,7 +1161,9 @@ describe('Designer', () => {
           element.updateComplete;
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(4);
           expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(13);
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('simplifies vertical connection paths when disconnecting', async () => {
@@ -1159,7 +1179,9 @@ describe('Designer', () => {
           element.updateComplete;
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(4);
           expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(11);
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('simplifies when disconnecting only where possible', async () => {
@@ -1178,7 +1200,9 @@ describe('Designer', () => {
           );
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
           expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(16);
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('disconnects equipment upon being moved', async () => {
@@ -1189,7 +1213,9 @@ describe('Designer', () => {
           await sendMouse({ type: 'click', position: [150, 180] });
           expect(element.doc.querySelector('[type="DIS"] > Terminal')).to.not
             .exist;
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('removes superfluous connectivity nodes when disconnecting', async () => {
@@ -1200,7 +1226,9 @@ describe('Designer', () => {
             new PointerEvent('auxclick', { button: 1 })
           );
           expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('removes contained connectivity nodes when moving containers', async () => {
@@ -1243,7 +1271,9 @@ describe('Designer', () => {
           expect(
             element.doc.querySelectorAll('ConnectivityNode')
           ).to.have.lengthOf(1);
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('deletes conducting equipment on delete menu item select', async () => {
@@ -1260,7 +1290,9 @@ describe('Designer', () => {
           )!.selected = true;
           await element.updateComplete;
           expect(equipment.parentElement).to.not.exist;
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('deletes bays on delete menu item select', async () => {
@@ -1277,7 +1309,9 @@ describe('Designer', () => {
           )!.selected = true;
           await element.updateComplete;
           expect(bay.parentElement).to.not.exist;
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         it('deletes voltage levels on delete menu item select', async () => {
@@ -1294,7 +1328,9 @@ describe('Designer', () => {
           )!.selected = true;
           await element.updateComplete;
           expect(bay.parentElement).to.not.exist;
-          await expect(element.doc.documentElement).dom.to.equalSnapshot();
+          await expect(element.doc.documentElement).dom.to.equalSnapshot({
+            ignoreAttributes: ['esld:uuid'],
+          });
         });
 
         describe('and a bus bar', () => {
@@ -1338,7 +1374,9 @@ describe('Designer', () => {
                 .querySelector('[name="L"]')
                 ?.querySelectorAll('Section')
             ).to.have.lengthOf(1);
-            await expect(element.doc.documentElement).dom.to.equalSnapshot();
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+              ignoreAttributes: ['esld:uuid'],
+            });
           });
 
           it('does not merge bus bar sections with feeder sections', async () => {
@@ -1389,7 +1427,9 @@ describe('Designer', () => {
             expect(bus).to.have.attribute('h', '3');
             await sendMouse({ type: 'click', position: [450, 150] });
             expect(bus).to.have.attribute('h', '2');
-            await expect(element.doc.documentElement).dom.to.equalSnapshot();
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+              ignoreAttributes: ['esld:uuid'],
+            });
           });
 
           it('moves the bus bar on first menu item select', async () => {
@@ -1407,7 +1447,9 @@ describe('Designer', () => {
             expect(bus).to.have.attribute('y', '2');
             await sendMouse({ type: 'click', position: [430, 400] });
             expect(bus).to.have.attribute('y', '10');
-            await expect(element.doc.documentElement).dom.to.equalSnapshot();
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+              ignoreAttributes: ['esld:uuid'],
+            });
           });
 
           it('removes the bus bar on third menu item select', async () => {
@@ -1424,7 +1466,9 @@ describe('Designer', () => {
             )!.selected = true;
             await sldEditor.updateComplete;
             expect(element.doc.querySelector('[name="BB1"]')).to.not.exist;
-            await expect(element.doc.documentElement).dom.to.equalSnapshot();
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+              ignoreAttributes: ['esld:uuid'],
+            });
           });
         });
       });

@@ -45,13 +45,10 @@ function pathString(...args: string[]) {
   return args.join('/');
 }
 
-export function elementPath(
-  element: Element | null,
-  ...rest: string[]
-): string {
+export function elementPath(element: Element, ...rest: string[]): string {
   const pedigree = [];
   let child = element;
-  while (child?.parentElement && child.hasAttribute('name')) {
+  while (child.parentElement && child.hasAttribute('name')) {
     pedigree.unshift(child.getAttribute('name')!);
     child = child.parentElement;
   }
@@ -237,57 +234,6 @@ function updateConnectivityNodes(
   return updates;
 }
 
-function updateVertices(element: Element, parent: Element, name: string) {
-  const updates = [] as Edit[];
-
-  const substationName = parent.closest('Substation')!.getAttribute('name');
-  let voltageLevelName =
-    parent.closest('VoltageLevel')?.getAttribute('name') ||
-    element.closest('VoltageLevel')!.getAttribute('name');
-  if (element.tagName === 'VoltageLevel') voltageLevelName = name;
-  let bayName =
-    parent.closest('Bay')?.getAttribute('name') ||
-    element.closest('Bay')?.getAttribute('name');
-  if (element.tagName === 'Bay') bayName = name;
-  const equipmentElements = Array.from(
-    element.getElementsByTagName('ConductingEquipment')
-  );
-  if (element.tagName === 'ConductingEquipment')
-    equipmentElements.push(element);
-
-  equipmentElements.forEach(equipment => {
-    let eqName = equipment.getAttribute('name');
-    if (element === equipment) eqName = name;
-    if (!bayName) bayName = equipment.closest('Bay')!.getAttribute('name');
-    const terminals = Array.from(equipment.children).filter(
-      child => child.tagName === 'Terminal'
-    );
-    terminals.forEach(terminal => {
-      const terminalName = terminal.getAttribute('name');
-      const vertexAt = elementPath(terminal);
-      const vertices = Array.from(
-        element.ownerDocument.querySelectorAll(`Vertex[at="${vertexAt}"]`)
-      );
-      vertices.forEach(vertex => {
-        updates.push({
-          element: vertex,
-          attributes: {
-            at: elementPath(
-              null,
-              substationName!,
-              voltageLevelName!,
-              bayName!,
-              eqName!,
-              terminalName!
-            ),
-          },
-        });
-      });
-    });
-  });
-  return updates;
-}
-
 function uniqueName(element: Element, parent: Element): string {
   const children = Array.from(parent.children);
   const oldName = element.getAttribute('name');
@@ -320,7 +266,6 @@ export function reparentElement(element: Element, parent: Element): Edit[] {
   if (newName !== element.getAttribute('name'))
     edits.push({ element, attributes: { name: newName } });
   edits.push(...updateConnectivityNodes(element, parent, newName));
-  edits.push(...updateVertices(element, parent, newName));
   return edits;
 }
 
@@ -353,8 +298,9 @@ export function removeTerminal(terminal: Element): Edit[] {
   }
 
   const priv = cNode?.querySelector(`Private[type="${privType}"]`);
-  const vertexAt = elementPath(terminal);
-  const vertex = priv?.querySelector(`Vertex[at="${vertexAt}"]`);
+  const vertex = priv?.querySelector(
+    `Vertex[*|uuid="${terminal.getAttributeNS(sldNs, 'uuid')}"]`
+  );
   const section = vertex?.parentElement;
   if (!section) return edits;
   edits.push({ node: section });

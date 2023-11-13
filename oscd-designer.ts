@@ -18,7 +18,6 @@ import {
   ConnectDetail,
   ConnectEvent,
   connectionStartPoints,
-  elementPath,
   isBusBar,
   PlaceEvent,
   Point,
@@ -33,6 +32,20 @@ import {
   StartEvent,
   xmlnsNs,
 } from './util.js';
+
+/* eslint-disable no-bitwise */
+function uuid() {
+  const halfBytes = new Array(36);
+  for (let i = 0; i < 36; i += 1) {
+    if ([8, 13, 18, 23].includes(i)) halfBytes[i] = '-';
+    else halfBytes[i] = Math.floor(Math.random() * 16);
+  }
+  halfBytes[14] = 4;
+  halfBytes[19] &= ~(1 << 2);
+  halfBytes[19] |= 1 << 3;
+  return halfBytes.map(x => x.toString(16)).join('');
+}
+/* eslint-enable no-bitwise */
 
 function makeBusBar(doc: XMLDocument, nsp: string) {
   const busBar = doc.createElementNS(doc.documentElement.namespaceURI, 'Bay');
@@ -89,7 +102,7 @@ function cutSectionAt(
   const v = vertices[index].cloneNode() as Element;
   v.setAttributeNS(sldNs, `${nsPrefix}:x`, x.toString());
   v.setAttributeNS(sldNs, `${nsPrefix}:y`, y.toString());
-  v.removeAttribute('at');
+  v.removeAttributeNS(sldNs, 'uuid');
   newSection.prepend(v);
   edits.push({
     node: newSection,
@@ -381,19 +394,19 @@ export default class Designer extends LitElement {
     }
     const section = this.doc.createElementNS(sldNs, `${this.nsp}:Section`);
     edits.push({ parent: priv!, node: section, reference: null });
-    const fromTermName = terminal === 'top' ? 'T1' : 'T2';
-    const toTermName = toTerminal === 'top' ? 'T1' : 'T2';
+    const fromTermUUID = uuid();
+    const toTermUUID = uuid();
     path.forEach(([x, y], i) => {
       const vertex = this.doc.createElementNS(sldNs, `${this.nsp}:Vertex`);
       vertex.setAttributeNS(sldNs, `${this.nsp}:x`, x.toString());
       vertex.setAttributeNS(sldNs, `${this.nsp}:y`, y.toString());
       if (i === 0)
-        vertex.setAttribute('at', elementPath(equipment, fromTermName));
+        vertex.setAttributeNS(sldNs, `${this.nsp}:uuid`, fromTermUUID);
       else if (
         i === path.length - 1 &&
         connectTo.tagName !== 'ConnectivityNode'
       )
-        vertex.setAttribute('at', elementPath(connectTo, toTermName));
+        vertex.setAttributeNS(sldNs, `${this.nsp}:uuid`, toTermUUID);
       edits.push({ parent: section, node: vertex, reference: null });
     });
     if (connectTo.tagName === 'ConnectivityNode') {
@@ -429,6 +442,8 @@ export default class Designer extends LitElement {
       this.doc.documentElement.namespaceURI,
       'Terminal'
     );
+    fromTermElement.setAttributeNS(sldNs, `${this.nsp}:uuid`, fromTermUUID);
+    const fromTermName = terminal === 'top' ? 'T1' : 'T2';
     fromTermElement.setAttribute('name', fromTermName);
     fromTermElement.setAttribute('connectivityNode', connectivityNode);
     fromTermElement.setAttribute('substationName', substationName);
@@ -445,6 +460,8 @@ export default class Designer extends LitElement {
         this.doc.documentElement.namespaceURI,
         'Terminal'
       );
+      toTermElement.setAttributeNS(sldNs, `${this.nsp}:uuid`, toTermUUID);
+      const toTermName = toTerminal === 'top' ? 'T1' : 'T2';
       toTermElement.setAttribute('name', toTermName);
       toTermElement.setAttribute('connectivityNode', connectivityNode);
       toTermElement.setAttribute('substationName', substationName);

@@ -330,7 +330,7 @@ export class SLDEditor extends LitElement {
     );
     let pathName = grounded?.getAttribute('pathName');
     if (!pathName) {
-      pathName = elementPath(equipment.closest('Bay'), 'grounded');
+      pathName = elementPath(equipment.closest('Bay')!, 'grounded');
       grounded = this.doc.createElementNS(
         this.doc.documentElement.namespaceURI,
         'ConnectivityNode'

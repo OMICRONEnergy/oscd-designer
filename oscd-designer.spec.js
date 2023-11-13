@@ -240,6 +240,54 @@ describe('Designer', () => {
             expect(voltageLevel).to.have.attribute('smth:x', '2');
             expect(voltageLevel).to.have.attribute('smth:y', '2');
         });
+        it('opens a menu on voltage level right click', async () => {
+            querySvg({
+                scl: 'VoltageLevel',
+                svg: 'rect',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            expect(querySvg({ svg: 'menu' })).to.exist;
+        });
+        it('resizes voltage levels on resize menu item select', async () => {
+            querySvg({
+                scl: 'VoltageLevel',
+                svg: 'rect',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const item = sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(1)');
+            item.selected = true;
+            await element.updateComplete;
+            expect(element)
+                .property('resizing')
+                .to.exist.and.to.have.property('tagName', 'VoltageLevel');
+            const voltageLevel = element.resizing;
+            expect(voltageLevel).to.have.attribute('smth:w', '48');
+            expect(voltageLevel).to.have.attribute('smth:h', '23');
+            await sendMouse({ type: 'click', position: [300, 300] });
+            expect(voltageLevel).to.have.attribute('smth:w', '8');
+            expect(voltageLevel).to.have.attribute('smth:h', '7');
+        });
+        it('moves voltage levels on resize menu item select', async () => {
+            querySvg({
+                scl: 'VoltageLevel',
+                svg: 'rect',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const item = sldEditor.shadowRoot.querySelector('mwc-list-item:nth-of-type(2)');
+            item.selected = true;
+            await element.updateComplete;
+            expect(element)
+                .property('placing')
+                .to.exist.and.to.have.property('tagName', 'VoltageLevel');
+            const voltageLevel = element.placing;
+            expect(voltageLevel).to.have.attribute('smth:x', '1');
+            expect(voltageLevel).to.have.attribute('smth:y', '1');
+            await sendMouse({ type: 'click', position: [100, 150] });
+            expect(voltageLevel).to.have.attribute('smth:x', '2');
+            expect(voltageLevel).to.have.attribute('smth:y', '2');
+        });
         it('forbids moving voltage levels out of bounds', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
             const moveHandle = sldEditor.shadowRoot.querySelector('.handle');
@@ -310,6 +358,14 @@ describe('Designer', () => {
             await sendMouse({ type: 'click', position: [400, 400] });
             expect(bay).to.have.attribute('esld:w', '10');
             expect(bay).to.have.attribute('esld:h', '9');
+        });
+        it('opens a menu on bay right click', async () => {
+            querySvg({
+                scl: 'Bay',
+                svg: 'rect',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            expect(querySvg({ svg: 'menu' })).to.exist;
         });
         it('forbids resizing bays out of bounds', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
@@ -490,7 +546,7 @@ describe('Designer', () => {
             eqClickTarget.dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
             expect(equipment).to.have.attribute('esld:rot', '2');
         });
-        it('displays a menu on equipment right click', async () => {
+        it('opens a menu on equipment right click', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
             const equipment = element.doc.querySelector('ConductingEquipment');
             const id = identity(equipment);
@@ -877,6 +933,39 @@ describe('Designer', () => {
                     expect(element.doc.querySelectorAll('ConnectivityNode')).to.have.lengthOf(1);
                     await expect(element.doc.documentElement).dom.to.equalSnapshot();
                 });
+                it('deletes conducting equipment on delete menu item select', async () => {
+                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                    const equipment = element.doc.querySelector('[type="CTR"]');
+                    querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+                    await element.updateComplete;
+                    expect(equipment.querySelector('Terminal[name="T1"]')).to.exist;
+                    sldEditor.shadowRoot.querySelector('mwc-list-item:nth-last-of-type(2)').selected = true;
+                    await element.updateComplete;
+                    expect(equipment.parentElement).to.not.exist;
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                });
+                it('deletes bays on delete menu item select', async () => {
+                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                    const bay = element.doc.querySelector('Bay');
+                    querySvg({ scl: 'Bay', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+                    await element.updateComplete;
+                    expect(bay.querySelector('Terminal[name="T1"]')).to.exist;
+                    sldEditor.shadowRoot.querySelector('mwc-list-item:nth-last-of-type(2)').selected = true;
+                    await element.updateComplete;
+                    expect(bay.parentElement).to.not.exist;
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                });
+                it('deletes voltage levels on delete menu item select', async () => {
+                    const sldEditor = element.shadowRoot.querySelector('sld-editor');
+                    const bay = element.doc.querySelector('[name="V2"]');
+                    querySvg({ scl: '[name="V2"]', svg: 'rect' }).dispatchEvent(new PointerEvent('contextmenu'));
+                    await element.updateComplete;
+                    expect(bay.querySelector('Terminal[name="T1"]')).to.exist;
+                    sldEditor.shadowRoot.querySelector('mwc-list-item:nth-last-of-type(2)').selected = true;
+                    await element.updateComplete;
+                    expect(bay.parentElement).to.not.exist;
+                    await expect(element.doc.documentElement).dom.to.equalSnapshot();
+                });
                 describe('and a bus bar', () => {
                     beforeEach(async () => {
                         var _a;
@@ -910,7 +999,7 @@ describe('Designer', () => {
                             .querySelector('[name="L"]')) === null || _b === void 0 ? void 0 : _b.querySelectorAll('Section')).to.have.lengthOf(1);
                         await expect(element.doc.documentElement).dom.to.equalSnapshot();
                     });
-                    it('opens a menu on right click', async () => {
+                    it('opens a menu on bus bar right click', async () => {
                         querySvg({
                             scl: '[name="L"]',
                             svg: 'line[stroke="none"]',

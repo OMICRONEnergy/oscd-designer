@@ -27,7 +27,7 @@ function pathString(...args) {
 export function elementPath(element, ...rest) {
     const pedigree = [];
     let child = element;
-    while ((child === null || child === void 0 ? void 0 : child.parentElement) && child.hasAttribute('name')) {
+    while (child.parentElement && child.hasAttribute('name')) {
         pedigree.unshift(child.getAttribute('name'));
         child = child.parentElement;
     }
@@ -159,44 +159,6 @@ function updateConnectivityNodes(element, parent, name) {
     });
     return updates;
 }
-function updateVertices(element, parent, name) {
-    var _a, _b, _c;
-    const updates = [];
-    const substationName = parent.closest('Substation').getAttribute('name');
-    let voltageLevelName = ((_a = parent.closest('VoltageLevel')) === null || _a === void 0 ? void 0 : _a.getAttribute('name')) ||
-        element.closest('VoltageLevel').getAttribute('name');
-    if (element.tagName === 'VoltageLevel')
-        voltageLevelName = name;
-    let bayName = ((_b = parent.closest('Bay')) === null || _b === void 0 ? void 0 : _b.getAttribute('name')) ||
-        ((_c = element.closest('Bay')) === null || _c === void 0 ? void 0 : _c.getAttribute('name'));
-    if (element.tagName === 'Bay')
-        bayName = name;
-    const equipmentElements = Array.from(element.getElementsByTagName('ConductingEquipment'));
-    if (element.tagName === 'ConductingEquipment')
-        equipmentElements.push(element);
-    equipmentElements.forEach(equipment => {
-        let eqName = equipment.getAttribute('name');
-        if (element === equipment)
-            eqName = name;
-        if (!bayName)
-            bayName = equipment.closest('Bay').getAttribute('name');
-        const terminals = Array.from(equipment.children).filter(child => child.tagName === 'Terminal');
-        terminals.forEach(terminal => {
-            const terminalName = terminal.getAttribute('name');
-            const vertexAt = elementPath(terminal);
-            const vertices = Array.from(element.ownerDocument.querySelectorAll(`Vertex[at="${vertexAt}"]`));
-            vertices.forEach(vertex => {
-                updates.push({
-                    element: vertex,
-                    attributes: {
-                        at: elementPath(null, substationName, voltageLevelName, bayName, eqName, terminalName),
-                    },
-                });
-            });
-        });
-    });
-    return updates;
-}
 function uniqueName(element, parent) {
     var _a, _b;
     const children = Array.from(parent.children);
@@ -224,7 +186,6 @@ export function reparentElement(element, parent) {
     if (newName !== element.getAttribute('name'))
         edits.push({ element, attributes: { name: newName } });
     edits.push(...updateConnectivityNodes(element, parent, newName));
-    edits.push(...updateVertices(element, parent, newName));
     return edits;
 }
 export function removeTerminal(terminal) {
@@ -245,8 +206,7 @@ export function removeTerminal(terminal) {
             edits.push(...reparentElement(cNode, newParent));
     }
     const priv = cNode === null || cNode === void 0 ? void 0 : cNode.querySelector(`Private[type="${privType}"]`);
-    const vertexAt = elementPath(terminal);
-    const vertex = priv === null || priv === void 0 ? void 0 : priv.querySelector(`Vertex[at="${vertexAt}"]`);
+    const vertex = priv === null || priv === void 0 ? void 0 : priv.querySelector(`Vertex[*|uuid="${terminal.getAttributeNS(sldNs, 'uuid')}"]`);
     const section = vertex === null || vertex === void 0 ? void 0 : vertex.parentElement;
     if (!section)
         return edits;

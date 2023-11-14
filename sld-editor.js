@@ -1112,7 +1112,12 @@ let SLDEditor = class SLDEditor extends LitElement {
                 @click=${handleClick} @auxclick=${handleAuxClick}
                 @contextmenu=${handleContextMenu} @mousedown=${preventDefault}
                 pointer-events="all" stroke="none" stroke-width="1" />`);
-                if (this.connecting && ![x2, y2].find(n => Number.isInteger(n)))
+                if (![x1, y1].find(n => Number.isInteger(n)))
+                    lines.push(svg `<rect x="${x1 - 0.5}" y="${y1 - 0.5}" width="1" height="1"
+                @click=${handleClick} @auxclick=${handleAuxClick}
+                @contextmenu=${handleContextMenu} @mousedown=${preventDefault}
+                pointer-events="all" fill="none" />`);
+                if (![x2, y2].find(n => Number.isInteger(n)))
                     lines.push(svg `<rect x="${x2 - 0.5}" y="${y2 - 0.5}" width="1" height="1"
                 @click=${handleClick} @auxclick=${handleAuxClick}
                 @contextmenu=${handleContextMenu} @mousedown=${preventDefault}

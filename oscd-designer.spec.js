@@ -999,6 +999,21 @@ describe('Designer', () => {
                             .querySelector('[name="L"]')) === null || _b === void 0 ? void 0 : _b.querySelectorAll('Section')).to.have.lengthOf(1);
                         await expect(element.doc.documentElement).dom.to.equalSnapshot();
                     });
+                    it('does not merge bus bar sections with feeder sections', async () => {
+                        querySvg({
+                            scl: '[type="NEW"]',
+                            svg: 'circle:nth-of-type(2)',
+                        }).dispatchEvent(new PointerEvent('click'));
+                        await sendMouse({ type: 'click', position: [450, 150] });
+                        querySvg({ scl: '[type="CBR"]', svg: 'circle' }).dispatchEvent(new PointerEvent('click'));
+                        await sendMouse({ type: 'click', position: [450, 150] });
+                        expect(element.doc.querySelectorAll('Section[bus] Vertex')).to.have.lengthOf(4);
+                        querySvg({ scl: '[type="CBR"]', svg: 'rect' }).dispatchEvent(new PointerEvent('auxclick', { button: 1 }));
+                        expect(element.doc.querySelectorAll('Section[bus] Vertex')).to.have.lengthOf(4);
+                        await expect(element.doc.documentElement).dom.to.equalSnapshot({
+                            ignoreAttributes: ['esld:uuid'],
+                        });
+                    });
                     it('opens a menu on bus bar right click', async () => {
                         querySvg({
                             scl: '[name="L"]',

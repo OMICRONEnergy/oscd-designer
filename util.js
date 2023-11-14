@@ -75,6 +75,9 @@ function healSectionCut(cut) {
         return [];
     if (cutSections.length < 2)
         return removeNode(cut.closest('ConnectivityNode'));
+    const [busA, busB] = cutSections.map(section => xmlBoolean(section.getAttribute('bus')));
+    if (busA !== busB)
+        return [];
     const edits = [];
     const [sectionA, sectionB] = cutSections;
     if (isCut(sectionA.firstElementChild))
@@ -232,6 +235,7 @@ export function removeTerminal(terminal) {
     const otherTerminals = Array.from(terminal.ownerDocument.querySelectorAll(`Terminal[connectivityNode="${pathName}"]`)).filter(t => t !== terminal);
     if (cNode &&
         otherTerminals.length &&
+        otherTerminals.some(t => t.closest('Bay')) &&
         otherTerminals.every(t => t.closest('Bay') !== cNode.closest('Bay')) &&
         !isBusBar(cNode.closest('Bay'))) {
         const newParent = otherTerminals

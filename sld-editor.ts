@@ -45,6 +45,16 @@ import {
   xmlBoolean,
 } from './util.js';
 
+type EditWizardDetial = { element: Element };
+
+function newEditWizardEvent(element: Element): CustomEvent<EditWizardDetial> {
+  return new CustomEvent<EditWizardDetial>('oscd-edit-wizard-request', {
+    bubbles: true,
+    composed: true,
+    detail: { element },
+  });
+}
+
 type MenuItem = { handler: () => void; content: TemplateResult };
 
 type Rect = [number, number, number, number];
@@ -414,6 +424,13 @@ export class SLDEditor extends LitElement {
       },
       {
         content: html`<mwc-list-item graphic="icon">
+          <span>Edit</span>
+          <mwc-icon slot="graphic">edit</mwc-icon>
+        </mwc-list-item>`,
+        handler: () => this.dispatchEvent(newEditWizardEvent(equipment)),
+      },
+      {
+        content: html`<mwc-list-item graphic="icon">
           <span>Delete</span>
           <mwc-icon slot="graphic">delete</mwc-icon>
         </mwc-list-item>`,
@@ -549,6 +566,13 @@ export class SLDEditor extends LitElement {
       },
       {
         content: html`<mwc-list-item graphic="icon">
+          <span>Edit</span>
+          <mwc-icon slot="graphic">edit</mwc-icon>
+        </mwc-list-item>`,
+        handler: () => this.dispatchEvent(newEditWizardEvent(busBar)),
+      },
+      {
+        content: html`<mwc-list-item graphic="icon">
           <span>Delete</span>
           <mwc-icon slot="graphic">delete</mwc-icon>
         </mwc-list-item>`,
@@ -594,6 +618,13 @@ export class SLDEditor extends LitElement {
           </svg>
         </mwc-list-item>`,
         handler: () => this.dispatchEvent(newStartPlaceEvent(bayOrVL)),
+      },
+      {
+        content: html`<mwc-list-item graphic="icon">
+          <span>Edit</span>
+          <mwc-icon slot="graphic">edit</mwc-icon>
+        </mwc-list-item>`,
+        handler: () => this.dispatchEvent(newEditWizardEvent(bayOrVL)),
       },
       {
         content: html`<mwc-list-item graphic="icon">

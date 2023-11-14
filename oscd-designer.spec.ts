@@ -74,6 +74,7 @@ export const equipmentDocString = `<?xml version="1.0" encoding="UTF-8"?>
 
 describe('Designer', () => {
   let element: Designer;
+  let lastCalledWizard: Element | undefined;
 
   function querySvg({
     scl,
@@ -110,11 +111,17 @@ describe('Designer', () => {
           handleEdit(detail);
           element.editCount += 1;
         }}
+        @oscd-edit-wizard-request=${({
+          detail: { element: e },
+        }: CustomEvent<{ element: Element }>) => {
+          lastCalledWizard = e;
+        }}
       ></oscd-designer>`
     );
   });
 
   afterEach(async () => {
+    lastCalledWizard = undefined;
     await resetMouse();
   });
 
@@ -378,6 +385,23 @@ describe('Designer', () => {
       expect(voltageLevel).to.have.attribute('smth:y', '2');
     });
 
+    it('requests voltage level edit wizard on penultimate menu item select', async () => {
+      querySvg({
+        scl: 'VoltageLevel',
+        svg: 'rect',
+      }).dispatchEvent(new PointerEvent('contextmenu'));
+      const sldEditor =
+        element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+      await element.updateComplete;
+      sldEditor.shadowRoot!.querySelector<ListItem>(
+        'mwc-list-item:nth-last-of-type(3)'
+      )!.selected = true;
+      await sldEditor.updateComplete;
+      expect(lastCalledWizard).to.equal(
+        element.doc.querySelector('VoltageLevel')
+      );
+    });
+
     it('forbids moving voltage levels out of bounds', async () => {
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -469,6 +493,21 @@ describe('Designer', () => {
       }).dispatchEvent(new PointerEvent('contextmenu'));
       await element.updateComplete;
       expect(querySvg({ svg: 'menu' })).to.exist;
+    });
+
+    it('requests bay edit wizard on penultimate menu item select', async () => {
+      querySvg({
+        scl: 'Bay',
+        svg: 'rect',
+      }).dispatchEvent(new PointerEvent('contextmenu'));
+      const sldEditor =
+        element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+      await element.updateComplete;
+      sldEditor.shadowRoot!.querySelector<ListItem>(
+        'mwc-list-item:nth-last-of-type(3)'
+      )!.selected = true;
+      await sldEditor.updateComplete;
+      expect(lastCalledWizard).to.equal(element.doc.querySelector('Bay'));
     });
 
     it('forbids resizing bays out of bounds', async () => {
@@ -654,6 +693,23 @@ describe('Designer', () => {
       );
       element.doc = doc;
       await element.updateComplete;
+    });
+
+    it('requests equipment edit wizard on penultimate menu item select', async () => {
+      querySvg({
+        scl: '[type="CTR"]',
+        svg: 'rect',
+      }).dispatchEvent(new PointerEvent('contextmenu'));
+      const sldEditor =
+        element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+      await element.updateComplete;
+      sldEditor.shadowRoot!.querySelector<ListItem>(
+        'mwc-list-item:nth-last-of-type(3)'
+      )!.selected = true;
+      await sldEditor.updateComplete;
+      expect(lastCalledWizard).to.equal(
+        element.doc.querySelector('[type="CTR"]')
+      );
     });
 
     it('moves equipment on left mouse button click', async () => {
@@ -1452,7 +1508,24 @@ describe('Designer', () => {
             });
           });
 
-          it('removes the bus bar on third menu item select', async () => {
+          it('requests bus bar edit wizard on penultimate menu item select', async () => {
+            querySvg({
+              scl: '[name="L"]',
+              svg: 'line[stroke="none"]',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            await element.updateComplete;
+            sldEditor.shadowRoot!.querySelector<ListItem>(
+              'mwc-list-item:nth-last-of-type(3)'
+            )!.selected = true;
+            await sldEditor.updateComplete;
+            expect(lastCalledWizard).to.equal(
+              element.doc.querySelector('[name="BB1"]')
+            );
+          });
+
+          it('removes the bus bar on last menu item select', async () => {
             querySvg({
               scl: '[name="L"]',
               svg: 'line[stroke="none"]',
@@ -1462,7 +1535,7 @@ describe('Designer', () => {
             const sldEditor =
               element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
             sldEditor.shadowRoot!.querySelector<ListItem>(
-              'mwc-list-item:nth-of-type(3)'
+              'mwc-list-item:nth-last-of-type(2)'
             )!.selected = true;
             await sldEditor.updateComplete;
             expect(element.doc.querySelector('[name="BB1"]')).to.not.exist;

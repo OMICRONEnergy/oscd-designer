@@ -29,60 +29,63 @@ export const emptyDocString = `<?xml version="1.0" encoding="UTF-8"?>
 </SCL>`;
 
 export const voltageLevelDocString = `<?xml version="1.0" encoding="UTF-8"?>
-<SCL version="2007" revision="B" xmlns:smth="https://transpower.co.nz/SCL/SSD/SLD/v0" xmlns="http://www.iec.ch/61850/2003/SCL">
+<SCL xmlns:smth="https://transpower.co.nz/SCL/SSD/SLD/v0" xmlns="http://www.iec.ch/61850/2003/SCL" version="2007" revision="B">
   <Substation name="S1" smth:w="50" smth:h="25">
-    <VoltageLevel name="V1" smth:x="1" smth:y="1" smth:w="48" smth:h="23" />
+    <VoltageLevel name="V1" smth:x="1" smth:y="1" smth:lx="1" smth:ly="1" smth:w="48" smth:h="23" desc="some description"/>
   </Substation>
-</SCL>`;
+</SCL>
+`;
 
 export const bayDocString = `<?xml version="1.0" encoding="UTF-8"?>
-<SCL version="2007" revision="B" xmlns="http://www.iec.ch/61850/2003/SCL">
-  <Substation xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0" name="S1" esld:w="50" esld:h="25">
-    <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="13" esld:h="13">
-      <Bay name="B1" esld:x="2" esld:y="2" esld:w="3" esld:h="3">
-        <ConnectivityNode name="L1" pathName="S1/V1/B1/L1" />
+<SCL xmlns="http://www.iec.ch/61850/2003/SCL" version="2007" revision="B" xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0">
+  <Substation name="S1" esld:w="50" esld:h="25">
+    <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="13" esld:h="13" esld:lx="1" esld:ly="1">
+      <Bay name="B1" esld:x="2" esld:y="2" esld:w="3" esld:h="3" esld:lx="2" esld:ly="2">
+        <ConnectivityNode name="L1" pathName="S1/V1/B1/L1"/>
       </Bay>
     </VoltageLevel>
-    <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="13" esld:h="13">
-      <Bay name="B1" esld:x="20" esld:y="11" esld:w="1" esld:h="1" />
+    <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="13" esld:h="13" esld:lx="15" esld:ly="1">
+      <Bay name="B1" esld:x="20" esld:y="11" esld:w="1" esld:h="1" esld:lx="20" esld:ly="11"/>
     </VoltageLevel>
   </Substation>
-</SCL>`;
+</SCL>
+`;
 
 export const equipmentDocString = `<?xml version="1.0" encoding="UTF-8"?>
-<SCL version="2007" revision="B" xmlns="http://www.iec.ch/61850/2003/SCL">
-  <Substation xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0" name="S1" esld:w="50" esld:h="25">
-    <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="13" esld:h="13">
-      <Bay name="B1" esld:x="2" esld:y="2" esld:w="6" esld:h="6">
-        <ConductingEquipment type="CBR" name="CBR1" esld:x="4" esld:y="4" esld:rot="1" />
+<SCL xmlns="http://www.iec.ch/61850/2003/SCL" version="2007" revision="B" xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0">
+  <Substation name="S1" esld:w="50" esld:h="25">
+    <VoltageLevel name="V1" esld:x="1" esld:y="1" esld:w="13" esld:h="13" esld:lx="1" esld:ly="1">
+      <Bay name="B1" esld:x="2" esld:y="2" esld:w="6" esld:h="6" esld:lx="2" esld:ly="2">
+        <ConductingEquipment type="CBR" name="CBR1" desc="CBR description" esld:x="4" esld:y="4" esld:rot="1" esld:lx="3.5" esld:ly="4"/>
       </Bay>
     </VoltageLevel>
-    <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="23" esld:h="23">
-      <Bay name="B1" esld:x="16" esld:y="2" esld:w="6" esld:h="6">
-        <ConductingEquipment type="CTR" name="CTR1" esld:x="17" esld:y="5" esld:rot="3" />
-        <ConductingEquipment type="DIS" name="DIS1" esld:x="18" esld:y="4" esld:rot="1" />
-        <ConductingEquipment type="NEW" name="NEW1" esld:x="19" esld:y="3" esld:rot="2" />
-        <ConductingEquipment type="VTR" name="VTR1" esld:x="17" esld:y="3" esld:rot="3" />
-        <ConductingEquipment type="DIS" name="DIS2" esld:x="20" esld:y="4" esld:rot="0" />
-        <ConductingEquipment type="BAT" name="BAT1" esld:x="19" esld:y="7" esld:rot="3">
-          <Terminal name="erroneous" />
+    <VoltageLevel name="V2" esld:x="15" esld:y="1" esld:w="23" esld:h="23" esld:lx="15" esld:ly="1">
+      <Bay name="B1" esld:x="16" esld:y="2" esld:w="6" esld:h="6" esld:lx="16" esld:ly="2">
+        <ConductingEquipment type="CTR" name="CTR1" esld:x="17" esld:y="5" esld:rot="3" esld:lx="17" esld:ly="7.5"/>
+        <ConductingEquipment type="DIS" name="DIS1" esld:x="18" esld:y="4" esld:rot="1" esld:lx="17" esld:ly="4.5"/>
+        <ConductingEquipment type="NEW" name="NEW1" esld:x="19" esld:y="3" esld:rot="2" esld:lx="20" esld:ly="3.5"/>
+        <ConductingEquipment type="VTR" name="VTR1" esld:x="17" esld:y="3" esld:rot="3" esld:lx="17" esld:ly="3"/>
+        <ConductingEquipment type="DIS" name="DIS2" esld:x="20" esld:y="4" esld:rot="0" esld:lx="21" esld:ly="5"/>
+        <ConductingEquipment type="BAT" name="BAT1" esld:x="19" esld:y="7" esld:rot="3" esld:lx="19" esld:ly="7">
+          <Terminal name="erroneous"/>
         </ConductingEquipment>
       </Bay>
     </VoltageLevel>
   </Substation>
-</SCL>`;
+</SCL>
+`;
 
 describe('Designer', () => {
   let element: Designer;
   let lastCalledWizard: Element | undefined;
 
-  function querySvg({
+  function queryUI({
     scl,
-    svg,
+    ui,
   }:
-    | { scl: string; svg?: undefined }
-    | { svg: string; scl?: undefined }
-    | { scl: string; svg: string }) {
+    | { scl: string; ui?: undefined }
+    | { ui: string; scl?: undefined }
+    | { scl: string; ui: string }) {
     let target: {
       getElementById?: (id: string) => Element | null;
       querySelector: (sel: string) => Element | null;
@@ -92,8 +95,8 @@ describe('Designer', () => {
       const sclTarget = element.doc.querySelector(scl);
       target = target.getElementById?.(<string>identity(sclTarget))!;
     }
-    if (svg) {
-      target = target.querySelector(svg)!;
+    if (ui) {
+      target = target.querySelector(ui)!;
     }
     return target as Element;
   }
@@ -122,6 +125,7 @@ describe('Designer', () => {
 
   afterEach(async () => {
     lastCalledWizard = undefined;
+    await sendMouse({ type: 'click', position: [0, 0] });
     await resetMouse();
   });
 
@@ -329,18 +333,19 @@ describe('Designer', () => {
     });
 
     it('opens a menu on voltage level right click', async () => {
-      querySvg({
+      queryUI({
         scl: 'VoltageLevel',
-        svg: 'rect',
+        ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       await element.updateComplete;
-      expect(querySvg({ svg: 'menu' })).to.exist;
+      expect(queryUI({ ui: 'menu' })).to.exist;
+      expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
     });
 
     it('resizes voltage levels on resize menu item select', async () => {
-      querySvg({
+      queryUI({
         scl: 'VoltageLevel',
-        svg: 'rect',
+        ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       await element.updateComplete;
       const sldEditor =
@@ -361,10 +366,10 @@ describe('Designer', () => {
       expect(voltageLevel).to.have.attribute('smth:h', '7');
     });
 
-    it('moves voltage levels on resize menu item select', async () => {
-      querySvg({
+    it('moves voltage levels on move menu item select', async () => {
+      queryUI({
         scl: 'VoltageLevel',
-        svg: 'rect',
+        ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       await element.updateComplete;
       const sldEditor =
@@ -385,10 +390,10 @@ describe('Designer', () => {
       expect(voltageLevel).to.have.attribute('smth:y', '2');
     });
 
-    it('requests voltage level edit wizard on penultimate menu item select', async () => {
-      querySvg({
+    it('requests voltage level edit wizard on edit menu item select', async () => {
+      queryUI({
         scl: 'VoltageLevel',
-        svg: 'rect',
+        ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -399,6 +404,32 @@ describe('Designer', () => {
       await sldEditor.updateComplete;
       expect(lastCalledWizard).to.equal(
         element.doc.querySelector('VoltageLevel')
+      );
+    });
+
+    it('moves the voltage level label on "move label" menu item select', async () => {
+      queryUI({
+        scl: 'VoltageLevel',
+        ui: 'rect',
+      }).dispatchEvent(new PointerEvent('contextmenu'));
+      const sldEditor =
+        element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+      await element.updateComplete;
+      sldEditor.shadowRoot!.querySelector<ListItem>(
+        'mwc-list-item:nth-of-type(3)'
+      )!.selected = true;
+      await sldEditor.updateComplete;
+      expect(element)
+        .property('placingLabel')
+        .to.have.property('tagName', 'VoltageLevel');
+      await sendMouse({ type: 'click', position: [200, 200] });
+      expect(element.doc.querySelector('VoltageLevel')).to.have.attribute(
+        'smth:lx',
+        '5.5'
+      );
+      expect(element.doc.querySelector('VoltageLevel')).to.have.attribute(
+        'smth:ly',
+        '4'
       );
     });
 
@@ -417,6 +448,31 @@ describe('Designer', () => {
       await sendMouse({ type: 'click', position: [200, 200] });
       expect(voltageLevel).to.have.attribute('smth:x', '1');
       expect(voltageLevel).to.have.attribute('smth:y', '1');
+    });
+
+    it('moves the voltage level label on label left click', async () => {
+      queryUI({ ui: '.label text' }).dispatchEvent(new PointerEvent('click'));
+      expect(element)
+        .property('placingLabel')
+        .to.have.property('tagName', 'VoltageLevel');
+      await sendMouse({ type: 'click', position: [200, 200] });
+      expect(element.doc.querySelector('VoltageLevel')).to.have.attribute(
+        'smth:lx',
+        '5.5'
+      );
+      expect(element.doc.querySelector('VoltageLevel')).to.have.attribute(
+        'smth:ly',
+        '4'
+      );
+    });
+
+    it('requests a voltage level edit wizard on label middle click', async () => {
+      queryUI({ ui: '.label text' }).dispatchEvent(
+        new PointerEvent('auxclick', { button: 1 })
+      );
+      expect(lastCalledWizard).to.equal(
+        element.doc.querySelector('VoltageLevel')
+      );
     });
 
     it('allows placing a new bay', async () => {
@@ -487,18 +543,18 @@ describe('Designer', () => {
     });
 
     it('opens a menu on bay right click', async () => {
-      querySvg({
+      queryUI({
         scl: 'Bay',
-        svg: 'rect',
+        ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       await element.updateComplete;
-      expect(querySvg({ svg: 'menu' })).to.exist;
+      expect(queryUI({ ui: 'menu' })).to.exist;
     });
 
-    it('requests bay edit wizard on penultimate menu item select', async () => {
-      querySvg({
+    it('requests bay edit wizard on edit menu item select', async () => {
+      queryUI({
         scl: 'Bay',
-        svg: 'rect',
+        ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -661,7 +717,7 @@ describe('Designer', () => {
       it('moves the bus bar on left click', async () => {
         await sendMouse({
           type: 'click',
-          position: middleOf(querySvg({ scl: '[name="L"]' })),
+          position: middleOf(queryUI({ scl: '[name="L"]' })),
         });
         const bus = element.doc.querySelector('[name="BB1"]');
         expect(bus).to.have.attribute('x', '5');
@@ -673,7 +729,7 @@ describe('Designer', () => {
         await sendMouse({
           type: 'click',
           button: 'middle',
-          position: middleOf(querySvg({ scl: '[name="L"]' })),
+          position: middleOf(queryUI({ scl: '[name="L"]' })),
         });
         const bus = element.doc.querySelector('[name="BB1"]');
         expect(bus).to.have.attribute('esld:w', '1');
@@ -695,10 +751,10 @@ describe('Designer', () => {
       await element.updateComplete;
     });
 
-    it('requests equipment edit wizard on penultimate menu item select', async () => {
-      querySvg({
+    it('requests equipment edit wizard on edit menu item select', async () => {
+      queryUI({
         scl: '[type="CTR"]',
-        svg: 'rect',
+        ui: 'rect',
       }).dispatchEvent(new PointerEvent('contextmenu'));
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -710,6 +766,30 @@ describe('Designer', () => {
       expect(lastCalledWizard).to.equal(
         element.doc.querySelector('[type="CTR"]')
       );
+    });
+
+    it('moves the equipment label on "move label" menu item select', async () => {
+      queryUI({
+        scl: 'ConductingEquipment',
+        ui: 'rect',
+      }).dispatchEvent(new PointerEvent('contextmenu'));
+      const sldEditor =
+        element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+      await element.updateComplete;
+      sldEditor.shadowRoot!.querySelector<ListItem>(
+        'mwc-list-item:nth-last-of-type(4)'
+      )!.selected = true;
+      await sldEditor.updateComplete;
+      expect(element)
+        .property('placingLabel')
+        .to.have.property('tagName', 'ConductingEquipment');
+      await sendMouse({ type: 'click', position: [200, 200] });
+      expect(
+        element.doc.querySelector('ConductingEquipment')
+      ).to.have.attribute('esld:lx', '5.5');
+      expect(
+        element.doc.querySelector('ConductingEquipment')
+      ).to.have.attribute('esld:ly', '4');
     });
 
     it('moves equipment on left mouse button click', async () => {
@@ -740,20 +820,12 @@ describe('Designer', () => {
     });
 
     it('opens a menu on equipment right click', async () => {
-      const sldEditor =
-        element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
-      const equipment = element.doc.querySelector('ConductingEquipment');
-      const id = identity(equipment);
-      const eqClickTarget = sldEditor
-        .shadowRoot!.getElementById(<string>id)!
-        .querySelector('rect')!;
-      eqClickTarget.dispatchEvent(
+      queryUI({ scl: 'ConductingEquipment', ui: 'rect' }).dispatchEvent(
         new PointerEvent('contextmenu', { clientX: 750, clientY: 550 })
       );
       await element.updateComplete;
-      expect(sldEditor)
-        .property('menu')
-        .to.exist.and.to.have.property('element', equipment);
+      expect(queryUI({ ui: 'menu' })).to.exist;
+      expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
     });
 
     it('flips equipment on mirror menu item select', async () => {
@@ -862,7 +934,7 @@ describe('Designer', () => {
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
       const equipment = element.doc.querySelector('ConductingEquipment')!;
-      querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(
+      queryUI({ scl: 'ConductingEquipment', ui: 'rect' }).dispatchEvent(
         new PointerEvent('contextmenu')
       );
       await element.updateComplete;
@@ -876,7 +948,7 @@ describe('Designer', () => {
       expect(
         equipment.querySelector('Terminal[name="T1"][cNodeName="grounded"]')
       ).to.exist;
-      querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(
+      queryUI({ scl: 'ConductingEquipment', ui: 'rect' }).dispatchEvent(
         new PointerEvent('contextmenu')
       );
       await element.updateComplete;
@@ -921,7 +993,7 @@ describe('Designer', () => {
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
       let equipment = element.doc.querySelector('ConductingEquipment')!;
-      querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(
+      queryUI({ scl: 'ConductingEquipment', ui: 'rect' }).dispatchEvent(
         new PointerEvent('contextmenu')
       );
       await element.updateComplete;
@@ -929,12 +1001,12 @@ describe('Designer', () => {
         'mwc-list-item:nth-of-type(1)'
       )!.selected = true;
       expect(equipment.querySelector('Terminal[name="T1"]')).to.not.exist;
-      let position = middleOf(querySvg({ scl: '[type="VTR"]', svg: 'rect' }));
+      let position = middleOf(queryUI({ scl: '[type="VTR"]', ui: 'rect' }));
       position[1] -= 1;
       await sendMouse({ type: 'click', position });
       expect(equipment.querySelector('Terminal[name="T1"]')).to.exist;
 
-      querySvg({ scl: 'ConductingEquipment', svg: 'rect' }).dispatchEvent(
+      queryUI({ scl: 'ConductingEquipment', ui: 'rect' }).dispatchEvent(
         new PointerEvent('contextmenu')
       );
       await element.updateComplete;
@@ -942,13 +1014,13 @@ describe('Designer', () => {
         'mwc-list-item:nth-of-type(2)'
       )!.selected = true;
       expect(equipment.querySelector('Terminal[name="T2"]')).to.not.exist;
-      position = middleOf(querySvg({ scl: '[type="NEW"]', svg: 'rect' }));
+      position = middleOf(queryUI({ scl: '[type="NEW"]', ui: 'rect' }));
       position[1] -= 1;
       await sendMouse({ type: 'click', position });
       expect(equipment.querySelector('Terminal[name="T2"]')).to.exist;
 
       equipment = element.doc.querySelector('[type="DIS"]')!;
-      querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(
+      queryUI({ scl: '[type="DIS"]', ui: 'rect' }).dispatchEvent(
         new PointerEvent('contextmenu')
       );
       await element.updateComplete;
@@ -956,11 +1028,11 @@ describe('Designer', () => {
         'mwc-list-item:nth-of-type(1)'
       )!.selected = true;
       expect(equipment.querySelector('Terminal[name="T1"]')).to.not.exist;
-      position = middleOf(querySvg({ scl: '[type="CTR"]', svg: 'rect' }));
+      position = middleOf(queryUI({ scl: '[type="CTR"]', ui: 'rect' }));
       await sendMouse({ type: 'click', position });
       expect(equipment.querySelector('Terminal[name="T1"]')).to.exist;
 
-      querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(
+      queryUI({ scl: '[type="DIS"]', ui: 'rect' }).dispatchEvent(
         new PointerEvent('contextmenu')
       );
       await element.updateComplete;
@@ -968,7 +1040,7 @@ describe('Designer', () => {
         'mwc-list-item:nth-of-type(2)'
       )!.selected = true;
       expect(equipment.querySelector('Terminal[name="T2"]')).to.not.exist;
-      position = middleOf(querySvg({ scl: '[name="DIS2"]', svg: 'rect' }));
+      position = middleOf(queryUI({ scl: '[name="DIS2"]', ui: 'rect' }));
       position[1] += 1;
       await sendMouse({ type: 'click', position });
       expect(equipment.querySelector('Terminal[name="T2"]')).to.exist;
@@ -1140,25 +1212,25 @@ describe('Designer', () => {
 
       describe('between more than two pieces of equipment', async () => {
         beforeEach(async () => {
-          querySvg({ scl: '[type="CTR"]', svg: 'circle' }).dispatchEvent(
+          queryUI({ scl: '[type="CTR"]', ui: 'circle' }).dispatchEvent(
             new PointerEvent('click')
           );
           await sendMouse({
             type: 'click',
-            position: middleOf(querySvg({ scl: 'ConnectivityNode' })),
+            position: middleOf(queryUI({ scl: 'ConnectivityNode' })),
           });
-          querySvg({ scl: '[type="BAT"]', svg: 'circle' }).dispatchEvent(
+          queryUI({ scl: '[type="BAT"]', ui: 'circle' }).dispatchEvent(
             new PointerEvent('click')
           );
           await sendMouse({
             type: 'click',
-            position: middleOf(querySvg({ scl: '[type="CTR"]', svg: 'rect' })),
+            position: middleOf(queryUI({ scl: '[type="CTR"]', ui: 'rect' })),
           });
         });
 
         it('disconnects equipment on rotation', async () => {
           expect(element.doc.querySelector('[type="CTR"] > Terminal')).to.exist;
-          querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="CTR"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('auxclick', { button: 1 })
           );
           expect(element.doc.querySelector('[type="CTR"] > Terminal')).to.not
@@ -1168,7 +1240,7 @@ describe('Designer', () => {
             2
           );
           expect(element.doc.querySelector('[type="BAT"] > Terminal')).to.exist;
-          querySvg({ scl: '[type="BAT"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="BAT"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('auxclick', { button: 1 })
           );
           expect(element.doc.querySelector('[type="BAT"] > Terminal')).to.not
@@ -1182,7 +1254,7 @@ describe('Designer', () => {
           const sldEditor =
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           const equipment = element.doc.querySelector('[type="CTR"]')!;
-          querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="CTR"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('contextmenu')
           );
           await element.updateComplete;
@@ -1192,7 +1264,7 @@ describe('Designer', () => {
           )!.selected = true;
           await element.updateComplete;
           expect(equipment.querySelector('Terminal[name="T1"]')).to.not.exist;
-          querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="CTR"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('contextmenu')
           );
           await sldEditor.updateComplete;
@@ -1205,13 +1277,13 @@ describe('Designer', () => {
         });
 
         it('simplifies horizontal connection paths when disconnecting', async () => {
-          querySvg({ scl: '[type="VTR"]', svg: 'circle' }).dispatchEvent(
+          queryUI({ scl: '[type="VTR"]', ui: 'circle' }).dispatchEvent(
             new PointerEvent('click')
           );
           await sendMouse({ type: 'click', position: [300, 220] });
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
           expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(16);
-          querySvg({ scl: '[type="CBR"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="CBR"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('auxclick', { button: 1 })
           );
           element.updateComplete;
@@ -1223,13 +1295,13 @@ describe('Designer', () => {
         });
 
         it('simplifies vertical connection paths when disconnecting', async () => {
-          querySvg({ scl: '[type="NEW"]', svg: 'circle' }).dispatchEvent(
+          queryUI({ scl: '[type="NEW"]', ui: 'circle' }).dispatchEvent(
             new PointerEvent('click')
           );
           await sendMouse({ type: 'click', position: [600, 270] });
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
           expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(16);
-          querySvg({ scl: '[type="NEW"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="NEW"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('auxclick', { button: 1 })
           );
           element.updateComplete;
@@ -1241,17 +1313,17 @@ describe('Designer', () => {
         });
 
         it('simplifies when disconnecting only where possible', async () => {
-          querySvg({ scl: '[type="VTR"]', svg: 'circle' }).dispatchEvent(
+          queryUI({ scl: '[type="VTR"]', ui: 'circle' }).dispatchEvent(
             new PointerEvent('click')
           );
           await sendMouse({ type: 'click', position: [300, 220] });
-          querySvg({ scl: '[type="NEW"]', svg: 'circle' }).dispatchEvent(
+          queryUI({ scl: '[type="NEW"]', ui: 'circle' }).dispatchEvent(
             new PointerEvent('click')
           );
           await sendMouse({ type: 'click', position: [300, 220] });
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(7);
           expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(19);
-          querySvg({ scl: '[type="NEW"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="NEW"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('auxclick', { button: 1 })
           );
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
@@ -1262,7 +1334,7 @@ describe('Designer', () => {
         });
 
         it('disconnects equipment upon being moved', async () => {
-          querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="DIS"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('click')
           );
           expect(element.doc.querySelector('[type="DIS"] > Terminal')).to.exist;
@@ -1275,10 +1347,10 @@ describe('Designer', () => {
         });
 
         it('removes superfluous connectivity nodes when disconnecting', async () => {
-          querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="CTR"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('auxclick', { button: 1 })
           );
-          querySvg({ scl: '[type="DIS"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="DIS"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('auxclick', { button: 1 })
           );
           expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
@@ -1288,7 +1360,7 @@ describe('Designer', () => {
         });
 
         it('removes contained connectivity nodes when moving containers', async () => {
-          querySvg({ svg: '.handle' }).dispatchEvent(new PointerEvent('click'));
+          queryUI({ ui: '.handle' }).dispatchEvent(new PointerEvent('click'));
           await sendMouse({ type: 'click', position: [100, 150] });
           expect(
             element.doc.querySelectorAll('ConnectivityNode')
@@ -1296,9 +1368,9 @@ describe('Designer', () => {
         });
 
         it('removes connected connectivity nodes when moving containers', async () => {
-          querySvg({
+          queryUI({
             scl: '[name="V2"]',
-            svg: '.handle',
+            ui: '.handle',
           }).dispatchEvent(new PointerEvent('click'));
           expect(
             element.doc.querySelectorAll('ConnectivityNode')
@@ -1311,9 +1383,9 @@ describe('Designer', () => {
 
         it('keeps internal connectivity nodes when moving containers', async () => {
           const position = middleOf(
-            querySvg({
+            queryUI({
               scl: '[name="V2"]',
-              svg: '.handle',
+              ui: '.handle',
             })
           );
           await sendMouse({ position, type: 'click' });
@@ -1336,7 +1408,7 @@ describe('Designer', () => {
           const sldEditor =
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           const equipment = element.doc.querySelector('[type="CTR"]')!;
-          querySvg({ scl: '[type="CTR"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[type="CTR"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('contextmenu')
           );
           await element.updateComplete;
@@ -1355,7 +1427,7 @@ describe('Designer', () => {
           const sldEditor =
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           const bay = element.doc.querySelector('Bay')!;
-          querySvg({ scl: 'Bay', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: 'Bay', ui: 'rect' }).dispatchEvent(
             new PointerEvent('contextmenu')
           );
           await element.updateComplete;
@@ -1374,7 +1446,7 @@ describe('Designer', () => {
           const sldEditor =
             element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
           const bay = element.doc.querySelector('[name="V2"]')!;
-          querySvg({ scl: '[name="V2"]', svg: 'rect' }).dispatchEvent(
+          queryUI({ scl: '[name="V2"]', ui: 'rect' }).dispatchEvent(
             new PointerEvent('contextmenu')
           );
           await element.updateComplete;
@@ -1398,23 +1470,23 @@ describe('Designer', () => {
             await sendMouse({ type: 'click', position: [430, 230] });
             await sendMouse({
               type: 'click',
-              position: middleOf(querySvg({ scl: '[name="L"]' })),
+              position: middleOf(queryUI({ scl: '[name="L"]' })),
             });
             await sendMouse({ type: 'click', position: [450, 150] });
-            querySvg({ scl: '[type="VTR"]', svg: 'circle' }).dispatchEvent(
+            queryUI({ scl: '[type="VTR"]', ui: 'circle' }).dispatchEvent(
               new PointerEvent('click')
             );
             await sendMouse({
               type: 'click',
-              position: middleOf(querySvg({ scl: '[name="L"]' })),
+              position: middleOf(queryUI({ scl: '[name="L"]' })),
             });
           });
 
           it('keeps the bus bar when moving containers', async () => {
             const position = middleOf(
-              querySvg({
+              queryUI({
                 scl: '[name="V2"] > [name="B1"]',
-                svg: '.handle',
+                ui: '.handle',
               })
             );
             expect(
@@ -1436,19 +1508,19 @@ describe('Designer', () => {
           });
 
           it('does not merge bus bar sections with feeder sections', async () => {
-            querySvg({
+            queryUI({
               scl: '[type="NEW"]',
-              svg: 'circle:nth-of-type(2)',
+              ui: 'circle:nth-of-type(2)',
             }).dispatchEvent(new PointerEvent('click'));
             await sendMouse({ type: 'click', position: [450, 150] });
-            querySvg({ scl: '[type="CBR"]', svg: 'circle' }).dispatchEvent(
+            queryUI({ scl: '[type="CBR"]', ui: 'circle' }).dispatchEvent(
               new PointerEvent('click')
             );
             await sendMouse({ type: 'click', position: [450, 150] });
             expect(
               element.doc.querySelectorAll('Section[bus] Vertex')
             ).to.have.lengthOf(4);
-            querySvg({ scl: '[type="CBR"]', svg: 'rect' }).dispatchEvent(
+            queryUI({ scl: '[type="CBR"]', ui: 'rect' }).dispatchEvent(
               new PointerEvent('auxclick', { button: 1 })
             );
             expect(
@@ -1460,18 +1532,18 @@ describe('Designer', () => {
           });
 
           it('opens a menu on bus bar right click', async () => {
-            querySvg({
+            queryUI({
               scl: '[name="L"]',
-              svg: 'line[stroke="none"]',
+              ui: 'line[stroke="none"]',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
-            expect(querySvg({ svg: 'menu' })).to.exist;
+            expect(queryUI({ ui: 'menu' })).to.exist;
           });
 
-          it('resizes the bus bar on first menu item select', async () => {
-            querySvg({
+          it('resizes the bus bar on resize menu item select', async () => {
+            queryUI({
               scl: '[name="L"]',
-              svg: 'line[stroke="none"]',
+              ui: 'line[stroke="none"]',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             const sldEditor =
@@ -1488,10 +1560,10 @@ describe('Designer', () => {
             });
           });
 
-          it('moves the bus bar on first menu item select', async () => {
-            querySvg({
+          it('moves the bus bar on move menu item select', async () => {
+            queryUI({
               scl: '[name="L"]',
-              svg: 'line[stroke="none"]',
+              ui: 'line[stroke="none"]',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             const sldEditor =
@@ -1508,10 +1580,36 @@ describe('Designer', () => {
             });
           });
 
-          it('requests bus bar edit wizard on penultimate menu item select', async () => {
-            querySvg({
+          it('moves the bus bar label on "move label" menu item select', async () => {
+            queryUI({
               scl: '[name="L"]',
-              svg: 'line[stroke="none"]',
+              ui: 'line[stroke="none"]',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            await element.updateComplete;
+            sldEditor.shadowRoot!.querySelector<ListItem>(
+              'mwc-list-item:nth-last-of-type(4)'
+            )!.selected = true;
+            await sldEditor.updateComplete;
+            expect(element)
+              .property('placingLabel')
+              .to.have.attribute('name', 'BB1');
+            await sendMouse({ type: 'click', position: [200, 200] });
+            expect(element.doc.querySelector('[name="BB1"]')).to.have.attribute(
+              'lx',
+              '5.5'
+            );
+            expect(element.doc.querySelector('[name="BB1"]')).to.have.attribute(
+              'ly',
+              '4'
+            );
+          });
+
+          it('requests bus bar edit wizard on edit menu item select', async () => {
+            queryUI({
+              scl: '[name="L"]',
+              ui: 'line[stroke="none"]',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             const sldEditor =
               element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -1525,10 +1623,10 @@ describe('Designer', () => {
             );
           });
 
-          it('removes the bus bar on last menu item select', async () => {
-            querySvg({
+          it('deletes the bus bar on delete menu item select', async () => {
+            queryUI({
               scl: '[name="L"]',
-              svg: 'line[stroke="none"]',
+              ui: 'line[stroke="none"]',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             expect(element.doc.querySelector('[name="BB1"]')).to.exist;

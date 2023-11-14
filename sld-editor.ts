@@ -2,7 +2,7 @@ import { css, html, nothing, LitElement, svg, TemplateResult } from 'lit';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { ref } from 'lit/directives/ref.js';
+import { createRef, Ref, ref } from 'lit/directives/ref.js';
 
 import { Edit, newEditEvent } from '@openscd/open-scd-core';
 
@@ -31,10 +31,12 @@ import {
   isBusBar,
   newConnectEvent,
   newPlaceEvent,
+  newPlaceLabelEvent,
   newResizeEvent,
   newRotateEvent,
   newStartConnectEvent,
   newStartPlaceEvent,
+  newStartPlaceLabelEvent,
   newStartResizeEvent,
   Point,
   privType,
@@ -144,7 +146,12 @@ function preventDefault(e: Event) {
 
 function renderMenuFooter(element: Element) {
   const name = element.getAttribute('name');
-  const desc = element.getAttribute('desc') || element.getAttribute('type');
+  let detail: string | null | TemplateResult<1> = element.getAttribute('desc');
+  const type = element.getAttribute('type');
+  if (type) {
+    if (detail) detail = html`${type} &mdash; ${detail}`;
+    else detail = type;
+  }
   let footerGraphic = equipmentGraphic(null);
   if (element.tagName === 'ConductingEquipment')
     footerGraphic = equipmentGraphic(element.getAttribute('type'));
@@ -153,9 +160,16 @@ function renderMenuFooter(element: Element) {
   else if (element.tagName === 'Bay') footerGraphic = bayGraphic;
   else if (element.tagName === 'VoltageLevel')
     footerGraphic = voltageLevelGraphic;
-  return html`<mwc-list-item ?twoline=${desc} graphic="avatar" noninteractive>
+  return html`<mwc-list-item ?twoline=${detail} graphic="avatar" noninteractive>
     <span>${name}</span>
-    ${desc ? html`<span slot="secondary">${desc}</span>` : nothing}
+    ${detail
+      ? html`<span
+          slot="secondary"
+          style="display: inline-block; max-width: 15em; overflow: hidden; text-overflow: ellipsis;"
+        >
+          ${detail}
+        </span>`
+      : nothing}
     ${footerGraphic}
   </mwc-list-item>`;
 }
@@ -179,10 +193,13 @@ export class SLDEditor extends LitElement {
   nsp = 'esld';
 
   @property()
+  resizing?: Element;
+
+  @property()
   placing?: Element;
 
   @property()
-  resizing?: Element;
+  placingLabel?: Element;
 
   @property()
   connecting?: {
@@ -217,6 +234,27 @@ export class SLDEditor extends LitElement {
 
   @state()
   menu?: { element: Element; top: number; left: number };
+
+  coordinatesRef: Ref<HTMLElement> = createRef();
+
+  positionCoordinates(e: MouseEvent) {
+    const coordinatesDiv = this.coordinatesRef.value;
+    if (coordinatesDiv) {
+      coordinatesDiv.style.top = `${e.clientY}px`;
+      coordinatesDiv.style.left = `${e.clientX + 16}px`;
+    }
+  }
+
+  openMenu(element: Element, e: MouseEvent) {
+    if (
+      !this.placing &&
+      !this.resizing &&
+      !this.placingLabel &&
+      !this.connecting
+    )
+      this.menu = { element, left: e.clientX, top: e.clientY };
+    e.preventDefault();
+  }
 
   svgCoordinates(clientX: number, clientY: number) {
     const p = new DOMPoint(clientX, clientY);
@@ -275,6 +313,27 @@ export class SLDEditor extends LitElement {
     return true;
   }
 
+  renderedLabelPosition(element: Element): Point {
+    let {
+      label: [x, y],
+    } = attributes(element);
+    if (
+      this.placing &&
+      element.closest(this.placing.tagName) === this.placing
+    ) {
+      const {
+        pos: [parentX, parentY],
+      } = attributes(this.placing);
+      x += this.mouseX - parentX;
+      y += this.mouseY - parentY;
+    }
+    if (this.placingLabel === element) {
+      x = this.mouseX2;
+      y = this.mouseY2 + 0.5;
+    }
+    return [x, y];
+  }
+
   renderedPosition(element: Element): Point {
     let {
       pos: [x, y],
@@ -296,14 +355,23 @@ export class SLDEditor extends LitElement {
     if (key === 'Escape') this.menu = undefined;
   };
 
-  handleClick = (_e: MouseEvent) => {
-    this.menu = undefined;
+  handleClick = (e: MouseEvent) => {
+    if (
+      this.menu &&
+      !e
+        .composedPath()
+        .find(elm => 'id' in elm && elm.id === 'sld-context-menu')
+    ) {
+      e.stopImmediatePropagation();
+      this.menu = undefined;
+    }
+    this.positionCoordinates(e);
   };
 
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('keydown', this.handleKeydown);
-    window.addEventListener('click', this.handleClick);
+    window.addEventListener('click', this.handleClick, true);
   }
 
   disconnectedCallback() {
@@ -421,6 +489,13 @@ export class SLDEditor extends LitElement {
           </svg>
         </mwc-list-item>`,
         handler: () => this.dispatchEvent(newStartPlaceEvent(equipment)),
+      },
+      {
+        content: html`<mwc-list-item graphic="icon">
+          <span>Move Label</span>
+          <mwc-icon slot="graphic">text_rotation_none</mwc-icon>
+        </mwc-list-item>`,
+        handler: () => this.dispatchEvent(newStartPlaceLabelEvent(equipment)),
       },
       {
         content: html`<mwc-list-item graphic="icon">
@@ -566,6 +641,13 @@ export class SLDEditor extends LitElement {
       },
       {
         content: html`<mwc-list-item graphic="icon">
+          <span>Move Label</span>
+          <mwc-icon slot="graphic">text_rotation_none</mwc-icon>
+        </mwc-list-item>`,
+        handler: () => this.dispatchEvent(newStartPlaceLabelEvent(busBar)),
+      },
+      {
+        content: html`<mwc-list-item graphic="icon">
           <span>Edit</span>
           <mwc-icon slot="graphic">edit</mwc-icon>
         </mwc-list-item>`,
@@ -618,6 +700,13 @@ export class SLDEditor extends LitElement {
           </svg>
         </mwc-list-item>`,
         handler: () => this.dispatchEvent(newStartPlaceEvent(bayOrVL)),
+      },
+      {
+        content: html`<mwc-list-item graphic="icon">
+          <span>Move Label</span>
+          <mwc-icon slot="graphic">text_rotation_none</mwc-icon>
+        </mwc-list-item>`,
+        handler: () => this.dispatchEvent(newStartPlaceLabelEvent(bayOrVL)),
       },
       {
         content: html`<mwc-list-item graphic="icon">
@@ -682,6 +771,7 @@ export class SLDEditor extends LitElement {
 
     return html`
       <menu
+        id="sld-context-menu"
         style="position: fixed; top: ${this.menu.top}px; left: ${this.menu
           .left}px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px;"
         ${ref(async (m?: Element) => {
@@ -724,6 +814,16 @@ export class SLDEditor extends LitElement {
         ? svg`<rect width="100%" height="100%" fill="url(#grid)" />`
         : nothing;
 
+    const placingLabelTarget = this.placingLabel
+      ? svg`<rect width="100%" height="100%" fill="url(#halfgrid)"
+      @click=${() => {
+        const element = this.placingLabel!;
+        const [x, y] = this.renderedLabelPosition(element);
+        this.dispatchEvent(newPlaceLabelEvent({ element, x, y }));
+      }}
+      />`
+      : nothing;
+
     let placingElement = svg``;
     if (this.placing) {
       if (this.placing.tagName === 'VoltageLevel' || isBay(this.placing))
@@ -734,7 +834,7 @@ export class SLDEditor extends LitElement {
         placingElement = this.renderBusBar(this.placing);
     }
 
-    let placingIndicator = svg``;
+    let coordinates = html``;
     if (this.placing) {
       const {
         dim: [w0, h0],
@@ -746,18 +846,14 @@ export class SLDEditor extends LitElement {
         w0,
         h0
       );
-      placingIndicator = svg`
-      <foreignObject x="${this.mouseX + 1}" y="${this.mouseY}"
-          width="1" height="1" class="preview"
-          style="pointer-events: none; overflow: visible;">
-        <span class="${classMap({ indicator: true, invalid })}">
+      coordinates = html`<div
+        ${ref(this.coordinatesRef)}
+        class="${classMap({ coordinates: true, invalid })}"
+      >
         (${this.mouseX},${this.mouseY})
-        </span>
-      </foreignObject>
-    `;
+      </div>`;
     }
 
-    let resizingIndicator = svg``;
     if (this.resizing && !isBusBar(this.resizing)) {
       const {
         pos: [x, y],
@@ -765,15 +861,12 @@ export class SLDEditor extends LitElement {
       const newW = Math.max(1, this.mouseX - x + 1);
       const newH = Math.max(1, this.mouseY - y + 1);
       const invalid = !this.canResizeTo(this.resizing, newW, newH);
-      resizingIndicator = svg`
-      <foreignObject x="${this.mouseX + 1}" y="${this.mouseY}"
-        width="1" height="1" class="preview"
-        style="pointer-events: none; overflow: visible;">
-        <span class="${classMap({ indicator: true, invalid })}">
+      coordinates = html`<div
+        ${ref(this.coordinatesRef)}
+        class="${classMap({ coordinates: true, invalid })}"
+      >
         (${newW}&times;${newH})
-        </span>
-      </foreignObject>
-    `;
+      </div>`;
     }
 
     const connectionPreview = [];
@@ -882,19 +975,10 @@ export class SLDEditor extends LitElement {
           this.mouseY = Math.floor(y);
           this.mouseX2 = Math.floor(x * 2) / 2;
           this.mouseY2 = Math.floor(y * 2) / 2;
+          this.positionCoordinates(e);
         }}
       >
         <style>
-          .indicator {
-            font-size: 0.6px;
-            overflow: visible;
-            font-family: 'Roboto', sans-serif;
-            background: white;
-            color: rgb(0, 0, 0 / 0.83);
-          }
-          .indicator.invalid {
-            color: #bb1326;
-          }
           .handle {
             visibility: hidden;
           }
@@ -955,9 +1039,15 @@ export class SLDEditor extends LitElement {
               isBusBar(node.parentElement!)
           )
           .map(cNode => this.renderConnectivityNode(cNode))}
-        ${placingElement} ${placingIndicator} ${resizingIndicator}
+        ${placingElement}
+        ${Array.from(
+          this.substation.querySelectorAll(
+            'VoltageLevel, Bay, ConductingEquipment'
+          )
+        ).map(element => this.renderLabel(element))}
+        ${placingLabelTarget}
       </svg>
-      ${menu}
+      ${menu} ${coordinates}
       <mwc-dialog
         id="resizeSubstationUI"
         heading="Resize ${this.substation.getAttribute('name')}"
@@ -1042,8 +1132,42 @@ export class SLDEditor extends LitElement {
     </section>`;
   }
 
+  renderLabel(element: Element) {
+    const [x, y] = this.renderedLabelPosition(element);
+    const name = element.getAttribute('name');
+    const fontSize = element.tagName === 'ConductingEquipment' ? 0.45 : 0.6;
+    let events = 'none';
+    let handleClick: (() => void) | symbol = nothing;
+    if (
+      !this.placing &&
+      !this.resizing &&
+      !this.connecting &&
+      !this.placingLabel
+    ) {
+      events = 'all';
+      handleClick = () => this.dispatchEvent(newStartPlaceLabelEvent(element));
+    }
+    const id = identity(element);
+    return svg`<g class="label" id="label:${id}">
+        <text x="${x + 0.1}" y="${y - 0.2}"
+          @mousedown=${preventDefault}
+          @auxclick=${(e: MouseEvent) => {
+            if (e.button === 1) {
+              // middle mouse button
+              this.dispatchEvent(newEditWizardEvent(element));
+              e.preventDefault();
+            }
+          }}
+          @click=${handleClick}
+          @contextmenu=${(e: MouseEvent) => this.openMenu(element, e)}
+          pointer-events="${events}" fill="#000000" fill-opacity="0.83"
+          style="font: ${fontSize}px sans-serif; cursor: default;">
+          ${name}
+        </text>
+      </g>`;
+  }
+
   renderContainer(bayOrVL: Element, preview = false): TemplateResult<2> {
-    const name = bayOrVL.getAttribute('name') ?? '';
     const isVL = bayOrVL.tagName === 'VoltageLevel';
     if (this.placing === bayOrVL && !preview) return svg``;
 
@@ -1142,18 +1266,13 @@ export class SLDEditor extends LitElement {
       preview,
     })} tabindex="0" pointer-events="all" style="outline: none;">
       <rect x="${x}" y="${y}" width="${w}" height="${h}"
-        @contextmenu=${(e: MouseEvent) => {
-          this.menu = { element: bayOrVL, left: e.clientX, top: e.clientY };
-          e.preventDefault();
-        }}
+        @contextmenu=${(e: MouseEvent) => this.openMenu(bayOrVL, e)}
         @click=${handleClick || nothing}
         fill="white" stroke-dasharray="${isVL ? nothing : '0.18'}"
         stroke="${
           // eslint-disable-next-line no-nested-ternary
           invalid ? '#BB1326' : isVL ? '#F5E214' : '#12579B'
         }" />
-      <text x="${x + 0.1}" y="${y - 0.2}" fill="#000000" fill-opacity="0.83"
-      pointer-events="none" style="font: 0.6px sans-serif;">${name}</text>
       ${moveHandle}
       ${Array.from(bayOrVL.children)
         .filter(isBay)
@@ -1312,10 +1431,7 @@ export class SLDEditor extends LitElement {
             e.preventDefault();
           }
         }}
-        @contextmenu=${(e: MouseEvent) => {
-          this.menu = { element: equipment, left: e.clientX, top: e.clientY };
-          e.preventDefault();
-        }}
+        @contextmenu=${(e: MouseEvent) => this.openMenu(equipment, e)}
       />
       ${topConnector}
       ${topIndicator}
@@ -1401,10 +1517,7 @@ export class SLDEditor extends LitElement {
           handleAuxClick = ({ button }: MouseEvent) => {
             if (button === 1) this.dispatchEvent(newStartResizeEvent(bay));
           };
-          handleContextMenu = (e: MouseEvent) => {
-            this.menu = { element: bay, left: e.clientX, top: e.clientY };
-            e.preventDefault();
-          };
+          handleContextMenu = (e: MouseEvent) => this.openMenu(bay, e);
         }
         if (busBar && this.resizing === bay) {
           if (section !== sections.find(s => xmlBoolean(s.getAttribute('bus'))))
@@ -1521,6 +1634,24 @@ export class SLDEditor extends LitElement {
       margin-bottom: 4px;
       --mdc-icon-button-size: 28px;
       --mdc-icon-size: 24px;
+    }
+
+    .coordinates {
+      position: fixed;
+      pointer-events: none;
+      font-size: 16px;
+      font-family: 'Roboto', sans-serif;
+      padding: 8px;
+      border-radius: 16px;
+      background: #fffd;
+      color: rgb(0, 0, 0 / 0.83);
+    }
+    .coordinates.invalid {
+      color: #bb1326;
+    }
+
+    * {
+      user-select: none;
     }
   `;
 }

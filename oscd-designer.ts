@@ -20,6 +20,7 @@ import {
   connectionStartPoints,
   isBusBar,
   PlaceEvent,
+  PlaceLabelEvent,
   Point,
   privType,
   removeNode,
@@ -35,15 +36,15 @@ import {
 
 /* eslint-disable no-bitwise */
 function uuid() {
-  const halfBytes = new Array(36);
+  const digits = new Array(36);
   for (let i = 0; i < 36; i += 1) {
-    if ([8, 13, 18, 23].includes(i)) halfBytes[i] = '-';
-    else halfBytes[i] = Math.floor(Math.random() * 16);
+    if ([8, 13, 18, 23].includes(i)) digits[i] = '-';
+    else digits[i] = Math.floor(Math.random() * 16);
   }
-  halfBytes[14] = 4;
-  halfBytes[19] &= ~(1 << 2);
-  halfBytes[19] |= 1 << 3;
-  return halfBytes.map(x => x.toString(16)).join('');
+  digits[14] = 4;
+  digits[19] &= ~(1 << 2);
+  digits[19] |= 1 << 3;
+  return digits.map(x => x.toString(16)).join('');
 }
 /* eslint-enable no-bitwise */
 
@@ -143,6 +144,9 @@ export default class Designer extends LitElement {
   placing?: Element;
 
   @state()
+  placingLabel?: Element;
+
+  @state()
   connecting?: {
     equipment: Element;
     path: Point[];
@@ -168,6 +172,11 @@ export default class Designer extends LitElement {
     this.placing = element;
   }
 
+  startPlacingLabel(element: Element | undefined) {
+    this.reset();
+    this.placingLabel = element;
+  }
+
   startConnecting({ equipment, terminal }: StartConnectDetail) {
     this.reset();
     const { close, far } = connectionStartPoints(equipment)[terminal];
@@ -180,8 +189,9 @@ export default class Designer extends LitElement {
   }
 
   reset() {
-    this.placing = undefined;
     this.resizing = undefined;
+    this.placing = undefined;
+    this.placingLabel = undefined;
     this.connecting = undefined;
   }
 
@@ -241,39 +251,80 @@ export default class Designer extends LitElement {
     this.dispatchEvent(newEditEvent(edits));
   }
 
+  placeLabel(element: Element, x: number, y: number) {
+    this.dispatchEvent(
+      newEditEvent({
+        element,
+        attributes: {
+          lx: { namespaceURI: sldNs, value: x.toString() },
+          ly: { namespaceURI: sldNs, value: y.toString() },
+        },
+      })
+    );
+    this.reset();
+  }
+
   placeElement(element: Element, parent: Element, x: number, y: number) {
     const edits: Edit[] = [];
     if (element.parentElement !== parent) {
       edits.push(...reparentElement(element, parent));
     }
-    if (element.localName !== 'Vertex')
+
+    const {
+      pos: [oldX, oldY],
+      label: [oldLX, oldLY],
+      rot,
+    } = attributes(element);
+
+    const dx = x - oldX;
+    const dy = y - oldY;
+
+    if (element.localName !== 'Vertex') {
+      let lx = oldLX;
+      let ly = oldLY;
+      if (
+        element.tagName === 'ConductingEquipment' &&
+        !element.hasAttributeNS(sldNs, 'lx') &&
+        rot % 2 === 0
+      ) {
+        lx += 1;
+        ly += 1;
+      }
       edits.push({
         element,
         attributes: {
           x: { namespaceURI: sldNs, value: x.toString() },
           y: { namespaceURI: sldNs, value: y.toString() },
+          lx: { namespaceURI: sldNs, value: (lx + dx).toString() },
+          ly: { namespaceURI: sldNs, value: (ly + dy).toString() },
         },
       });
-
-    const {
-      pos: [oldX, oldY],
-    } = attributes(element);
-
-    const dx = x - oldX;
-    const dy = y - oldY;
+    }
 
     Array.from(
       element.querySelectorAll('Bay, ConductingEquipment, Vertex')
     ).forEach(descendant => {
       const {
         pos: [descX, descY],
+        label: [descLX, descLY],
       } = attributes(descendant);
+      const newAttributes: Update['attributes'] = {
+        x: { namespaceURI: sldNs, value: (descX + dx).toString() },
+        y: { namespaceURI: sldNs, value: (descY + dy).toString() },
+      };
+      if (descendant.localName !== 'Vertex') {
+        newAttributes.lx = {
+          namespaceURI: sldNs,
+          value: (descLX + dx).toString(),
+        };
+        newAttributes.ly = {
+          namespaceURI: sldNs,
+          value: (descLY + dy).toString(),
+        };
+      }
       edits.push({
         element: descendant,
-        attributes: {
-          x: { namespaceURI: sldNs, value: (descX + dx).toString() },
-          y: { namespaceURI: sldNs, value: (descY + dy).toString() },
-        },
+        attributes: newAttributes,
       });
     });
 
@@ -490,12 +541,16 @@ export default class Designer extends LitElement {
             .gridSize=${this.gridSize}
             .resizing=${this.resizing}
             .placing=${this.placing}
+            .placingLabel=${this.placingLabel}
             .connecting=${this.connecting}
             @oscd-sld-start-resize=${({ detail }: StartEvent) => {
               this.startResizing(detail);
             }}
             @oscd-sld-start-place=${({ detail }: StartEvent) => {
               this.startPlacing(detail);
+            }}
+            @oscd-sld-start-place-label=${({ detail }: StartEvent) => {
+              this.startPlacingLabel(detail);
             }}
             @oscd-sld-start-connect=${({ detail }: StartConnectEvent) => {
               this.startConnecting(detail);
@@ -515,6 +570,9 @@ export default class Designer extends LitElement {
             @oscd-sld-place=${({
               detail: { element, parent, x, y },
             }: PlaceEvent) => this.placeElement(element, parent, x, y)}
+            @oscd-sld-place-label=${({
+              detail: { element, x, y },
+            }: PlaceLabelEvent) => this.placeLabel(element, x, y)}
             @oscd-sld-connect=${({ detail }: ConnectEvent) =>
               this.connectEquipment(detail)}
             @oscd-sld-rotate=${({ detail }: StartEvent) =>
@@ -647,9 +705,12 @@ export default class Designer extends LitElement {
     }
 
     nav {
+      user-select: none;
       position: fixed;
       bottom: 4px;
       left: 4px;
+      background: #fffd;
+      border-radius: 24px;
     }
   `;
 }

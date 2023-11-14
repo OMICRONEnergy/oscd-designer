@@ -10,6 +10,7 @@ export type Point = [number, number];
 export type Attrs = {
   pos: Point;
   dim: Point;
+  label: Point;
   flip: boolean;
   rot: 0 | 1 | 2 | 3;
   bus: boolean;
@@ -27,18 +28,25 @@ export function isBusBar(element: Element) {
 }
 
 export function attributes(element: Element): Attrs {
-  const [x, y, w, h, rotVal] = ['x', 'y', 'w', 'h', 'rot'].map(name =>
-    parseFloat(element.getAttributeNS(sldNs, name) ?? '0')
-  );
+  const [x, y, w, h, rotVal, labelX, labelY] = [
+    'x',
+    'y',
+    'w',
+    'h',
+    'rot',
+    'lx',
+    'ly',
+  ].map(name => parseFloat(element.getAttributeNS(sldNs, name) ?? '0'));
   const pos = [x, y].map(d => Math.max(0, d)) as Point;
   const dim = [w, h].map(d => Math.max(1, d)) as Point;
+  const label = [labelX, labelY].map(d => Math.max(0, d)) as Point;
 
   const bus = xmlBoolean(element.getAttribute('bus'));
   const flip = xmlBoolean(element.getAttributeNS(sldNs, 'flip'));
 
   const rot = (((rotVal % 4) + 4) % 4) as 0 | 1 | 2 | 3;
 
-  return { pos, dim, flip, rot, bus };
+  return { pos, dim, label, flip, rot, bus };
 }
 
 function pathString(...args: string[]) {
@@ -370,6 +378,11 @@ export function newResizeEvent(detail: ResizeDetail): ResizeEvent {
   });
 }
 
+export type PlaceLabelDetail = {
+  x: number;
+  y: number;
+  element: Element;
+};
 export type PlaceDetail = {
   x: number;
   y: number;
@@ -379,6 +392,15 @@ export type PlaceDetail = {
 export type PlaceEvent = CustomEvent<PlaceDetail>;
 export function newPlaceEvent(detail: PlaceDetail): PlaceEvent {
   return new CustomEvent('oscd-sld-place', {
+    bubbles: true,
+    composed: true,
+    detail,
+  });
+}
+
+export type PlaceLabelEvent = CustomEvent<PlaceLabelDetail>;
+export function newPlaceLabelEvent(detail: PlaceLabelDetail): PlaceLabelEvent {
+  return new CustomEvent('oscd-sld-place-label', {
     bubbles: true,
     composed: true,
     detail,
@@ -422,6 +444,13 @@ export function newStartPlaceEvent(detail: Element): StartEvent {
     detail,
   });
 }
+export function newStartPlaceLabelEvent(detail: Element): StartEvent {
+  return new CustomEvent('oscd-sld-start-place-label', {
+    bubbles: true,
+    composed: true,
+    detail,
+  });
+}
 export type StartConnectDetail = {
   equipment: Element;
   terminal: 'top' | 'bottom';
@@ -441,10 +470,12 @@ declare global {
   interface ElementEventMap {
     ['oscd-sld-resize']: ResizeEvent;
     ['oscd-sld-place']: PlaceEvent;
+    ['oscd-sld-place-label']: PlaceLabelEvent;
     ['oscd-sld-connect']: ConnectEvent;
     ['oscd-sld-rotate']: StartEvent;
     ['oscd-sld-start-resize']: StartEvent;
     ['oscd-sld-start-place']: StartEvent;
+    ['oscd-sld-start-place-label']: StartEvent;
     ['oscd-sld-start-connect']: StartConnectEvent;
   }
 }

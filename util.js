@@ -13,13 +13,22 @@ export function isBusBar(element) {
         xmlBoolean((_a = element.querySelector('Section[bus]')) === null || _a === void 0 ? void 0 : _a.getAttribute('bus')));
 }
 export function attributes(element) {
-    const [x, y, w, h, rotVal] = ['x', 'y', 'w', 'h', 'rot'].map(name => { var _a; return parseFloat((_a = element.getAttributeNS(sldNs, name)) !== null && _a !== void 0 ? _a : '0'); });
+    const [x, y, w, h, rotVal, labelX, labelY] = [
+        'x',
+        'y',
+        'w',
+        'h',
+        'rot',
+        'lx',
+        'ly',
+    ].map(name => { var _a; return parseFloat((_a = element.getAttributeNS(sldNs, name)) !== null && _a !== void 0 ? _a : '0'); });
     const pos = [x, y].map(d => Math.max(0, d));
     const dim = [w, h].map(d => Math.max(1, d));
+    const label = [labelX, labelY].map(d => Math.max(0, d));
     const bus = xmlBoolean(element.getAttribute('bus'));
     const flip = xmlBoolean(element.getAttributeNS(sldNs, 'flip'));
     const rot = (((rotVal % 4) + 4) % 4);
-    return { pos, dim, flip, rot, bus };
+    return { pos, dim, label, flip, rot, bus };
 }
 function pathString(...args) {
     return args.join('/');
@@ -264,6 +273,13 @@ export function newPlaceEvent(detail) {
         detail,
     });
 }
+export function newPlaceLabelEvent(detail) {
+    return new CustomEvent('oscd-sld-place-label', {
+        bubbles: true,
+        composed: true,
+        detail,
+    });
+}
 export function newConnectEvent(detail) {
     return new CustomEvent('oscd-sld-connect', {
         bubbles: true,
@@ -287,6 +303,13 @@ export function newStartResizeEvent(detail) {
 }
 export function newStartPlaceEvent(detail) {
     return new CustomEvent('oscd-sld-start-place', {
+        bubbles: true,
+        composed: true,
+        detail,
+    });
+}
+export function newStartPlaceLabelEvent(detail) {
+    return new CustomEvent('oscd-sld-start-place-label', {
         bubbles: true,
         composed: true,
         detail,

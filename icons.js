@@ -459,6 +459,12 @@ export const powerTransformerTwoWindingSymbol = svg `<symbol
 </symbol>`;
 export const symbols = svg `
   <defs>
+  <pattern id="halfgrid" patternUnits="userSpaceOnUse" width="1" height="1" viewBox="0 0 1 1">
+  <circle cx="0.1" cy="0.8" r="0.035" fill="#888" opacity="0.3" />
+  <circle cx="0.6" cy="0.3" r="0.035" fill="#888" opacity="0.3" />
+  <circle cx="0.1" cy="0.3" r="0.035" fill="#888" opacity="0.3" />
+  <circle cx="0.6" cy="0.8" r="0.035" fill="#888" opacity="0.3" />
+  </pattern>
   <pattern id="grid" patternUnits="userSpaceOnUse" width="1" height="1" viewBox="0 0 1 1">
   <line x1="0" y1="0" x2="0" y2="1" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />
   <line x1="0" y1="0" x2="1" y2="0" stroke="#888" stroke-opacity="0.3" stroke-width="0.06" />

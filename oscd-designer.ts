@@ -127,7 +127,19 @@ export default class Designer extends LitElement {
   doc!: XMLDocument;
 
   @property()
-  editCount = -1;
+  get editCount(): number {
+    return this._editCount;
+  }
+
+  set editCount(value: number) {
+    this.connecting = undefined;
+    if (!this.resizing?.parentElement) this.resizing = undefined;
+    if (!this.placingLabel?.parentElement) this.placingLabel = undefined;
+    this._editCount = value;
+  }
+
+  @state()
+  private _editCount = -1;
 
   @state()
   gridSize = 32;

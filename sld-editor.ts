@@ -783,7 +783,7 @@ export class SLDEditor extends LitElement {
           const nav = (
             this.parentElement!.getRootNode() as ShadowRoot
           ).querySelector('nav')!;
-          const navHeight = nav.offsetHeight + 12;
+          const navHeight = nav.offsetHeight + 8;
           await this.updateComplete;
           const { bottom, right } = menu.getBoundingClientRect();
           if (bottom > window.innerHeight - navHeight) {
@@ -880,7 +880,7 @@ export class SLDEditor extends LitElement {
     </div>`;
 
     const connectionPreview = [];
-    if (this.connecting) {
+    if (this.connecting?.equipment.closest('Substation') === this.substation) {
       const { equipment, path, terminal } = this.connecting;
       let i = 0;
       while (i < path.length - 2) {

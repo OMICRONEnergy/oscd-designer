@@ -1009,7 +1009,7 @@ export class SLDEditor extends LitElement {
           g.bay > rect {
             shape-rendering: crispEdges;
           }
-          section:not(:hover) .preview {
+          svg:not(:hover) .preview {
             visibility: hidden;
           }
           .preview {
@@ -1055,7 +1055,12 @@ export class SLDEditor extends LitElement {
           this.substation.querySelectorAll(
             'VoltageLevel, Bay, ConductingEquipment'
           )
-        ).map(element => this.renderLabel(element))}
+        )
+          .filter(
+            e =>
+              !this.placing || e.closest(this.placing.tagName) !== this.placing
+          )
+          .map(element => this.renderLabel(element))}
         ${placingLabelTarget}
       </svg>
       ${menu} ${coordinateTooltip}
@@ -1158,7 +1163,7 @@ export class SLDEditor extends LitElement {
       events = 'all';
       handleClick = () => this.dispatchEvent(newStartPlaceLabelEvent(element));
     }
-    const id = identity(element);
+    const id = element.parentElement ? identity(element) : 'placing...';
     return svg`<g class="label" id="label:${id}">
         <text x="${x + 0.1}" y="${y - 0.2}"
           @mousedown=${preventDefault}
@@ -1296,6 +1301,13 @@ export class SLDEditor extends LitElement {
             ? Array.from(bayOrVL.querySelectorAll('ConnectivityNode'))
                 .filter(child => child.getAttribute('name') !== 'grounded')
                 .map(cNode => this.renderConnectivityNode(cNode))
+            : nothing
+        }
+        ${
+          preview
+            ? Array.from(bayOrVL.querySelectorAll('Bay, ConductingEquipment'))
+                .concat(bayOrVL)
+                .map(element => this.renderLabel(element))
             : nothing
         }
       ${placingTarget}
@@ -1464,7 +1476,8 @@ export class SLDEditor extends LitElement {
       ${bottomConnector}
       ${bottomIndicator}
       ${bottomGrounded}
-    </g>`;
+    </g>
+    <g class="preview">${preview ? this.renderLabel(equipment) : nothing}</g>`;
   }
 
   renderBusBar(busBar: Element) {
@@ -1662,6 +1675,9 @@ export class SLDEditor extends LitElement {
     }
 
     .hidden {
+      display: none;
+    }
+    svg:not(:hover) ~ .coordinates {
       display: none;
     }
     .coordinates {

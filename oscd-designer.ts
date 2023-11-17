@@ -609,7 +609,6 @@ export default class Designer extends LitElement {
                     const element =
                       this.templateElements.ConductingEquipment!.cloneNode() as Element;
                     element.setAttribute('type', eqType);
-                    element.setAttribute('name', `${eqType}1`);
                     this.startPlacing(element);
                   }}
                   style="--mdc-theme-secondary: #fff; --mdc-theme-on-secondary: rgb(0, 0, 0 / 0.83)"

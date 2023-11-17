@@ -275,6 +275,7 @@ function uniqueName(element: Element, parent: Element): string {
 
   const baseName =
     element.getAttribute('name')?.replace(/[0-9]*$/, '') ??
+    element.getAttribute('type') ??
     element.tagName.charAt(0);
   let index = 1;
   function hasName(child: Element) {

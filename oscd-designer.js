@@ -640,7 +640,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
  * @license
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: Apache-2.0
- */;let ro=class extends no{};ro.styles=[oo],ro=n([mt("mwc-textfield")],ro);const ao="Transpower-SLD-Vertices",so="https://transpower.co.nz/SCL/SSD/SLD/v0",lo="http://www.w3.org/2000/svg",co=["CAB","CAP","CBR","CTR","DIS","GEN","IFL","LIN","MOT","REA","RES","SAR","SMC","VTR"];function po(t){return co.includes(t)}const mo=new Set(["GEN","MOT","SMC"]);function ho(t){var e;return["true","1"].includes(null!==(e=null==t?void 0:t.trim())&&void 0!==e?e:"false")}function uo(t){var e;return"Bay"===t.tagName&&ho(null===(e=t.querySelector("Section[bus]"))||void 0===e?void 0:e.getAttribute("bus"))}function fo(t){const[e,i,n,o,r,a,d]=["x","y","w","h","rot","lx","ly"].map((e=>{var i;return parseFloat(null!==(i=t.getAttributeNS(so,e))&&void 0!==i?i:"0")})),s=[e,i].map((t=>Math.max(0,t))),l=[n,o].map((t=>Math.max(1,t))),c=[a,d].map((t=>Math.max(0,t))),p=ho(t.getAttribute("bus"));return{pos:s,dim:l,label:c,flip:ho(t.getAttributeNS(so,"flip")),rot:(r%4+4)%4,bus:p}}function go(t){var e;const i=[];if(ho(null===(e=t.querySelector("Section[bus]"))||void 0===e?void 0:e.getAttribute("bus"))){Array.from(t.querySelectorAll("Section:not([bus])")).forEach((t=>i.push({node:t})));const e=Array.from(t.querySelectorAll("Section[bus]")),n=e[0];Array.from(n.children).slice(1).forEach((t=>i.push({node:t})));const o=e[e.length-1].lastElementChild;o&&i.push({parent:n,node:o,reference:null}),e.slice(1).forEach((t=>i.push({node:t})))}else i.push({node:t});return Array.from(t.ownerDocument.querySelectorAll(`Terminal[connectivityNode="${t.getAttribute("pathName")}"]`)).forEach((t=>i.push({node:t}))),i}function bo(t){const[e,i]=["x","y"].map((e=>t.getAttributeNS(so,e))),n=n=>n!==t&&n.getAttributeNS(so,"x")===e&&n.getAttributeNS(so,"y")===i,o=Array.from(t.closest("Private").getElementsByTagNameNS(so,"Section")).flatMap((t=>Array.from(t.children).filter(n))).map((t=>t.parentElement));if(o.length>2)return[];if(o.length<2)return go(t.closest("ConnectivityNode"));const[r,a]=o.map((t=>ho(t.getAttribute("bus"))));if(r!==a)return[];const d=[],[s,l]=o;n(s.firstElementChild)&&d.push(function(t){const e=[];return Array.from(t.children).reverse().forEach((i=>e.push({parent:t,node:i,reference:null}))),e}(s));const c=Array.from(l.children);n(l.lastElementChild)&&c.reverse(),c.slice(1).forEach((t=>d.push({parent:s,node:t,reference:null})));const p=Array.from(s.children).find(n),m=n(s.firstElementChild)?s.children[1]:s.children[s.childElementCount-2],h=c[1];return m&&p&&h&&function(t,e,i){const[[n,o],[r,a],[d,s]]=[t,e,i].map((t=>["x","y"].map((e=>t.getAttributeNS(so,e)))));return n===r&&r===d||o===a&&a===s}(m,p,h)&&d.push({node:p}),d.push({node:l}),d}function xo(t,e,i){var n;const o=[],r=Array.from(t.getElementsByTagName("ConnectivityNode"));"ConnectivityNode"===t.tagName&&r.push(t);const a=e.closest("Substation").getAttribute("name");let d=null===(n=e.closest("VoltageLevel"))||void 0===n?void 0:n.getAttribute("name");return"VoltageLevel"===t.tagName&&(d=i),r.forEach((n=>{var r,s;let l=n.getAttribute("name");t===n&&(l=i);let c=null!==(s=null===(r=n.parentElement)||void 0===r?void 0:r.getAttribute("name"))&&void 0!==s?s:"";if("Bay"===t.tagName&&(c=i),"Bay"===e.tagName&&e.hasAttribute("name")&&(c=e.getAttribute("name")),l&&c){const t=`${a}/${d}/${c}/${l}`;o.push({element:n,attributes:{pathName:t}}),a&&d&&c&&o.push(...function(t,e,i,n,o,r,a){const d=[],[s,l,c]=["Substation","VoltageLevel","Bay"].map((t=>{var i,n;return null!==(n=null===(i=e.closest(t))||void 0===i?void 0:i.getAttribute("name"))&&void 0!==n?n:""})),p=e.getAttribute("name"),m=`${s}/${l}/${c}/${p}`;return Array.from(t.ownerDocument.querySelectorAll(`Terminal[substationName="${s}"][voltageLevelName="${l}"][bayName="${c}"][cNodeName="${p}"], Terminal[connectivityNode="${m}"]`)).forEach((t=>{d.push({element:t,attributes:{substationName:i,voltageLevelName:n,bayName:o,connectivityNode:a,cNodeName:r}})})),d}(e,n,a,d,c,l,t))}})),o}function vo(t,e){const i=[];i.push({node:t,parent:e,reference:te(e,t.tagName)});const n=function(t,e){var i,n;const o=Array.from(e.children),r=t.getAttribute("name");if(r&&!o.find((t=>t.getAttribute("name")===r)))return r;const a=null!==(n=null===(i=t.getAttribute("name"))||void 0===i?void 0:i.replace(/[0-9]*$/,""))&&void 0!==n?n:t.tagName.charAt(0);let d=1;function s(t){return t.getAttribute("name")===a+d.toString()}for(;o.find(s);)d+=1;return a+d.toString()}(t,e);return n!==t.getAttribute("name")&&i.push({element:t,attributes:{name:n}}),i.push(...xo(t,e,n)),i}function yo(t){const e=[];e.push({node:t});const i=t.getAttribute("connectivityNode"),n=t.ownerDocument.querySelector(`ConnectivityNode[pathName="${i}"]`),o=Array.from(t.ownerDocument.querySelectorAll(`Terminal[connectivityNode="${i}"]`)).filter((e=>e!==t));if(n&&o.length&&o.some((t=>t.closest("Bay")))&&o.every((t=>t.closest("Bay")!==n.closest("Bay")))&&!uo(n.closest("Bay"))){const t=o.find((t=>t.closest("Bay"))).closest("Bay");t&&e.push(...vo(n,t))}const r=null==n?void 0:n.querySelector(`Private[type="${ao}"]`),a=null==r?void 0:r.querySelector(`Vertex[*|uuid="${t.getAttributeNS(so,"uuid")}"]`),d=null==a?void 0:a.parentElement;if(!d)return e;e.push({node:d});const s=a===d.lastElementChild?d.firstElementChild:d.lastElementChild;return s&&e.push(...bo(s)),e}function _o(t){const{pos:[e,i],rot:n}=fo(t);return{top:{close:[[e+.5,i],[e+1,i+.5],[e+.5,i+1],[e,i+.5]][n],far:[[e+.5,i-.5],[e+1.5,i+.5],[e+.5,i+1.5],[e-.5,i+.5]][n]},bottom:{close:[[e+.5,i+1],[e,i+.5],[e+.5,i],[e+1,i+.5]][n],far:[[e+.5,i+1.5],[e-.5,i+.5],[e+.5,i-.5],[e+1.5,i+.5]][n]}}}function wo(t){return new CustomEvent("oscd-sld-place",{bubbles:!0,composed:!0,detail:t})}function Eo(t){return new CustomEvent("oscd-sld-connect",{bubbles:!0,composed:!0,detail:t})}function So(t){return new CustomEvent("oscd-sld-rotate",{bubbles:!0,composed:!0,detail:t})}function Ao(t){return new CustomEvent("oscd-sld-start-resize",{bubbles:!0,composed:!0,detail:t})}function Co(t){return new CustomEvent("oscd-sld-start-place",{bubbles:!0,composed:!0,detail:t})}function ko(t){return new CustomEvent("oscd-sld-start-place-label",{bubbles:!0,composed:!0,detail:t})}function $o(t){return new CustomEvent("oscd-sld-start-connect",{bubbles:!0,composed:!0,detail:t})}const Io=q`<path
+ */;let ro=class extends no{};ro.styles=[oo],ro=n([mt("mwc-textfield")],ro);const ao="Transpower-SLD-Vertices",so="https://transpower.co.nz/SCL/SSD/SLD/v0",lo="http://www.w3.org/2000/svg",co=["CAB","CAP","CBR","CTR","DIS","GEN","IFL","LIN","MOT","REA","RES","SAR","SMC","VTR"];function po(t){return co.includes(t)}const mo=new Set(["GEN","MOT","SMC"]);function ho(t){var e;return["true","1"].includes(null!==(e=null==t?void 0:t.trim())&&void 0!==e?e:"false")}function uo(t){var e;return"Bay"===t.tagName&&ho(null===(e=t.querySelector("Section[bus]"))||void 0===e?void 0:e.getAttribute("bus"))}function fo(t){const[e,i,n,o,r,a,d]=["x","y","w","h","rot","lx","ly"].map((e=>{var i;return parseFloat(null!==(i=t.getAttributeNS(so,e))&&void 0!==i?i:"0")})),s=[e,i].map((t=>Math.max(0,t))),l=[n,o].map((t=>Math.max(1,t))),c=[a,d].map((t=>Math.max(0,t))),p=ho(t.getAttribute("bus"));return{pos:s,dim:l,label:c,flip:ho(t.getAttributeNS(so,"flip")),rot:(r%4+4)%4,bus:p}}function go(t){var e;const i=[];if(ho(null===(e=t.querySelector("Section[bus]"))||void 0===e?void 0:e.getAttribute("bus"))){Array.from(t.querySelectorAll("Section:not([bus])")).forEach((t=>i.push({node:t})));const e=Array.from(t.querySelectorAll("Section[bus]")),n=e[0];Array.from(n.children).slice(1).forEach((t=>i.push({node:t})));const o=e[e.length-1].lastElementChild;o&&i.push({parent:n,node:o,reference:null}),e.slice(1).forEach((t=>i.push({node:t})))}else i.push({node:t});return Array.from(t.ownerDocument.querySelectorAll(`Terminal[connectivityNode="${t.getAttribute("pathName")}"]`)).forEach((t=>i.push({node:t}))),i}function bo(t){const[e,i]=["x","y"].map((e=>t.getAttributeNS(so,e))),n=n=>n!==t&&n.getAttributeNS(so,"x")===e&&n.getAttributeNS(so,"y")===i,o=Array.from(t.closest("Private").getElementsByTagNameNS(so,"Section")).flatMap((t=>Array.from(t.children).filter(n))).map((t=>t.parentElement));if(o.length>2)return[];if(o.length<2)return go(t.closest("ConnectivityNode"));const[r,a]=o.map((t=>ho(t.getAttribute("bus"))));if(r!==a)return[];const d=[],[s,l]=o;n(s.firstElementChild)&&d.push(function(t){const e=[];return Array.from(t.children).reverse().forEach((i=>e.push({parent:t,node:i,reference:null}))),e}(s));const c=Array.from(l.children);n(l.lastElementChild)&&c.reverse(),c.slice(1).forEach((t=>d.push({parent:s,node:t,reference:null})));const p=Array.from(s.children).find(n),m=n(s.firstElementChild)?s.children[1]:s.children[s.childElementCount-2],h=c[1];return m&&p&&h&&function(t,e,i){const[[n,o],[r,a],[d,s]]=[t,e,i].map((t=>["x","y"].map((e=>t.getAttributeNS(so,e)))));return n===r&&r===d||o===a&&a===s}(m,p,h)&&d.push({node:p}),d.push({node:l}),d}function xo(t,e,i){var n;const o=[],r=Array.from(t.getElementsByTagName("ConnectivityNode"));"ConnectivityNode"===t.tagName&&r.push(t);const a=e.closest("Substation").getAttribute("name");let d=null===(n=e.closest("VoltageLevel"))||void 0===n?void 0:n.getAttribute("name");return"VoltageLevel"===t.tagName&&(d=i),r.forEach((n=>{var r,s;let l=n.getAttribute("name");t===n&&(l=i);let c=null!==(s=null===(r=n.parentElement)||void 0===r?void 0:r.getAttribute("name"))&&void 0!==s?s:"";if("Bay"===t.tagName&&(c=i),"Bay"===e.tagName&&e.hasAttribute("name")&&(c=e.getAttribute("name")),l&&c){const t=`${a}/${d}/${c}/${l}`;o.push({element:n,attributes:{pathName:t}}),a&&d&&c&&o.push(...function(t,e,i,n,o,r,a){const d=[],[s,l,c]=["Substation","VoltageLevel","Bay"].map((t=>{var i,n;return null!==(n=null===(i=e.closest(t))||void 0===i?void 0:i.getAttribute("name"))&&void 0!==n?n:""})),p=e.getAttribute("name"),m=`${s}/${l}/${c}/${p}`;return Array.from(t.ownerDocument.querySelectorAll(`Terminal[substationName="${s}"][voltageLevelName="${l}"][bayName="${c}"][cNodeName="${p}"], Terminal[connectivityNode="${m}"]`)).forEach((t=>{d.push({element:t,attributes:{substationName:i,voltageLevelName:n,bayName:o,connectivityNode:a,cNodeName:r}})})),d}(e,n,a,d,c,l,t))}})),o}function vo(t,e){const i=[];i.push({node:t,parent:e,reference:te(e,t.tagName)});const n=function(t,e){var i,n,o;const r=Array.from(e.children),a=t.getAttribute("name");if(a&&!r.find((t=>t.getAttribute("name")===a)))return a;const d=null!==(o=null!==(n=null===(i=t.getAttribute("name"))||void 0===i?void 0:i.replace(/[0-9]*$/,""))&&void 0!==n?n:t.getAttribute("type"))&&void 0!==o?o:t.tagName.charAt(0);let s=1;function l(t){return t.getAttribute("name")===d+s.toString()}for(;r.find(l);)s+=1;return d+s.toString()}(t,e);return n!==t.getAttribute("name")&&i.push({element:t,attributes:{name:n}}),i.push(...xo(t,e,n)),i}function yo(t){const e=[];e.push({node:t});const i=t.getAttribute("connectivityNode"),n=t.ownerDocument.querySelector(`ConnectivityNode[pathName="${i}"]`),o=Array.from(t.ownerDocument.querySelectorAll(`Terminal[connectivityNode="${i}"]`)).filter((e=>e!==t));if(n&&o.length&&o.some((t=>t.closest("Bay")))&&o.every((t=>t.closest("Bay")!==n.closest("Bay")))&&!uo(n.closest("Bay"))){const t=o.find((t=>t.closest("Bay"))).closest("Bay");t&&e.push(...vo(n,t))}const r=null==n?void 0:n.querySelector(`Private[type="${ao}"]`),a=null==r?void 0:r.querySelector(`Vertex[*|uuid="${t.getAttributeNS(so,"uuid")}"]`),d=null==a?void 0:a.parentElement;if(!d)return e;e.push({node:d});const s=a===d.lastElementChild?d.firstElementChild:d.lastElementChild;return s&&e.push(...bo(s)),e}function _o(t){const{pos:[e,i],rot:n}=fo(t);return{top:{close:[[e+.5,i],[e+1,i+.5],[e+.5,i+1],[e,i+.5]][n],far:[[e+.5,i-.5],[e+1.5,i+.5],[e+.5,i+1.5],[e-.5,i+.5]][n]},bottom:{close:[[e+.5,i+1],[e,i+.5],[e+.5,i],[e+1,i+.5]][n],far:[[e+.5,i+1.5],[e-.5,i+.5],[e+.5,i-.5],[e+1.5,i+.5]][n]}}}function wo(t){return new CustomEvent("oscd-sld-place",{bubbles:!0,composed:!0,detail:t})}function Eo(t){return new CustomEvent("oscd-sld-connect",{bubbles:!0,composed:!0,detail:t})}function So(t){return new CustomEvent("oscd-sld-rotate",{bubbles:!0,composed:!0,detail:t})}function Ao(t){return new CustomEvent("oscd-sld-start-resize",{bubbles:!0,composed:!0,detail:t})}function Co(t){return new CustomEvent("oscd-sld-start-place",{bubbles:!0,composed:!0,detail:t})}function ko(t){return new CustomEvent("oscd-sld-start-place-label",{bubbles:!0,composed:!0,detail:t})}function $o(t){return new CustomEvent("oscd-sld-start-connect",{bubbles:!0,composed:!0,detail:t})}const Io=q`<path
   d="M120 616v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 640v-80h80v80h-80Zm0-640v-80h80v80h-80Zm160 640v-80h80v80h-80Zm160 0v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160V296H600v-80h240v240h-80ZM120 936V696h80v160h160v80H120Z"
 />`,No=q`<path d="M480 976 310 806l57-57 73 73V616l-205-1 73 73-58 58L80 576l169-169 57 57-72 72h206V330l-73 73-57-57 170-170 170 170-57 57-73-73v206l205 1-73-73 58-58 170 170-170 170-57-57 73-73H520l-1 205 73-73 58 58-170 170Z"/>`,To=q`<path
     d="M 4 4 L 12.5 21 L 21 4"
@@ -1329,7 +1329,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
       <menu
         id="sld-context-menu"
         style="position: fixed; top: ${this.menu.top}px; left: ${this.menu.left}px; background: var(--oscd-base3, white); margin: 0px; padding: 0px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); --mdc-list-vertical-padding: 0px; overflow-y: auto;"
-        ${si((async t=>{if(!(t instanceof HTMLElement))return;const e=this.parentElement.getRootNode().querySelector("nav").offsetHeight+12;await this.updateComplete;const{bottom:i,right:n}=t.getBoundingClientRect();i>window.innerHeight-e&&(t.style.removeProperty("top"),t.style.bottom=`${e}px`,t.style.maxHeight=`calc(100vh - ${e+68}px)`),n>window.innerWidth&&(t.style.removeProperty("left"),t.style.right="0px")}))}
+        ${si((async t=>{if(!(t instanceof HTMLElement))return;const e=this.parentElement.getRootNode().querySelector("nav").offsetHeight+8;await this.updateComplete;const{bottom:i,right:n}=t.getBoundingClientRect();i>window.innerHeight-e&&(t.style.removeProperty("top"),t.style.bottom=`${e}px`,t.style.maxHeight=`calc(100vh - ${e+68}px)`),n>window.innerWidth&&(t.style.removeProperty("left"),t.style.right="0px")}))}
       >
         <mwc-list
           @selected=${({detail:{index:t}})=>{var i;null===(i=e[t])||void 0===i||i.handler(),this.menu=void 0}}
@@ -1348,19 +1348,19 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
   </mwc-list-item>`}(t)}
         </mwc-list>
       </menu>
-    `}render(){var t,e;const{dim:[i,n]}=fo(this.substation),o="VoltageLevel"===(null===(t=this.placing)||void 0===t?void 0:t.tagName)?q`<rect width="100%" height="100%" fill="url(#grid)" />`:j,r=this.placingLabel?q`<rect width="100%" height="100%" fill="url(#halfgrid)"
+    `}render(){var t,e,i;const{dim:[n,o]}=fo(this.substation),r="VoltageLevel"===(null===(t=this.placing)||void 0===t?void 0:t.tagName)?q`<rect width="100%" height="100%" fill="url(#grid)" />`:j,a=this.placingLabel?q`<rect width="100%" height="100%" fill="url(#halfgrid)"
       @click=${()=>{const t=this.placingLabel,[e,i]=this.renderedLabelPosition(t);this.dispatchEvent(new CustomEvent("oscd-sld-place-label",{bubbles:!0,composed:!0,detail:{element:t,x:e,y:i}}))}}
-      />`:j;let a=q``;this.placing&&("VoltageLevel"===this.placing.tagName||Ko(this.placing)?a=q`${this.renderContainer(this.placing,!0)}`:"ConductingEquipment"===this.placing.tagName?a=this.renderEquipment(this.placing,{preview:!0}):uo(this.placing)&&(a=this.renderBusBar(this.placing)));let d=U``,s=!1,l=!0;if(this.placing){const{dim:[t,e]}=fo(this.placing);l=!1,s=!this.canPlaceAt(this.placing,this.mouseX,this.mouseY,t,e),d=U`${this.mouseX},${this.mouseY}`}if(this.resizing&&!uo(this.resizing)){const{pos:[t,e]}=fo(this.resizing),i=Math.max(1,this.mouseX-t+1),n=Math.max(1,this.mouseY-e+1);l=!1,s=!this.canResizeTo(this.resizing,i,n),d=U`${i}&times;${n}`}const c=U`<div
+      />`:j;let d=q``;this.placing&&("VoltageLevel"===this.placing.tagName||Ko(this.placing)?d=q`${this.renderContainer(this.placing,!0)}`:"ConductingEquipment"===this.placing.tagName?d=this.renderEquipment(this.placing,{preview:!0}):uo(this.placing)&&(d=this.renderBusBar(this.placing)));let s=U``,l=!1,c=!0;if(this.placing){const{dim:[t,e]}=fo(this.placing);c=!1,l=!this.canPlaceAt(this.placing,this.mouseX,this.mouseY,t,e),s=U`${this.mouseX},${this.mouseY}`}if(this.resizing&&!uo(this.resizing)){const{pos:[t,e]}=fo(this.resizing),i=Math.max(1,this.mouseX-t+1),n=Math.max(1,this.mouseY-e+1);c=!1,l=!this.canResizeTo(this.resizing,i,n),s=U`${i}&times;${n}`}const p=U`<div
       ${si(this.coordinatesRef)}
-      class="${Le({coordinates:!0,invalid:s,hidden:l})}"
+      class="${Le({coordinates:!0,invalid:l,hidden:c})}"
     >
-      (${d})
-    </div>`,p=[];if(this.connecting){const{equipment:t,path:e,terminal:i}=this.connecting;let n=0;for(;n<e.length-2;){const[t,i]=e[n],[o,r]=e[n+1];p.push(q`<line x1="${t}" y1="${i}" x2="${o}" y2="${r}"
-                stroke-linecap="square" stroke="black" />`),n+=1}const[[o,r],[a,d]]=e.slice(-2),s=o===a;let l=this.mouseX+.5,c=this.mouseY+.5,[m,h]=[l,c];const u=Array.from(this.substation.querySelectorAll("ConductingEquipment")).filter((e=>e!==t)).find((t=>{const{pos:[e,i]}=fo(t);return e===this.mouseX&&i===this.mouseY})),f=this.nearestOpenTerminal(u);if(u&&f){const{far:t,close:e}=_o(u)[f];[l,c]=t,[m,h]=e}const g=s?a:l,b=s?c:d;p.push(q`<line x1="${o}" y1="${r}" x2="${g}" y2="${b}"
+      (${s})
+    </div>`,m=[];if((null===(e=this.connecting)||void 0===e?void 0:e.equipment.closest("Substation"))===this.substation){const{equipment:t,path:e,terminal:i}=this.connecting;let n=0;for(;n<e.length-2;){const[t,i]=e[n],[o,r]=e[n+1];m.push(q`<line x1="${t}" y1="${i}" x2="${o}" y2="${r}"
+                stroke-linecap="square" stroke="black" />`),n+=1}const[[o,r],[a,d]]=e.slice(-2),s=o===a;let l=this.mouseX+.5,c=this.mouseY+.5,[p,h]=[l,c];const u=Array.from(this.substation.querySelectorAll("ConductingEquipment")).filter((e=>e!==t)).find((t=>{const{pos:[e,i]}=fo(t);return e===this.mouseX&&i===this.mouseY})),f=this.nearestOpenTerminal(u);if(u&&f){const{far:t,close:e}=_o(u)[f];[l,c]=t,[p,h]=e}const g=s?a:l,b=s?c:d;m.push(q`<line x1="${o}" y1="${r}" x2="${g}" y2="${b}"
                 stroke-linecap="square" stroke="black" />`,q`<line x1="${g}" y1="${b}" x2="${l}" y2="${c}"
-                stroke-linecap="square" stroke="black" />`,q`<line x1="${l}" y1="${c}" x2="${m}" y2="${h}"
-                stroke-linecap="square" stroke="black" />`),p.push(q`<rect width="100%" height="100%" fill="url(#grid)"
-      @click=${()=>{e[e.length-1]=[g,b],e.push([l,c]),e.push([m,h]),Wo(e),this.requestUpdate(),u&&f&&this.dispatchEvent(Eo({equipment:t,terminal:i,path:e,connectTo:u,toTerminal:f}))}} />`)}const m=this.renderMenu();return U`<section>
+                stroke-linecap="square" stroke="black" />`,q`<line x1="${l}" y1="${c}" x2="${p}" y2="${h}"
+                stroke-linecap="square" stroke="black" />`),m.push(q`<rect width="100%" height="100%" fill="url(#grid)"
+      @click=${()=>{e[e.length-1]=[g,b],e.push([l,c]),e.push([p,h]),Wo(e),this.requestUpdate(),u&&f&&this.dispatchEvent(Eo({equipment:t,terminal:i,path:e,connectTo:u,toTerminal:f}))}} />`)}const h=this.renderMenu();return U`<section>
       <h2>
         ${this.substation.getAttribute("name")}
         <mwc-icon-button
@@ -1380,9 +1380,9 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
       </h2>
       <svg
         id="sld"
-        viewBox="0 0 ${i} ${n}"
-        width="${i*this.gridSize}"
-        height="${n*this.gridSize}"
+        viewBox="0 0 ${n} ${o}"
+        width="${n*this.gridSize}"
+        height="${o*this.gridSize}"
         stroke-width="0.06"
         fill="none"
         @mousemove=${t=>{const[e,i]=this.svgCoordinates(t.clientX,t.clientY);this.mouseX=Math.floor(e),this.mouseY=Math.floor(i),this.mouseX2=Math.floor(2*e)/2,this.mouseY2=Math.floor(2*i)/2,this.positionCoordinates(t)}}
@@ -1408,7 +1408,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
           g.bay > rect {
             shape-rendering: crispEdges;
           }
-          section:not(:hover) .preview {
+          svg:not(:hover) .preview {
             visibility: hidden;
           }
           .preview {
@@ -1417,17 +1417,17 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
         </style>
         ${Go}
         <rect width="100%" height="100%" fill="white" />
-        ${o}
+        ${r}
         ${Array.from(this.substation.children).filter((t=>"VoltageLevel"===t.tagName)).map((t=>q`${this.renderContainer(t)}`))}
-        ${p}
-        ${(null===(e=this.connecting)||void 0===e?void 0:e.equipment.closest("Substation"))===this.substation?Array.from(this.substation.querySelectorAll("ConductingEquipment")).map((t=>this.renderEquipment(t,{connect:!0}))):j}
+        ${m}
+        ${(null===(i=this.connecting)||void 0===i?void 0:i.equipment.closest("Substation"))===this.substation?Array.from(this.substation.querySelectorAll("ConductingEquipment")).map((t=>this.renderEquipment(t,{connect:!0}))):j}
         ${Array.from(this.substation.querySelectorAll("ConnectivityNode")).filter((t=>!("grounded"===t.getAttribute("name")||this.placing&&t.closest(this.placing.tagName)===this.placing||uo(t.parentElement)))).map((t=>this.renderConnectivityNode(t)))}
         ${Array.from(this.substation.querySelectorAll("ConnectivityNode")).filter((t=>"grounded"!==t.getAttribute("name")&&!(this.placing&&t.closest(this.placing.tagName)===this.placing)&&uo(t.parentElement))).map((t=>this.renderConnectivityNode(t)))}
+        ${d}
+        ${Array.from(this.substation.querySelectorAll("VoltageLevel, Bay, ConductingEquipment")).filter((t=>!this.placing||t.closest(this.placing.tagName)!==this.placing)).map((t=>this.renderLabel(t)))}
         ${a}
-        ${Array.from(this.substation.querySelectorAll("VoltageLevel, Bay, ConductingEquipment")).map((t=>this.renderLabel(t)))}
-        ${r}
       </svg>
-      ${m} ${c}
+      ${h} ${p}
       <mwc-dialog
         id="resizeSubstationUI"
         heading="Resize ${this.substation.getAttribute("name")}"
@@ -1439,7 +1439,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
             min="1"
             step="1"
             label="Width"
-            value="${i}"
+            value="${n}"
             dialogInitialFocus
             autoValidate
             .validityTransform=${(t,e)=>{const{dim:[i,n]}=fo(this.substation);return e.valid&&!this.canResizeTo(this.substation,parseInt(t,10),n)?{valid:!1,rangeUnderflow:!0}:{}}}
@@ -1450,7 +1450,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
             min="1"
             step="1"
             label="Height"
-            value="${n}"
+            value="${o}"
             autoValidate
             .validityTransform=${(t,e)=>{const{dim:[i,n]}=fo(this.substation);return e.valid&&!this.canResizeTo(this.substation,i,parseInt(t,10))?{valid:!1,rangeUnderflow:!0}:{}}}
           ></mwc-textfield>
@@ -1464,7 +1464,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
           >cancel</mwc-button
         >
       </mwc-dialog>
-    </section>`}renderLabel(t){const[e,i]=this.renderedLabelPosition(t),n=t.getAttribute("name"),o="ConductingEquipment"===t.tagName?.45:.6;let r="none",a=j;this.placing||this.resizing||this.connecting||this.placingLabel||(r="all",a=()=>this.dispatchEvent(ko(t)));const d=se(t);return q`<g class="label" id="label:${d}">
+    </section>`}renderLabel(t){const[e,i]=this.renderedLabelPosition(t),n=t.getAttribute("name"),o="ConductingEquipment"===t.tagName?.45:.6;let r="none",a=j;this.placing||this.resizing||this.connecting||this.placingLabel||(r="all",a=()=>this.dispatchEvent(ko(t)));const d=t.parentElement?se(t):"placing...";return q`<g class="label" id="label:${d}">
         <text x="${e+.1}" y="${i-.2}"
           @mousedown=${Jo}
           @auxclick=${e=>{1===e.button&&(this.dispatchEvent(jo(t)),e.preventDefault())}}
@@ -1502,6 +1502,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
       ${Array.from(t.children).filter(Ko).map((t=>this.renderContainer(t)))}
       ${Array.from(t.children).filter((t=>"ConductingEquipment"===t.tagName)).map((t=>this.renderEquipment(t)))}
         ${e?Array.from(t.querySelectorAll("ConnectivityNode")).filter((t=>"grounded"!==t.getAttribute("name"))).map((t=>this.renderConnectivityNode(t))):j}
+        ${e?Array.from(t.querySelectorAll("Bay, ConductingEquipment")).concat(t).map((t=>this.renderLabel(t))):j}
       ${h}
       ${m}
       ${u}
@@ -1540,7 +1541,8 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
       ${y}
       ${_}
       ${w}
-    </g>`}renderBusBar(t){const[e,i]=this.renderedPosition(t),{dim:[n,o]}=fo(t);let r=q``;return this.placing===t&&(r=q`<rect x="${e}" y="${i}" width="1" height="1"
+    </g>
+    <g class="preview">${e?this.renderLabel(t):j}</g>`}renderBusBar(t){const[e,i]=this.renderedPosition(t),{dim:[n,o]}=fo(t);let r=q``;return this.placing===t&&(r=q`<rect x="${e}" y="${i}" width="1" height="1"
           pointer-events="all" fill="none" 
           @click=${()=>{const r=Array.from(this.substation.querySelectorAll(":root > Substation > VoltageLevel")).find((t=>Yo(t,e,i,n,o)));r&&this.dispatchEvent(wo({x:e,y:i,element:t,parent:r}))}}
         />`),q`<g class="bus" id="${t.parentElement?se(t):j}">
@@ -1575,6 +1577,9 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
     }
 
     .hidden {
+      display: none;
+    }
+    svg:not(:hover) ~ .coordinates {
       display: none;
     }
     .coordinates {
@@ -1618,7 +1623,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
         ${Array.from(this.doc.documentElement.children).find((t=>"Substation"===t.tagName))?U``:j}${Array.from(this.doc.querySelectorAll(":root > Substation > VoltageLevel > Bay")).find((t=>!uo(t)))?co.map((t=>{return U`<mwc-fab
                   mini
                   label="Add ${t}"
-                  @click=${()=>{const e=this.templateElements.ConductingEquipment.cloneNode();e.setAttribute("type",t),e.setAttribute("name",`${t}1`),this.startPlacing(e)}}
+                  @click=${()=>{const e=this.templateElements.ConductingEquipment.cloneNode();e.setAttribute("type",t),this.startPlacing(e)}}
                   style="--mdc-theme-secondary: #fff; --mdc-theme-on-secondary: rgb(0, 0, 0 / 0.83)"
                   >${e=t,U`<svg
     id="${e}"

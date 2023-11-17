@@ -189,13 +189,13 @@ function updateConnectivityNodes(element, parent, name) {
     return updates;
 }
 function uniqueName(element, parent) {
-    var _a, _b;
+    var _a, _b, _c;
     const children = Array.from(parent.children);
     const oldName = element.getAttribute('name');
     if (oldName &&
         !children.find(child => child.getAttribute('name') === oldName))
         return oldName;
-    const baseName = (_b = (_a = element.getAttribute('name')) === null || _a === void 0 ? void 0 : _a.replace(/[0-9]*$/, '')) !== null && _b !== void 0 ? _b : element.tagName.charAt(0);
+    const baseName = (_c = (_b = (_a = element.getAttribute('name')) === null || _a === void 0 ? void 0 : _a.replace(/[0-9]*$/, '')) !== null && _b !== void 0 ? _b : element.getAttribute('type')) !== null && _c !== void 0 ? _c : element.tagName.charAt(0);
     let index = 1;
     function hasName(child) {
         return child.getAttribute('name') === baseName + index.toString();

@@ -33,22 +33,9 @@ import {
   StartConnectDetail,
   StartConnectEvent,
   StartEvent,
+  uuid,
   xmlnsNs,
 } from './util.js';
-
-/* eslint-disable no-bitwise */
-function uuid() {
-  const digits = new Array(36);
-  for (let i = 0; i < 36; i += 1) {
-    if ([8, 13, 18, 23].includes(i)) digits[i] = '-';
-    else digits[i] = Math.floor(Math.random() * 16);
-  }
-  digits[14] = 4;
-  digits[19] &= ~(1 << 2);
-  digits[19] |= 1 << 3;
-  return digits.map(x => x.toString(16)).join('');
-}
-/* eslint-enable no-bitwise */
 
 function makeBusBar(doc: XMLDocument, nsp: string) {
   const busBar = doc.createElementNS(doc.documentElement.namespaceURI, 'Bay');
@@ -392,7 +379,7 @@ export default class Designer extends LitElement {
           });
         });
       }
-    } else {
+    } else if (element.getRootNode() === this.doc) {
       Array.from(element.getElementsByTagName('ConnectivityNode')).forEach(
         cNode => {
           if (
@@ -713,8 +700,8 @@ export default class Designer extends LitElement {
           label="Add Substation"
           style="--mdc-theme-secondary: #BB1326;"
         >
-        </mwc-fab>
-        <mwc-icon-button
+        </mwc-fab
+        ><mwc-icon-button
           icon="zoom_in"
           label="Zoom In"
           @click=${() => this.zoomIn()}

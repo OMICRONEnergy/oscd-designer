@@ -29,6 +29,20 @@ export function isEqType(str: string): str is EqType {
 }
 export const ringedEqTypes = new Set(['GEN', 'MOT', 'SMC']);
 
+/* eslint-disable no-bitwise */
+export function uuid() {
+  const digits = new Array(36);
+  for (let i = 0; i < 36; i += 1) {
+    if ([8, 13, 18, 23].includes(i)) digits[i] = '-';
+    else digits[i] = Math.floor(Math.random() * 16);
+  }
+  digits[14] = 4;
+  digits[19] &= ~(1 << 2);
+  digits[19] |= 1 << 3;
+  return digits.map(x => x.toString(16)).join('');
+}
+/* eslint-enable no-bitwise */
+
 export type Point = [number, number];
 export type Attrs = {
   pos: Point;
@@ -191,17 +205,14 @@ function updateTerminals(
 ) {
   const updates = [] as Edit[];
 
-  const [oldSubstationName, oldVoltageLevelName, oldBayName] = [
-    'Substation',
-    'VoltageLevel',
-    'Bay',
-  ].map(tag => cNode.closest(tag)?.getAttribute('name') ?? '');
-  const oldCNodeName = cNode.getAttribute('name');
-  const oldConnectivityNode = `${oldSubstationName}/${oldVoltageLevelName}/${oldBayName}/${oldCNodeName}`;
+  const oldPathName = cNode.getAttribute('pathName');
+  if (!oldPathName) return [];
+  const [oldSubstationName, oldVoltageLevelName, oldBayName, oldCNodeName] =
+    oldPathName.split('/');
 
   const terminals = Array.from(
-    parent.ownerDocument.querySelectorAll(
-      `Terminal[substationName="${oldSubstationName}"][voltageLevelName="${oldVoltageLevelName}"][bayName="${oldBayName}"][cNodeName="${oldCNodeName}"], Terminal[connectivityNode="${oldConnectivityNode}"]`
+    (cNode.getRootNode() as Document | Element).querySelectorAll(
+      `Terminal[substationName="${oldSubstationName}"][voltageLevelName="${oldVoltageLevelName}"][bayName="${oldBayName}"][cNodeName="${oldCNodeName}"], Terminal[connectivityNode="${oldPathName}"]`
     )
   );
   terminals.forEach(terminal => {

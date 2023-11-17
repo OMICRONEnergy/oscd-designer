@@ -69,7 +69,7 @@ export const equipmentDocString = `<?xml version="1.0" encoding="UTF-8"?>
         <ConductingEquipment type="BAT" name="BAT1" esld:x="19" esld:y="7" esld:rot="3" esld:lx="19" esld:ly="7">
           <Terminal name="erroneous"/>
         </ConductingEquipment>
-        <ConductingEquipment type="SMC" name="SMC1" esld:x="22" esld:y="8" esld:rot="3" esld:lx="22" esld:ly="8" />
+        <ConductingEquipment type="SMC" name="SMC1" esld:x="21" esld:y="7" esld:rot="3" esld:lx="22" esld:ly="8" />
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -316,7 +316,7 @@ describe('Designer', () => {
       expect(voltageLevel).to.have.attribute('smth:h', '7');
     });
 
-    it('allows moving voltage levels', async () => {
+    it('moves voltage levels on move handle click', async () => {
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
       const moveHandle =
@@ -376,7 +376,7 @@ describe('Designer', () => {
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
       const item = sldEditor.shadowRoot!.querySelector<ListItem>(
-        'mwc-list-item:nth-of-type(2)'
+        'mwc-list-item:nth-last-of-type(5)'
       )!;
       item.selected = true;
       await element.updateComplete;
@@ -417,7 +417,7 @@ describe('Designer', () => {
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
       await element.updateComplete;
       sldEditor.shadowRoot!.querySelector<ListItem>(
-        'mwc-list-item:nth-of-type(3)'
+        'mwc-list-item:nth-last-of-type(4)'
       )!.selected = true;
       await sldEditor.updateComplete;
       expect(element)
@@ -512,7 +512,9 @@ describe('Designer', () => {
       expect(bus).to.have.attribute('y', '3');
       expect(bus).to.have.attribute('smth:w', '1');
       expect(bus).to.have.attribute('h', '8');
-      expect(bus).dom.to.equalSnapshot({ ignoreAttributes: ['esld:uuid'] });
+      await expect(bus).dom.to.equalSnapshot({
+        ignoreAttributes: ['esld:uuid'],
+      });
     });
   });
 
@@ -602,7 +604,7 @@ describe('Designer', () => {
       expect(voltageLevel).to.have.attribute('esld:h', '13');
     });
 
-    it('allows moving bays', async () => {
+    it('moves bays on move handle click', async () => {
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
       sldEditor
@@ -654,7 +656,7 @@ describe('Designer', () => {
       await sendMouse({ type: 'click', position: [600, 200] });
       expect(element).to.have.property('placing', undefined);
       expect(cNode).to.have.attribute('pathName', 'S1/V2/B2/L1');
-      expect(element.doc.documentElement).dom.to.equalSnapshot({
+      await expect(element.doc.documentElement).dom.to.equalSnapshot({
         ignoreAttributes: ['esld:uuid'],
       });
     });
@@ -807,6 +809,30 @@ describe('Designer', () => {
       expect(equipment).to.have.attribute('esld:y', '3');
     });
 
+    it('copies equipment on shift click', async () => {
+      const sldEditor =
+        element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+      const equipment = element.doc.querySelector('ConductingEquipment');
+      const id = identity(equipment);
+      const eqClickTarget = sldEditor
+        .shadowRoot!.getElementById(<string>id)!
+        .querySelector('rect')!;
+      eqClickTarget.dispatchEvent(
+        new PointerEvent('click', { shiftKey: true })
+      );
+      expect(element.doc.querySelector('ConductingEquipment[*|x="3"][*|y="3"]'))
+        .to.not.exist;
+      await sendMouse({ type: 'click', position: [150, 180] });
+      expect(
+        element.doc.querySelector('ConductingEquipment[*|x="3"][*|y="3"]')
+      ).to.exist.and.have.attribute('type', equipment!.getAttribute('type')!);
+      expect(equipment).to.have.attribute('esld:x', '4');
+      expect(equipment).to.have.attribute('esld:y', '4');
+      await expect(element.doc.documentElement).dom.to.equalSnapshot({
+        ignoreAttributes: ['esld:uuid'],
+      });
+    });
+
     it('rotates equipment on middle mouse button click', () => {
       const sldEditor =
         element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -890,7 +916,7 @@ describe('Designer', () => {
       eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
       await element.updateComplete;
       const item = sldEditor.shadowRoot!.querySelector<ListItem>(
-        'mwc-list-item:nth-of-type(7)'
+        'mwc-list-item:nth-last-of-type(5)'
       )!;
       item.selected = true;
       await element.updateComplete;
@@ -1592,6 +1618,38 @@ describe('Designer', () => {
             });
           });
 
+          it('copies equipment on copy menu item select', async () => {
+            queryUI({
+              scl: 'ConductingEquipment',
+              ui: 'rect',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            sldEditor.shadowRoot!.querySelector<ListItem>(
+              'mwc-list-item:nth-last-of-type(6)'
+            )!.selected = true;
+            expect(
+              element.doc.querySelector('ConductingEquipment[*|x="3"][*|y="3"]')
+            ).to.not.exist;
+            expect(
+              element.doc.querySelector('ConductingEquipment')
+            ).to.have.attribute('esld:x', '4');
+            expect(
+              element.doc.querySelector('ConductingEquipment')
+            ).to.have.attribute('esld:y', '4');
+            await sendMouse({ type: 'click', position: [150, 180] });
+            expect(
+              element.doc.querySelector('ConductingEquipment[*|x="3"][*|y="3"]')
+            ).to.exist;
+            expect(
+              element.doc.querySelector('ConductingEquipment[*|x="4"][*|y="4"]')
+            ).to.exist;
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+              ignoreAttributes: ['esld:uuid'],
+            });
+          });
+
           it('moves the bus bar on move menu item select', async () => {
             queryUI({
               scl: '[name="L"]',
@@ -1669,6 +1727,45 @@ describe('Designer', () => {
             )!.selected = true;
             await sldEditor.updateComplete;
             expect(element.doc.querySelector('[name="BB1"]')).to.not.exist;
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+              ignoreAttributes: ['esld:uuid'],
+            });
+          });
+
+          it('copies bays on copy menu item select', async () => {
+            queryUI({
+              scl: '[name="V2"] [name="B1"]',
+              ui: 'rect',
+            }).dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            const sldEditor =
+              element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
+            sldEditor.shadowRoot!.querySelector<ListItem>(
+              'mwc-list-item:nth-last-of-type(6)'
+            )!.selected = true;
+            expect(element.doc.querySelector('[name="V1"] [name="B2"]')).not.to
+              .exist;
+            await sendMouse({ type: 'click', position: [280, 350] });
+            expect(element.doc.querySelector('[name="V1"] [name="B2"]')).to
+              .exist;
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+              ignoreAttributes: ['esld:uuid'],
+            });
+          });
+
+          it('copies voltage levels on move handle shift click', async () => {
+            queryUI({
+              scl: '[name="V1"]',
+              ui: '.handle',
+            }).dispatchEvent(new PointerEvent('click', { shiftKey: true }));
+            expect(element.doc.querySelector('[name="V1"] [name="B2"]')).not.to
+              .exist;
+            element
+              .shadowRoot!.querySelector<Button>('[label="Add Substation"]')
+              ?.click();
+            await sendMouse({ type: 'click', position: [100, 150] });
+            expect(element.doc.querySelector('[name="S2"] [name="V1"]')).to
+              .exist;
             await expect(element.doc.documentElement).dom.to.equalSnapshot({
               ignoreAttributes: ['esld:uuid'],
             });

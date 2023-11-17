@@ -3,6 +3,26 @@ export const privType = 'Transpower-SLD-Vertices';
 export const sldNs = 'https://transpower.co.nz/SCL/SSD/SLD/v0';
 export const xmlnsNs = 'http://www.w3.org/2000/xmlns/';
 export const svgNs = 'http://www.w3.org/2000/svg';
+export const eqTypes = [
+    'CAB',
+    'CAP',
+    'CBR',
+    'CTR',
+    'DIS',
+    'GEN',
+    'IFL',
+    'LIN',
+    'MOT',
+    'REA',
+    'RES',
+    'SAR',
+    'SMC',
+    'VTR',
+];
+export function isEqType(str) {
+    return eqTypes.includes(str);
+}
+export const ringedEqTypes = new Set(['GEN', 'MOT', 'SMC']);
 export function xmlBoolean(value) {
     var _a;
     return ['true', '1'].includes((_a = value === null || value === void 0 ? void 0 : value.trim()) !== null && _a !== void 0 ? _a : 'false');

@@ -55,6 +55,7 @@ export const equipmentDocString = `<?xml version="1.0" encoding="UTF-8"?>
         <ConductingEquipment type="BAT" name="BAT1" esld:x="19" esld:y="7" esld:rot="3" esld:lx="19" esld:ly="7">
           <Terminal name="erroneous"/>
         </ConductingEquipment>
+        <ConductingEquipment type="SMC" name="SMC1" esld:x="22" esld:y="8" esld:rot="3" esld:lx="22" esld:ly="8" />
       </Bay>
     </VoltageLevel>
   </Substation>
@@ -256,7 +257,7 @@ describe('Designer', () => {
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             expect(queryUI({ ui: 'menu' })).to.exist;
-            expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
+            await expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
         });
         it('resizes voltage levels on resize menu item select', async () => {
             queryUI({
@@ -521,7 +522,7 @@ describe('Designer', () => {
         });
         it('allows placing new conducting equipment', async () => {
             var _a;
-            (_a = element.shadowRoot.querySelector('[label="Add CBR"]')) === null || _a === void 0 ? void 0 : _a.click();
+            (_a = element.shadowRoot.querySelector('[label="Add GEN"]')) === null || _a === void 0 ? void 0 : _a.click();
             expect(element)
                 .property('placing')
                 .to.have.property('tagName', 'ConductingEquipment');
@@ -588,14 +589,14 @@ describe('Designer', () => {
         });
         it('requests equipment edit wizard on edit menu item select', async () => {
             queryUI({
-                scl: '[type="CTR"]',
+                scl: '[type="SMC"]',
                 ui: 'rect',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             const sldEditor = element.shadowRoot.querySelector('sld-editor');
             await element.updateComplete;
             sldEditor.shadowRoot.querySelector('mwc-list-item:nth-last-of-type(3)').selected = true;
             await sldEditor.updateComplete;
-            expect(lastCalledWizard).to.equal(element.doc.querySelector('[type="CTR"]'));
+            expect(lastCalledWizard).to.equal(element.doc.querySelector('[type="SMC"]'));
         });
         it('moves the equipment label on "move label" menu item select', async () => {
             queryUI({
@@ -640,7 +641,7 @@ describe('Designer', () => {
             queryUI({ scl: 'ConductingEquipment', ui: 'rect' }).dispatchEvent(new PointerEvent('contextmenu', { clientX: 750, clientY: 550 }));
             await element.updateComplete;
             expect(queryUI({ ui: 'menu' })).to.exist;
-            expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
+            await expect(queryUI({ ui: 'menu' })).dom.to.equalSnapshot();
         });
         it('flips equipment on mirror menu item select', async () => {
             const sldEditor = element.shadowRoot.querySelector('sld-editor');

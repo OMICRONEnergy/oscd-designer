@@ -1330,7 +1330,7 @@ describe('Designer', () => {
           queryUI({ scl: '[type="NEW"]', ui: 'circle' }).dispatchEvent(
             new PointerEvent('click')
           );
-          await sendMouse({ type: 'click', position: [600, 270] });
+          await sendMouse({ type: 'click', position: [610, 270] });
           expect(element.doc.querySelectorAll('Section')).to.have.lengthOf(6);
           expect(element.doc.querySelectorAll('Vertex')).to.have.lengthOf(16);
           queryUI({ scl: '[type="NEW"]', ui: 'rect' }).dispatchEvent(
@@ -1566,7 +1566,7 @@ describe('Designer', () => {
           it('opens a menu on bus bar right click', async () => {
             queryUI({
               scl: '[name="L"]',
-              ui: 'line[stroke="none"]',
+              ui: 'line:not([stroke])',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             expect(queryUI({ ui: 'menu' })).to.exist;
@@ -1575,7 +1575,7 @@ describe('Designer', () => {
           it('resizes the bus bar on resize menu item select', async () => {
             queryUI({
               scl: '[name="L"]',
-              ui: 'line[stroke="none"]',
+              ui: 'line:not([stroke])',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             const sldEditor =
@@ -1595,7 +1595,7 @@ describe('Designer', () => {
           it('moves the bus bar on move menu item select', async () => {
             queryUI({
               scl: '[name="L"]',
-              ui: 'line[stroke="none"]',
+              ui: 'line:not([stroke])',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             const sldEditor =
@@ -1615,7 +1615,7 @@ describe('Designer', () => {
           it('moves the bus bar label on "move label" menu item select', async () => {
             queryUI({
               scl: '[name="L"]',
-              ui: 'line[stroke="none"]',
+              ui: 'line:not([stroke])',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             const sldEditor =
               element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -1641,7 +1641,7 @@ describe('Designer', () => {
           it('requests bus bar edit wizard on edit menu item select', async () => {
             queryUI({
               scl: '[name="L"]',
-              ui: 'line[stroke="none"]',
+              ui: 'line:not([stroke])',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             const sldEditor =
               element.shadowRoot!.querySelector<SLDEditor>('sld-editor')!;
@@ -1658,7 +1658,7 @@ describe('Designer', () => {
           it('deletes the bus bar on delete menu item select', async () => {
             queryUI({
               scl: '[name="L"]',
-              ui: 'line[stroke="none"]',
+              ui: 'line:not([stroke])',
             }).dispatchEvent(new PointerEvent('contextmenu'));
             await element.updateComplete;
             expect(element.doc.querySelector('[name="BB1"]')).to.exist;

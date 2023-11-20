@@ -1556,13 +1556,15 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
                 stroke-linecap="${n?"round":"square"}" />`),o.push(q`<line x1="${l}" y1="${c}" x2="${p}" y2="${m}"
                 @click=${h} @auxclick=${u}
                 @contextmenu=${f} @mousedown=${tr}
-                pointer-events="all" stroke="none" stroke-width="1" />`),[l,c].find((t=>Number.isInteger(t)))||o.push(q`<rect x="${l-.5}" y="${c-.5}" width="1" height="1"
-                @click=${h} @auxclick=${u}
-                @contextmenu=${f} @mousedown=${tr}
-                pointer-events="all" fill="none" />`),[p,m].find((t=>Number.isInteger(t)))||o.push(q`<rect x="${p-.5}" y="${m-.5}" width="1" height="1"
-                @click=${h} @auxclick=${u}
-                @contextmenu=${f} @mousedown=${tr}
-                pointer-events="all" fill="none" />`),s+=1}}));const d=t.parentElement.parentElement?se(t):j;return q`<g class="node" id="${d}" >
+                pointer-events="all" stroke-width="${this.connecting?.99:.7}" />`),this.connecting&&![l,c].find((t=>Number.isInteger(t)))&&o.push(q`<rect x="${l-.495}" y="${c-.495}"
+                  width="0.99" height="0.99"
+                  @click=${h} @auxclick=${u}
+                  @contextmenu=${f} @mousedown=${tr}
+                  pointer-events="all" fill="none" />`),this.connecting&&![p,m].find((t=>Number.isInteger(t)))&&o.push(q`<rect x="${p-.495}" y="${m-.495}"
+                  width="0.99" height="0.99"
+                  @click=${h} @auxclick=${u}
+                  @contextmenu=${f} @mousedown=${tr}
+                  pointer-events="all" fill="none" />`),s+=1}}));const d=t.parentElement.parentElement?se(t):j;return q`<g class="node" id="${d}" >
         <title>${t.getAttribute("pathName")}</title>
         ${i}
         ${o}

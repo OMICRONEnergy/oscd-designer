@@ -1254,17 +1254,19 @@ let SLDEditor = class SLDEditor extends LitElement {
                 lines.push(svg `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
                 @click=${handleClick} @auxclick=${handleAuxClick}
                 @contextmenu=${handleContextMenu} @mousedown=${preventDefault}
-                pointer-events="all" stroke="none" stroke-width="1" />`);
-                if (![x1, y1].find(n => Number.isInteger(n)))
-                    lines.push(svg `<rect x="${x1 - 0.5}" y="${y1 - 0.5}" width="1" height="1"
-                @click=${handleClick} @auxclick=${handleAuxClick}
-                @contextmenu=${handleContextMenu} @mousedown=${preventDefault}
-                pointer-events="all" fill="none" />`);
-                if (![x2, y2].find(n => Number.isInteger(n)))
-                    lines.push(svg `<rect x="${x2 - 0.5}" y="${y2 - 0.5}" width="1" height="1"
-                @click=${handleClick} @auxclick=${handleAuxClick}
-                @contextmenu=${handleContextMenu} @mousedown=${preventDefault}
-                pointer-events="all" fill="none" />`);
+                pointer-events="all" stroke-width="${this.connecting ? 0.99 : 0.7}" />`);
+                if (this.connecting && ![x1, y1].find(n => Number.isInteger(n)))
+                    lines.push(svg `<rect x="${x1 - 0.495}" y="${y1 - 0.495}"
+                  width="0.99" height="0.99"
+                  @click=${handleClick} @auxclick=${handleAuxClick}
+                  @contextmenu=${handleContextMenu} @mousedown=${preventDefault}
+                  pointer-events="all" fill="none" />`);
+                if (this.connecting && ![x2, y2].find(n => Number.isInteger(n)))
+                    lines.push(svg `<rect x="${x2 - 0.495}" y="${y2 - 0.495}"
+                  width="0.99" height="0.99"
+                  @click=${handleClick} @auxclick=${handleAuxClick}
+                  @contextmenu=${handleContextMenu} @mousedown=${preventDefault}
+                  pointer-events="all" fill="none" />`);
                 i += 1;
             }
         });

@@ -18,6 +18,7 @@ import {
   ConnectDetail,
   ConnectEvent,
   connectionStartPoints,
+  elementPath,
   eqTypes,
   isBusBar,
   PlaceEvent,
@@ -345,6 +346,52 @@ export default class Designer extends LitElement {
       Array.from(element.getElementsByTagName('Terminal'))
         .filter(terminal => terminal.getAttribute('cNodeName') !== 'grounded')
         .forEach(terminal => edits.push(...removeTerminal(terminal)));
+
+      const groundedTerminals = Array.from(
+        element.getElementsByTagName('Terminal')
+      ).filter(terminal => terminal.getAttribute('cNodeName') === 'grounded');
+
+      if (groundedTerminals.length > 0) {
+        let newCNode = parent.querySelector(
+          `ConnectivityNode[name="grounded"]`
+        );
+
+        if (!newCNode) {
+          newCNode = this.doc.createElementNS(
+            this.doc.documentElement.namespaceURI,
+            'ConnectivityNode'
+          );
+          newCNode.setAttribute('name', 'grounded');
+          newCNode.setAttribute('pathName', elementPath(parent, 'grounded'));
+
+          edits.push({
+            node: newCNode,
+            parent,
+            reference: getReference(parent, 'ConnectivityNode'),
+          });
+        }
+
+        const bayName = parent.closest('Bay')!.getAttribute('name');
+        const voltageLevelName = parent
+          .closest('VoltageLevel')!
+          .getAttribute('name')!;
+        const substationName = parent
+          .closest('Substation')!
+          .getAttribute('name')!;
+        const connectivityNode = newCNode!.getAttribute('pathName');
+
+        groundedTerminals.forEach(terminal => {
+          edits.push({
+            element: terminal,
+            attributes: {
+              connectivityNode,
+              bayName,
+              voltageLevelName,
+              substationName,
+            },
+          });
+        });
+      }
     } else {
       Array.from(element.getElementsByTagName('ConnectivityNode')).forEach(
         cNode => {

@@ -811,6 +811,27 @@ describe('Designer', () => {
             await sendMouse({ type: 'click', position });
             expect(element.doc.querySelector('ConnectivityNode')).to.not.exist;
         });
+        it('retargets grounded terminals when reparenting equipment', async () => {
+            const sldEditor = element.shadowRoot.querySelector('sld-editor');
+            const equipment = element.doc.querySelector('ConductingEquipment');
+            const eqClickTarget = sldEditor
+                .shadowRoot.getElementById(identity(equipment))
+                .querySelector('circle:nth-of-type(2)');
+            expect(element.doc.querySelectorAll('ConnectivityNode[name="grounded"]')).to.have.lengthOf(0);
+            eqClickTarget.dispatchEvent(new PointerEvent('contextmenu'));
+            await element.updateComplete;
+            expect(element.doc.querySelectorAll('ConnectivityNode[name="grounded"]')).to.have.lengthOf(1);
+            const position = middleOf(queryUI({ scl: 'ConductingEquipment', ui: 'rect' }));
+            await sendMouse({ type: 'click', position });
+            await sendMouse({
+                type: 'click',
+                position: middleOf(queryUI({ scl: '[name="V2"] Bay', ui: 'rect' })),
+            });
+            expect(element.doc.querySelectorAll('ConnectivityNode[name="grounded"]')).to.have.lengthOf(2);
+            await expect(element.doc.documentElement).dom.to.equalSnapshot({
+                ignoreAttributes: ['esld:uuid'],
+            });
+        });
         describe('with established connectivity', () => {
             beforeEach(async () => {
                 const sldEditor = element.shadowRoot.querySelector('sld-editor');

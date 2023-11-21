@@ -11,7 +11,7 @@ import '@material/mwc-list/mwc-list-item.js';
 import '@material/mwc-textfield';
 import { getReference, identity } from '@openscd/oscd-scl';
 import { bayGraphic, eqRingPath, equipmentGraphic, movePath, resizePath, symbols, voltageLevelGraphic, } from './icons.js';
-import { attributes, connectionStartPoints, elementPath, isBusBar, isEqType, newConnectEvent, newPlaceEvent, newPlaceLabelEvent, newResizeEvent, newRotateEvent, newStartConnectEvent, newStartPlaceEvent, newStartPlaceLabelEvent, newStartResizeEvent, privType, removeNode, removeTerminal, ringedEqTypes, sldNs, svgNs, xmlBoolean, } from './util.js';
+import { attributes, connectionStartPoints, elementPath, isBusBar, isEqType, newConnectEvent, newPlaceEvent, newPlaceLabelEvent, newResizeEvent, newRotateEvent, newStartConnectEvent, newStartPlaceEvent, newStartPlaceLabelEvent, newStartResizeEvent, privType, removeNode, removeTerminal, ringedEqTypes, sldNs, svgNs, xlinkNs, xmlBoolean, } from './util.js';
 function newEditWizardEvent(element) {
     return new CustomEvent('oscd-edit-wizard-request', {
         bubbles: true,
@@ -163,7 +163,7 @@ let SLDEditor = class SLDEditor extends LitElement {
         }
         const containingParent = element.tagName === 'VoltageLevel'
             ? containsRect(this.substation, x, y, w, h)
-            : Array.from(this.substation.querySelectorAll(parentTags[element.tagName])).find(parent => containsRect(parent, x, y, w, h));
+            : Array.from(this.substation.querySelectorAll(parentTags[element.tagName])).find(parent => !isBusBar(parent) && containsRect(parent, x, y, w, h));
         if (containingParent)
             return true;
         return false;
@@ -719,6 +719,8 @@ let SLDEditor = class SLDEditor extends LitElement {
         </mwc-icon-button>
       </h2>
       <svg
+        xmlns="${svgNs}"
+        xmlns:xlink="${xlinkNs}"
         id="sld"
         viewBox="0 0 ${w} ${h}"
         width="${w * this.gridSize}"
@@ -951,7 +953,7 @@ let SLDEditor = class SLDEditor extends LitElement {
         fill="url(#grid)" />`;
         if (!this.placing && !this.resizing && !this.connecting) {
             moveHandle = svg `
-<a class="handle" href="#0" @click=${() => this.dispatchEvent(newStartPlaceEvent(bayOrVL))}>
+<a class="handle" href="#0" xlink:href="#0" @click=${() => this.dispatchEvent(newStartPlaceEvent(bayOrVL))}>
   <svg xmlns="${svgNs}" height="1" width="1" fill="black" opacity="0.83"
     viewBox="0 96 960 960" x="${x}" y="${y}">
     <rect fill="white" x="0" y="0" width="100%" height="100%" />
@@ -960,7 +962,7 @@ let SLDEditor = class SLDEditor extends LitElement {
 </a>
     `;
             resizeHandle = svg `
-<a class="handle" href="#0" @click=${() => this.dispatchEvent(newStartResizeEvent(bayOrVL))}>
+<a class="handle" href="#0" xlink:href="#0" @click=${() => this.dispatchEvent(newStartResizeEvent(bayOrVL))}>
   <svg xmlns="${svgNs}" height="1" width="1" fill="black" opacity="0.83"
     viewBox="0 96 960 960" x="${w + x - 1}" y="${h + y - 1}">
     <rect fill="white" x="0" y="0" width="100%" height="100%" />
@@ -1024,12 +1026,13 @@ let SLDEditor = class SLDEditor extends LitElement {
   >
     ${eqRingPath}
   </svg>`
-            : svg `<use href="#${symbol}" pointer-events="none" />`;
+            : svg `<use href="#${symbol}" xlink:href="#${symbol}"
+              pointer-events="none" />`;
         let handleClick = () => {
             this.dispatchEvent(newStartPlaceEvent(equipment));
         };
         if (this.placing === equipment) {
-            const parent = Array.from(this.substation.querySelectorAll(':root > Substation > VoltageLevel > Bay')).find(vl => containsRect(vl, x, y, 1, 1));
+            const parent = Array.from(this.substation.querySelectorAll(':root > Substation > VoltageLevel > Bay')).find(bay => !isBusBar(bay) && containsRect(bay, x, y, 1, 1));
             if (parent && this.canPlaceAt(equipment, x, y, 1, 1))
                 handleClick = () => {
                     this.dispatchEvent(newPlaceEvent({
@@ -1092,19 +1095,20 @@ let SLDEditor = class SLDEditor extends LitElement {
             : svg `<polygon points="0.3,1 0.7,1 0.5,0.6" 
                 fill="#12579B" opacity="0.4" />`;
         const bottomGrounded = (bottomTerminal === null || bottomTerminal === void 0 ? void 0 : bottomTerminal.getAttribute('cNodeName')) === 'grounded'
-            ? svg `<line x1="0.5" y1="1.1" x2="0.5" y2="1" stroke="black" stroke-width="0.06" marker-start="url(#grounded)" />`
+            ? svg `<line x1="0.5" y1="1.1" x2="0.5" y2="1" stroke="black"
+                stroke-width="0.06" marker-start="url(#grounded)" />`
             : nothing;
         return svg `<g class="${classMap({
             equipment: true,
             preview: this.placing === equipment,
         })}"
     id="${equipment.parentElement ? identity(equipment) : nothing}"
-    transform="translate(${x} ${y}) rotate(${deg})${flip ? ' scale(-1,1)' : ''}" transform-origin="0.5 0.5">
+    transform="translate(${x} ${y}) rotate(${deg} 0.5 0.5)${flip ? ' scale(-1,1)' : ''}">
       <title>${equipment.getAttribute('name')}</title>
       ${icon}
       ${ringed
-            ? svg `<use transform="rotate(${-deg} 0.5 0.5)" href="#${symbol}"
-        pointer-events="none" />`
+            ? svg `<use transform="rotate(${-deg} 0.5 0.5)" pointer-events="none"
+                  href="#${symbol}" xlink:href="#${symbol}" />`
             : nothing}
       <rect width="1" height="1" fill="none" pointer-events="${connect ? 'none' : 'all'}"
         @mousedown=${preventDefault}

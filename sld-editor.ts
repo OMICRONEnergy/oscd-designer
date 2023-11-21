@@ -285,7 +285,9 @@ export class SLDEditor extends LitElement {
         ? containsRect(this.substation, x, y, w, h)
         : Array.from(
             this.substation.querySelectorAll(parentTags[element.tagName]!)
-          ).find(parent => containsRect(parent, x, y, w, h));
+          ).find(
+            parent => !isBusBar(parent) && containsRect(parent, x, y, w, h)
+          );
     if (containingParent) return true;
     return false;
   }
@@ -1353,7 +1355,7 @@ export class SLDEditor extends LitElement {
         this.substation.querySelectorAll(
           ':root > Substation > VoltageLevel > Bay'
         )
-      ).find(vl => containsRect(vl, x, y, 1, 1));
+      ).find(bay => !isBusBar(bay) && containsRect(bay, x, y, 1, 1));
       if (parent && this.canPlaceAt(equipment, x, y, 1, 1))
         handleClick = () => {
           this.dispatchEvent(

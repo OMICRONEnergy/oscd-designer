@@ -47,6 +47,7 @@ import {
   ringedEqTypes,
   sldNs,
   svgNs,
+  xlinkNs,
   xmlBoolean,
 } from './util.js';
 
@@ -975,6 +976,8 @@ export class SLDEditor extends LitElement {
         </mwc-icon-button>
       </h2>
       <svg
+        xmlns="${svgNs}"
+        xmlns:xlink="${xlinkNs}"
         id="sld"
         viewBox="0 0 ${w} ${h}"
         width="${w * this.gridSize}"
@@ -1255,7 +1258,7 @@ export class SLDEditor extends LitElement {
 
     if (!this.placing && !this.resizing && !this.connecting) {
       moveHandle = svg`
-<a class="handle" href="#0" @click=${() =>
+<a class="handle" href="#0" xlink:href="#0" @click=${() =>
         this.dispatchEvent(newStartPlaceEvent(bayOrVL))}>
   <svg xmlns="${svgNs}" height="1" width="1" fill="black" opacity="0.83"
     viewBox="0 96 960 960" x="${x}" y="${y}">
@@ -1265,7 +1268,7 @@ export class SLDEditor extends LitElement {
 </a>
     `;
       resizeHandle = svg`
-<a class="handle" href="#0" @click=${() =>
+<a class="handle" href="#0" xlink:href="#0" @click=${() =>
         this.dispatchEvent(newStartResizeEvent(bayOrVL))}>
   <svg xmlns="${svgNs}" height="1" width="1" fill="black" opacity="0.83"
     viewBox="0 96 960 960" x="${w + x - 1}" y="${h + y - 1}">
@@ -1344,7 +1347,8 @@ export class SLDEditor extends LitElement {
   >
     ${eqRingPath}
   </svg>`
-      : svg`<use href="#${symbol}" pointer-events="none" />`;
+      : svg`<use href="#${symbol}" xlink:href="#${symbol}"
+              pointer-events="none" />`;
 
     let handleClick = () => {
       this.dispatchEvent(newStartPlaceEvent(equipment));
@@ -1439,7 +1443,8 @@ export class SLDEditor extends LitElement {
 
     const bottomGrounded =
       bottomTerminal?.getAttribute('cNodeName') === 'grounded'
-        ? svg`<line x1="0.5" y1="1.1" x2="0.5" y2="1" stroke="black" stroke-width="0.06" marker-start="url(#grounded)" />`
+        ? svg`<line x1="0.5" y1="1.1" x2="0.5" y2="1" stroke="black"
+                stroke-width="0.06" marker-start="url(#grounded)" />`
         : nothing;
 
     return svg`<g class="${classMap({
@@ -1447,15 +1452,15 @@ export class SLDEditor extends LitElement {
       preview: this.placing === equipment,
     })}"
     id="${equipment.parentElement ? identity(equipment) : nothing}"
-    transform="translate(${x} ${y}) rotate(${deg})${
+    transform="translate(${x} ${y}) rotate(${deg} 0.5 0.5)${
       flip ? ' scale(-1,1)' : ''
-    }" transform-origin="0.5 0.5">
+    }">
       <title>${equipment.getAttribute('name')}</title>
       ${icon}
       ${
         ringed
-          ? svg`<use transform="rotate(${-deg} 0.5 0.5)" href="#${symbol}"
-        pointer-events="none" />`
+          ? svg`<use transform="rotate(${-deg} 0.5 0.5)" pointer-events="none"
+                  href="#${symbol}" xlink:href="#${symbol}" />`
           : nothing
       }
       <rect width="1" height="1" fill="none" pointer-events="${

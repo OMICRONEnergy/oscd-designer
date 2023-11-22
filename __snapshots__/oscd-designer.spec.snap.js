@@ -246,8 +246,8 @@ snapshots["Designer given conducting equipment grounds equipment on connection p
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -423,8 +423,8 @@ snapshots["Designer given conducting equipment connects equipment on connection 
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -688,8 +688,8 @@ snapshots["Designer given conducting equipment connects equipment on connect men
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -965,8 +965,8 @@ snapshots["Designer given conducting equipment with established connectivity uni
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -1180,8 +1180,8 @@ snapshots["Designer given conducting equipment with established connectivity con
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -1357,8 +1357,8 @@ snapshots["Designer given conducting equipment with established connectivity avo
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -1641,8 +1641,8 @@ snapshots["Designer given conducting equipment with established connectivity kee
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -1816,8 +1816,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -2001,8 +2001,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -2321,8 +2321,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -2621,8 +2621,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -2855,8 +2855,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -3024,8 +3024,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -3151,8 +3151,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -3384,8 +3384,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -3521,8 +3521,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -3785,8 +3785,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="7"
           esld:rot="3"
-          esld:x="22"
-          esld:y="7"
+          esld:x="21"
+          esld:y="6"
           name="SMC1"
           type="SMC"
         >
@@ -4078,8 +4078,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -4982,6 +4982,17 @@ snapshots["Designer given a voltage level opens a menu on voltage level right cl
       mwc-list-item=""
     >
       <span>
+        Copy
+      </span>
+      <mwc-icon slot="graphic">
+        copy_all
+      </mwc-icon>
+    </mwc-list-item>
+    <mwc-list-item
+      graphic="icon"
+      mwc-list-item=""
+    >
+      <span>
         Move
       </span>
     </mwc-list-item>
@@ -5113,6 +5124,17 @@ snapshots["Designer given conducting equipment opens a menu on equipment right c
       </span>
       <mwc-icon slot="graphic">
         rotate_90_degrees_cw
+      </mwc-icon>
+    </mwc-list-item>
+    <mwc-list-item
+      graphic="icon"
+      mwc-list-item=""
+    >
+      <span>
+        Copy
+      </span>
+      <mwc-icon slot="graphic">
+        copy_all
       </mwc-icon>
     </mwc-list-item>
     <mwc-list-item
@@ -5430,8 +5452,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -5721,8 +5743,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -6235,8 +6257,8 @@ snapshots["Designer given conducting equipment with established connectivity bet
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -6418,8 +6440,8 @@ snapshots["Designer given conducting equipment retargets grounded terminals when
           esld:lx="22"
           esld:ly="8"
           esld:rot="3"
-          esld:x="22"
-          esld:y="8"
+          esld:x="21"
+          esld:y="7"
           name="SMC1"
           type="SMC"
         >
@@ -6435,4 +6457,1639 @@ snapshots["Designer given conducting equipment retargets grounded terminals when
 </SCL>
 `;
 /* end snapshot Designer given conducting equipment retargets grounded terminals when reparenting equipment */
+
+snapshots["Designer given conducting equipment copies equipment on shift click"] = 
+`<SCL
+  revision="B"
+  version="2007"
+  xmlns="http://www.iec.ch/61850/2003/SCL"
+  xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0"
+>
+  <Substation
+    esld:h="25"
+    esld:w="50"
+    name="S1"
+  >
+    <VoltageLevel
+      esld:h="13"
+      esld:lx="1"
+      esld:ly="1"
+      esld:w="13"
+      esld:x="1"
+      esld:y="1"
+      name="V1"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="2"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="2"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="2.5"
+          esld:ly="3"
+          esld:rot="1"
+          esld:x="3"
+          esld:y="3"
+          name="CBR2"
+          type="CBR"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="3.5"
+          esld:ly="4"
+          esld:rot="1"
+          esld:x="4"
+          esld:y="4"
+          name="CBR1"
+          type="CBR"
+        >
+        </ConductingEquipment>
+      </Bay>
+    </VoltageLevel>
+    <VoltageLevel
+      esld:h="23"
+      esld:lx="15"
+      esld:ly="1"
+      esld:w="23"
+      esld:x="15"
+      esld:y="1"
+      name="V2"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="16"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="16"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="7.5"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="5"
+          name="CTR1"
+          type="CTR"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="4.5"
+          esld:rot="1"
+          esld:x="18"
+          esld:y="4"
+          name="DIS1"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="20"
+          esld:ly="3.5"
+          esld:rot="2"
+          esld:x="19"
+          esld:y="3"
+          name="NEW1"
+          type="NEW"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="3"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="3"
+          name="VTR1"
+          type="VTR"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="21"
+          esld:ly="5"
+          esld:rot="0"
+          esld:x="20"
+          esld:y="4"
+          name="DIS2"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="19"
+          esld:ly="7"
+          esld:rot="3"
+          esld:x="19"
+          esld:y="7"
+          name="BAT1"
+          type="BAT"
+        >
+          <Terminal name="erroneous">
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="21"
+          esld:y="7"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
+      </Bay>
+    </VoltageLevel>
+  </Substation>
+</SCL>
+`;
+/* end snapshot Designer given conducting equipment copies equipment on shift click */
+
+snapshots["Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies equipment on shift click"] = 
+`<SCL
+  revision="B"
+  version="2007"
+  xmlns="http://www.iec.ch/61850/2003/SCL"
+  xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0"
+>
+  <Substation
+    esld:h="25"
+    esld:w="50"
+    name="S1"
+  >
+    <VoltageLevel
+      esld:h="13"
+      esld:lx="1"
+      esld:ly="1"
+      esld:w="13"
+      esld:x="1"
+      esld:y="1"
+      name="V1"
+    >
+      <Bay
+        esld:w="1"
+        h="3"
+        lx="13"
+        ly="2"
+        name="BB1"
+        x="13"
+        y="2"
+      >
+        <ConnectivityNode
+          name="L"
+          pathName="S1/V1/BB1/L"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="2.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+      <Bay
+        esld:h="6"
+        esld:lx="2"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="2"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="2.5"
+          esld:ly="3"
+          esld:rot="1"
+          esld:x="3"
+          esld:y="3"
+          name="CBR2"
+          type="CBR"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="3.5"
+          esld:ly="4"
+          esld:rot="1"
+          esld:x="4"
+          esld:y="4"
+          name="CBR1"
+          type="CBR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V1/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+    <VoltageLevel
+      esld:h="23"
+      esld:lx="15"
+      esld:ly="1"
+      esld:w="23"
+      esld:x="15"
+      esld:y="1"
+      name="V2"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="16"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="16"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="7.5"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="5"
+          name="CTR1"
+          type="CTR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="4.5"
+          esld:rot="1"
+          esld:x="18"
+          esld:y="4"
+          name="DIS1"
+          type="DIS"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="20"
+          esld:ly="3.5"
+          esld:rot="2"
+          esld:x="19"
+          esld:y="3"
+          name="NEW1"
+          type="NEW"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="3"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="3"
+          name="VTR1"
+          type="VTR"
+        >
+          <Terminal
+            bayName="BB1"
+            cNodeName="L"
+            connectivityNode="S1/V1/BB1/L"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="21"
+          esld:ly="5"
+          esld:rot="0"
+          esld:x="20"
+          esld:y="4"
+          name="DIS2"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="19"
+          esld:ly="7"
+          esld:rot="3"
+          esld:x="19"
+          esld:y="7"
+          name="BAT1"
+          type="BAT"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal name="erroneous">
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="22"
+          esld:y="8"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V2/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="19"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="5.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+  </Substation>
+</SCL>
+`;
+/* end snapshot Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies equipment on shift click */
+
+snapshots["Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies equipment on copy menu item select"] = 
+`<SCL
+  revision="B"
+  version="2007"
+  xmlns="http://www.iec.ch/61850/2003/SCL"
+  xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0"
+>
+  <Substation
+    esld:h="25"
+    esld:w="50"
+    name="S1"
+  >
+    <VoltageLevel
+      esld:h="13"
+      esld:lx="1"
+      esld:ly="1"
+      esld:w="13"
+      esld:x="1"
+      esld:y="1"
+      name="V1"
+    >
+      <Bay
+        esld:w="1"
+        h="3"
+        lx="13"
+        ly="2"
+        name="BB1"
+        x="13"
+        y="2"
+      >
+        <ConnectivityNode
+          name="L"
+          pathName="S1/V1/BB1/L"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="2.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+      <Bay
+        esld:h="6"
+        esld:lx="2"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="2"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="2.5"
+          esld:ly="3"
+          esld:rot="1"
+          esld:x="3"
+          esld:y="3"
+          name="CBR2"
+          type="CBR"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="3.5"
+          esld:ly="4"
+          esld:rot="1"
+          esld:x="4"
+          esld:y="4"
+          name="CBR1"
+          type="CBR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V1/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+    <VoltageLevel
+      esld:h="23"
+      esld:lx="15"
+      esld:ly="1"
+      esld:w="23"
+      esld:x="15"
+      esld:y="1"
+      name="V2"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="16"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="16"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="7.5"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="5"
+          name="CTR1"
+          type="CTR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="4.5"
+          esld:rot="1"
+          esld:x="18"
+          esld:y="4"
+          name="DIS1"
+          type="DIS"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="20"
+          esld:ly="3.5"
+          esld:rot="2"
+          esld:x="19"
+          esld:y="3"
+          name="NEW1"
+          type="NEW"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="3"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="3"
+          name="VTR1"
+          type="VTR"
+        >
+          <Terminal
+            bayName="BB1"
+            cNodeName="L"
+            connectivityNode="S1/V1/BB1/L"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="21"
+          esld:ly="5"
+          esld:rot="0"
+          esld:x="20"
+          esld:y="4"
+          name="DIS2"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="19"
+          esld:ly="7"
+          esld:rot="3"
+          esld:x="19"
+          esld:y="7"
+          name="BAT1"
+          type="BAT"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal name="erroneous">
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="21"
+          esld:y="7"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V2/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="19"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="5.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+  </Substation>
+</SCL>
+`;
+/* end snapshot Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies equipment on copy menu item select */
+
+snapshots["Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies bays on copy menu item select"] = 
+`<SCL
+  revision="B"
+  version="2007"
+  xmlns="http://www.iec.ch/61850/2003/SCL"
+  xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0"
+>
+  <Substation
+    esld:h="25"
+    esld:w="50"
+    name="S1"
+  >
+    <VoltageLevel
+      esld:h="13"
+      esld:lx="1"
+      esld:ly="1"
+      esld:w="13"
+      esld:x="1"
+      esld:y="1"
+      name="V1"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="8"
+        esld:ly="8"
+        esld:w="6"
+        esld:x="8"
+        esld:y="8"
+        name="B2"
+      >
+        <ConductingEquipment
+          esld:lx="9"
+          esld:ly="13.5"
+          esld:rot="3"
+          esld:x="9"
+          esld:y="11"
+          name="CTR1"
+          type="CTR"
+        >
+          <Terminal
+            bayName="B2"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B2/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="9"
+          esld:ly="10.5"
+          esld:rot="1"
+          esld:x="10"
+          esld:y="10"
+          name="DIS1"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="12"
+          esld:ly="9.5"
+          esld:rot="2"
+          esld:x="11"
+          esld:y="9"
+          name="NEW1"
+          type="NEW"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="9"
+          esld:ly="9"
+          esld:rot="3"
+          esld:x="9"
+          esld:y="9"
+          name="VTR1"
+          type="VTR"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="13"
+          esld:ly="11"
+          esld:rot="0"
+          esld:x="12"
+          esld:y="10"
+          name="DIS2"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="11"
+          esld:ly="13"
+          esld:rot="3"
+          esld:x="11"
+          esld:y="13"
+          name="BAT1"
+          type="BAT"
+        >
+          <Terminal
+            bayName="B2"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B2/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+          <Terminal name="erroneous">
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="14"
+          esld:ly="14"
+          esld:rot="3"
+          esld:x="13"
+          esld:y="13"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V1/B2/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="11"
+                esld:y="13.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="10.5"
+                esld:y="13.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="10.5"
+                esld:y="11.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="10"
+                esld:y="11.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+      <Bay
+        esld:w="1"
+        h="3"
+        lx="13"
+        ly="2"
+        name="BB1"
+        x="13"
+        y="2"
+      >
+        <ConnectivityNode
+          name="L"
+          pathName="S1/V1/BB1/L"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="2.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+      <Bay
+        esld:h="6"
+        esld:lx="2"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="2"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="3.5"
+          esld:ly="4"
+          esld:rot="1"
+          esld:x="4"
+          esld:y="4"
+          name="CBR1"
+          type="CBR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V1/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+    <VoltageLevel
+      esld:h="23"
+      esld:lx="15"
+      esld:ly="1"
+      esld:w="23"
+      esld:x="15"
+      esld:y="1"
+      name="V2"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="16"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="16"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="7.5"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="5"
+          name="CTR1"
+          type="CTR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="4.5"
+          esld:rot="1"
+          esld:x="18"
+          esld:y="4"
+          name="DIS1"
+          type="DIS"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="20"
+          esld:ly="3.5"
+          esld:rot="2"
+          esld:x="19"
+          esld:y="3"
+          name="NEW1"
+          type="NEW"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="3"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="3"
+          name="VTR1"
+          type="VTR"
+        >
+          <Terminal
+            bayName="BB1"
+            cNodeName="L"
+            connectivityNode="S1/V1/BB1/L"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="21"
+          esld:ly="5"
+          esld:rot="0"
+          esld:x="20"
+          esld:y="4"
+          name="DIS2"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="19"
+          esld:ly="7"
+          esld:rot="3"
+          esld:x="19"
+          esld:y="7"
+          name="BAT1"
+          type="BAT"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal name="erroneous">
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="21"
+          esld:y="7"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V2/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="19"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="5.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+  </Substation>
+</SCL>
+`;
+/* end snapshot Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies bays on copy menu item select */
+
+snapshots["Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies voltage levels on move handle shift click"] = 
+`<SCL
+  revision="B"
+  version="2007"
+  xmlns="http://www.iec.ch/61850/2003/SCL"
+  xmlns:esld="https://transpower.co.nz/SCL/SSD/SLD/v0"
+>
+  <Substation
+    esld:h="25"
+    esld:w="50"
+    name="S2"
+  >
+    <VoltageLevel
+      esld:h="13"
+      esld:lx="2"
+      esld:ly="2"
+      esld:w="13"
+      esld:x="2"
+      esld:y="2"
+      name="V1"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="3"
+        esld:ly="3"
+        esld:w="6"
+        esld:x="3"
+        esld:y="3"
+        name="B1"
+      >
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="4.5"
+          esld:ly="5"
+          esld:rot="1"
+          esld:x="5"
+          esld:y="5"
+          name="CBR1"
+          type="CBR"
+        >
+        </ConductingEquipment>
+      </Bay>
+    </VoltageLevel>
+  </Substation>
+  <Substation
+    esld:h="25"
+    esld:w="50"
+    name="S1"
+  >
+    <VoltageLevel
+      esld:h="13"
+      esld:lx="1"
+      esld:ly="1"
+      esld:w="13"
+      esld:x="1"
+      esld:y="1"
+      name="V1"
+    >
+      <Bay
+        esld:w="1"
+        h="3"
+        lx="13"
+        ly="2"
+        name="BB1"
+        x="13"
+        y="2"
+      >
+        <ConnectivityNode
+          name="L"
+          pathName="S1/V1/BB1/L"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="2.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+            </Section>
+            <Section bus="true">
+              <Vertex
+                esld:x="13.5"
+                esld:y="3.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="13.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+      <Bay
+        esld:h="6"
+        esld:lx="2"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="2"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          desc="CBR description"
+          esld:lx="3.5"
+          esld:ly="4"
+          esld:rot="1"
+          esld:x="4"
+          esld:y="4"
+          name="CBR1"
+          type="CBR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V1/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="17"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+            <Section>
+              <Vertex
+                esld:x="11.5"
+                esld:y="4.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="4.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+    <VoltageLevel
+      esld:h="23"
+      esld:lx="15"
+      esld:ly="1"
+      esld:w="23"
+      esld:x="15"
+      esld:y="1"
+      name="V2"
+    >
+      <Bay
+        esld:h="6"
+        esld:lx="16"
+        esld:ly="2"
+        esld:w="6"
+        esld:x="16"
+        esld:y="2"
+        name="B1"
+      >
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="7.5"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="5"
+          name="CTR1"
+          type="CTR"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="4.5"
+          esld:rot="1"
+          esld:x="18"
+          esld:y="4"
+          name="DIS1"
+          type="DIS"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V1/B1/L1"
+            name="T2"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="20"
+          esld:ly="3.5"
+          esld:rot="2"
+          esld:x="19"
+          esld:y="3"
+          name="NEW1"
+          type="NEW"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="17"
+          esld:ly="3"
+          esld:rot="3"
+          esld:x="17"
+          esld:y="3"
+          name="VTR1"
+          type="VTR"
+        >
+          <Terminal
+            bayName="BB1"
+            cNodeName="L"
+            connectivityNode="S1/V1/BB1/L"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V1"
+          >
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="21"
+          esld:ly="5"
+          esld:rot="0"
+          esld:x="20"
+          esld:y="4"
+          name="DIS2"
+          type="DIS"
+        >
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="19"
+          esld:ly="7"
+          esld:rot="3"
+          esld:x="19"
+          esld:y="7"
+          name="BAT1"
+          type="BAT"
+        >
+          <Terminal
+            bayName="B1"
+            cNodeName="L1"
+            connectivityNode="S1/V2/B1/L1"
+            name="T1"
+            substationName="S1"
+            voltageLevelName="V2"
+          >
+          </Terminal>
+          <Terminal name="erroneous">
+          </Terminal>
+        </ConductingEquipment>
+        <ConductingEquipment
+          esld:lx="22"
+          esld:ly="8"
+          esld:rot="3"
+          esld:x="21"
+          esld:y="7"
+          name="SMC1"
+          type="SMC"
+        >
+        </ConductingEquipment>
+        <ConnectivityNode
+          name="L1"
+          pathName="S1/V2/B1/L1"
+        >
+          <Private type="Transpower-SLD-Vertices">
+            <Section>
+              <Vertex
+                esld:x="19"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="7.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18.5"
+                esld:y="5.5"
+              >
+              </Vertex>
+              <Vertex
+                esld:x="18"
+                esld:y="5.5"
+              >
+              </Vertex>
+            </Section>
+          </Private>
+        </ConnectivityNode>
+      </Bay>
+    </VoltageLevel>
+  </Substation>
+</SCL>
+`;
+/* end snapshot Designer given conducting equipment with established connectivity between more than two pieces of equipment and a bus bar copies voltage levels on move handle shift click */
 

@@ -24,6 +24,20 @@ export function isEqType(str) {
     return eqTypes.includes(str);
 }
 export const ringedEqTypes = new Set(['GEN', 'MOT', 'SMC']);
+/* eslint-disable no-bitwise */
+export function uuid() {
+    const digits = new Array(36);
+    for (let i = 0; i < 36; i += 1) {
+        if ([8, 13, 18, 23].includes(i))
+            digits[i] = '-';
+        else
+            digits[i] = Math.floor(Math.random() * 16);
+    }
+    digits[14] = 4;
+    digits[19] &= ~(1 << 2);
+    digits[19] |= 1 << 3;
+    return digits.map(x => x.toString(16)).join('');
+}
 export function xmlBoolean(value) {
     var _a;
     return ['true', '1'].includes((_a = value === null || value === void 0 ? void 0 : value.trim()) !== null && _a !== void 0 ? _a : 'false');
@@ -133,14 +147,11 @@ function healSectionCut(cut) {
 }
 function updateTerminals(parent, cNode, substationName, voltageLevelName, bayName, cNodeName, connectivityNode) {
     const updates = [];
-    const [oldSubstationName, oldVoltageLevelName, oldBayName] = [
-        'Substation',
-        'VoltageLevel',
-        'Bay',
-    ].map(tag => { var _a, _b; return (_b = (_a = cNode.closest(tag)) === null || _a === void 0 ? void 0 : _a.getAttribute('name')) !== null && _b !== void 0 ? _b : ''; });
-    const oldCNodeName = cNode.getAttribute('name');
-    const oldConnectivityNode = `${oldSubstationName}/${oldVoltageLevelName}/${oldBayName}/${oldCNodeName}`;
-    const terminals = Array.from(parent.ownerDocument.querySelectorAll(`Terminal[substationName="${oldSubstationName}"][voltageLevelName="${oldVoltageLevelName}"][bayName="${oldBayName}"][cNodeName="${oldCNodeName}"], Terminal[connectivityNode="${oldConnectivityNode}"]`));
+    const oldPathName = cNode.getAttribute('pathName');
+    if (!oldPathName)
+        return [];
+    const [oldSubstationName, oldVoltageLevelName, oldBayName, oldCNodeName] = oldPathName.split('/');
+    const terminals = Array.from(cNode.getRootNode().querySelectorAll(`Terminal[substationName="${oldSubstationName}"][voltageLevelName="${oldVoltageLevelName}"][bayName="${oldBayName}"][cNodeName="${oldCNodeName}"], Terminal[connectivityNode="${oldPathName}"]`));
     terminals.forEach(terminal => {
         updates.push({
             element: terminal,

@@ -1528,7 +1528,7 @@ const oo=c`.mdc-floating-label{-moz-osx-font-smoothing:grayscale;-webkit-font-sm
                 fill="#12579B" opacity="0.4" />`,w="grounded"===(null==g?void 0:g.getAttribute("cNodeName"))?q`<line x1="0.5" y1="1.1" x2="0.5" y2="1" stroke="black"
                 stroke-width="0.06" marker-start="url(#grounded)" />`:j;return q`<g class="${Le({equipment:!0,preview:this.placing===t})}"
     id="${t.parentElement?se(t):j}"
-    transform="translate(${o} ${r}) rotate(${s} 0.5 0.5)${a?" scale(-1,1)":""}">
+    transform="translate(${o} ${r}) rotate(${s} 0.5 0.5)${a?" scale(-1,1) translate(-1 0)":""}">
       <title>${t.getAttribute("name")}</title>
       ${m}
       ${c?q`<use transform="rotate(${-s} 0.5 0.5)" pointer-events="none"

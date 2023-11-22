@@ -1103,7 +1103,7 @@ let SLDEditor = class SLDEditor extends LitElement {
             preview: this.placing === equipment,
         })}"
     id="${equipment.parentElement ? identity(equipment) : nothing}"
-    transform="translate(${x} ${y}) rotate(${deg} 0.5 0.5)${flip ? ' scale(-1,1)' : ''}">
+    transform="translate(${x} ${y}) rotate(${deg} 0.5 0.5)${flip ? ' scale(-1,1) translate(-1 0)' : ''}">
       <title>${equipment.getAttribute('name')}</title>
       ${icon}
       ${ringed
